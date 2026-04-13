@@ -113,6 +113,8 @@ function InfoCard({ icon, title, children }: { icon: string; title: string; chil
 export default function ContactPage() {
   const [budget, setBudget] = useState(5000);
   const [chatOpen, setChatOpen] = useState(false);
+  const [bookModalOpen, setBookModalOpen] = useState(false);
+  const [bookForm, setBookForm] = useState({ name: "", email: "", product: "" });
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
@@ -140,7 +142,10 @@ export default function ContactPage() {
       y: 40, opacity: 0, stagger: 0.08, duration: 0.7, ease: "power3.out", delay: 0.1,
     });
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setChatOpen(false);
+      if (e.key === "Escape") {
+        setChatOpen(false);
+        setBookModalOpen(false);
+      }
     };
     document.addEventListener("keydown", handleEscape);
     return () => {
@@ -251,7 +256,7 @@ export default function ContactPage() {
                   className="w-full"
                   onClick={(e) => {
                     e.preventDefault();
-                    alert("We have requested a call and you will be notified within 24 hr of the call via email.");
+                    setBookModalOpen(true);
                   }}
                 >
                   📞 &nbsp;Book a Call
@@ -520,6 +525,67 @@ export default function ContactPage() {
           )}
         </button>
       </div>
+
+      {/* Book a Call Modal */}
+      {bookModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-[var(--bg-overlay)] backdrop-blur-md" onClick={() => setBookModalOpen(false)} />
+          <div className="relative z-[101] w-full max-w-md animate-[slide-up_0.3s_ease-out]">
+            <GlassCard className="p-6 md:p-8">
+              <button 
+                onClick={() => setBookModalOpen(false)} 
+                className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-[var(--text-muted)] hover:text-[var(--text-h)] hover:bg-white/10 transition-all"
+                aria-label="Close modal"
+              >
+                ✕
+              </button>
+              <h3 className="text-xl font-display font-medium text-[var(--text-h)] mb-2">Request a Call</h3>
+              <p className="text-sm text-[var(--text-muted)] mb-6">Enter your details and we'll setup a time.</p>
+              <form onSubmit={(e) => {
+                e.preventDefault();
+                const subject = encodeURIComponent(`Call Request: ${bookForm.product}`);
+                const body = encodeURIComponent(`Name: ${bookForm.name}\nEmail: ${bookForm.email}\nProduct Type: ${bookForm.product}\n\nI would like to book a call regarding this product.`);
+                window.location.href = `mailto:binaryfroster@gmail.com?subject=${subject}&body=${body}`;
+                setBookModalOpen(false);
+                setBookForm({ name: "", email: "", product: "" });
+              }} className="flex flex-col gap-5">
+                <FloatInput 
+                  id="bookName" 
+                  label="Full Name" 
+                  required 
+                  value={bookForm.name} 
+                  onChange={(v) => setBookForm({ ...bookForm, name: v })} 
+                />
+                <FloatInput 
+                  id="bookEmail" 
+                  type="email" 
+                  label="Email Address" 
+                  required 
+                  value={bookForm.email} 
+                  onChange={(v) => setBookForm({ ...bookForm, email: v })} 
+                />
+                <StyledSelect 
+                  id="bookProduct" 
+                  label="Type of Product" 
+                  value={bookForm.product} 
+                  onChange={(v) => setBookForm({ ...bookForm, product: v })} 
+                  required
+                >
+                  <option value="" disabled>Select a product...</option>
+                  <option value="Web Application">Web Application</option>
+                  <option value="AI Automation">AI Automation</option>
+                  <option value="E-commerce">E-commerce</option>
+                  <option value="AI Diet Planner">AI Diet Planner</option>
+                  <option value="Other">Other</option>
+                </StyledSelect>
+                <LiquidButton type="submit" className="w-full mt-2">
+                  Request Call
+                </LiquidButton>
+              </form>
+            </GlassCard>
+          </div>
+        </div>
+      )}
 
     </div>
   );
