@@ -38,14 +38,13 @@ export default function Footer() {
             {/* Social icons */}
             <div className="flex gap-3">
               {[
-                { name: "LinkedIn", icon: "in" },
-                { name: "GitHub", icon: "GH" },
-                { name: "Twitter", icon: "X" },
-                { name: "Instagram", icon: "IG" },
+                { name: "LinkedIn", icon: "in", href: "https://www.linkedin.com/in/binary-froster/" },
+                { name: "Twitter", icon: "X", href: "https://x.com/Binaryfroster" },
+                { name: "Instagram", icon: "IG", href: "https://www.instagram.com/binaryfroster/" },
               ].map((s) => (
                 <a
                   key={s.name}
-                  href="#"
+                  href={s.href}
                   title={s.name}
                   className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[10px] font-mono text-text-muted hover:text-white hover:bg-white/10 hover:scale-110 hover:rotate-[8deg] transition-all duration-200"
                 >
@@ -87,7 +86,7 @@ export default function Footer() {
             <ul className="space-y-3 mb-6">
               <li className="flex items-center gap-2 text-sm">
                 <span className="text-base">📧</span>
-                <a href="mailto:hello@binaryfroster.com" className="hover:text-cyan-400 transition-colors">hello@binaryfroster.com</a>
+                <a href="mailto:binaryfroster@gmail.com" className="hover:text-cyan-400 transition-colors">binaryfroster@gmail.com</a>
               </li>
               <li className="flex items-center gap-2 text-sm">
                 <span className="text-base">⏱️</span>

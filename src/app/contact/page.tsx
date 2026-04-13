@@ -223,8 +223,8 @@ export default function ContactPage() {
 
             <div className="contact-elem flex flex-col gap-4">
               <InfoCard icon="📧" title="Email">
-                <a href="mailto:hello@binaryfroster.com" className="text-cyan-400 hover:text-cyan-300 transition-colors text-sm break-all">
-                  hello@binaryfroster.com
+                <a href="mailto:binaryfroster@gmail.com" className="text-cyan-400 hover:text-cyan-300 transition-colors text-sm break-all">
+                  binaryfroster@gmail.com
                 </a>
               </InfoCard>
 
@@ -246,7 +246,14 @@ export default function ContactPage() {
                 <p className="text-[var(--text-body)] text-sm mb-4 leading-relaxed">
                   Prefer to talk? Book a free 30-min discovery call — no obligation.
                 </p>
-                <LiquidButton variant="ghost" href="#" className="w-full">
+                <LiquidButton 
+                  variant="ghost" 
+                  className="w-full"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    alert("We have requested a call and you will be notified within 24 hr of the call via email.");
+                  }}
+                >
                   📞 &nbsp;Book a Call
                 </LiquidButton>
               </GlassCard>
@@ -257,14 +264,14 @@ export default function ContactPage() {
               <p className="text-xs text-[var(--text-muted)] mb-3 uppercase tracking-widest font-medium">Follow Us</p>
               <div className="flex gap-3">
                 {[
-                  { name: "LinkedIn", initial: "in", color: "hover:border-[#0A66C2]/60 hover:text-[#0A66C2]" },
-                  { name: "GitHub", initial: "GH", color: "hover:border-white/40 hover:text-white" },
-                  { name: "Twitter/X", initial: "𝕏", color: "hover:border-white/40 hover:text-white" },
-                  { name: "Instagram", initial: "IG", color: "hover:border-[#E1306C]/60 hover:text-[#E1306C]" },
+                  { name: "LinkedIn", initial: "in", color: "hover:border-[#0A66C2]/60 hover:text-[#0A66C2]", href: "https://www.linkedin.com/in/binary-froster/" },
+                  { name: "GitHub", initial: "GH", color: "hover:border-white/40 hover:text-white", href: "#" },
+                  { name: "Twitter/X", initial: "𝕏", color: "hover:border-white/40 hover:text-white", href: "https://x.com/Binaryfroster" },
+                  { name: "Instagram", initial: "IG", color: "hover:border-[#E1306C]/60 hover:text-[#E1306C]", href: "https://www.instagram.com/binaryfroster/" },
                 ].map((s) => (
                   <a
                     key={s.name}
-                    href="#"
+                    href={s.href}
                     className={`w-10 h-10 rounded-full bg-[var(--glass-bg)] border border-[var(--glass-border)] flex items-center justify-center text-[var(--text-muted)] transition-all text-xs font-semibold font-mono ${s.color}`}
                     aria-label={s.name}
                   >
