@@ -20,7 +20,7 @@ export default function BlogPage() {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
-    gsap.from(".blog-hero span, .blog-hero h1, .blog-hero p", {
+    const heroAnim = gsap.from(".blog-hero span, .blog-hero h1, .blog-hero p", {
       y: 40, opacity: 0, stagger: 0.1, duration: 0.6, ease: "power3.out", delay: 0.1,
     });
 
@@ -29,7 +29,11 @@ export default function BlogPage() {
       y: 60, opacity: 0, stagger: 0.08, duration: 0.6, ease: "power3.out",
     });
 
-    return () => { ScrollTrigger.getAll().forEach(t => t.kill()); };
+    return () => {
+      heroAnim.kill();
+      ScrollTrigger.getAll().forEach(t => t.kill());
+      gsap.set(".blog-hero span, .blog-hero h1, .blog-hero p, .blog-card", { clearProps: "all" });
+    };
   }, []);
 
   return (

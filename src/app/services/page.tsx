@@ -84,7 +84,7 @@ export default function ServicesPage() {
   const [yearly, setYearly] = useState(false);
 
   useEffect(() => {
-    gsap.from(".service-header span, .service-header h1, .service-header p", {
+    const headerAnim = gsap.from(".service-header span, .service-header h1, .service-header p", {
       y: 40, opacity: 0, stagger: 0.1, duration: 0.6, ease: "power3.out", delay: 0.1
     });
 
@@ -98,7 +98,11 @@ export default function ServicesPage() {
       y: 60, opacity: 0, stagger: 0.12, duration: 0.7, ease: "power3.out",
     });
 
-    return () => { ScrollTrigger.getAll().forEach(t => t.kill()); };
+    return () => {
+      headerAnim.kill();
+      ScrollTrigger.getAll().forEach(t => t.kill());
+      gsap.set(".service-header span, .service-header h1, .service-header p, .process-step, .pricing-card", { clearProps: "all" });
+    };
   }, []);
 
   const filtered = filterServices(services as ServiceItem[], activeCat, search);

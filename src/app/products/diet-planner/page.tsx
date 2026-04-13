@@ -61,7 +61,11 @@ export default function DietPlannerPage() {
       y: 60, opacity: 0, duration: 0.8, ease: "power3.out",
     });
 
-    return () => { ScrollTrigger.getAll().forEach(t => t.kill()); };
+    return () => {
+      tl.kill();
+      ScrollTrigger.getAll().forEach(t => t.kill());
+      gsap.set(".dp-eyebrow, .dp-h1, .dp-sub, .dp-cta, .dp-phone, .feature-section, .pricing-section, .dp-testimonials", { clearProps: "all" });
+    };
   }, []);
 
   // Auto rotate testimonials (pauses on manual interaction)

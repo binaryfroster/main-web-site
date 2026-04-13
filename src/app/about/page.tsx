@@ -27,7 +27,7 @@ export default function AboutPage() {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
-    gsap.from(".about-hero span, .about-hero h1, .about-hero p", {
+    const heroAnim = gsap.from(".about-hero span, .about-hero h1, .about-hero p", {
       y: 40, opacity: 0, stagger: 0.1, duration: 0.6, ease: "power3.out", delay: 0.1,
     });
 
@@ -41,7 +41,11 @@ export default function AboutPage() {
       y: 60, opacity: 0, stagger: 0.08, duration: 0.6, ease: "power3.out",
     });
 
-    return () => { ScrollTrigger.getAll().forEach(t => t.kill()); };
+    return () => {
+      heroAnim.kill();
+      ScrollTrigger.getAll().forEach(t => t.kill());
+      gsap.set(".about-hero span, .about-hero h1, .about-hero p, .value-card, .team-card", { clearProps: "all" });
+    };
   }, []);
 
   return (

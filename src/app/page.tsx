@@ -65,8 +65,14 @@ export default function Home() {
   }, [autoPlay]);
 
   useEffect(() => {
-    // Hero Entrance
-    const heroTL = gsap.timeline({ delay: 0.2 });
+    // ── Hero Entrance ──
+    const heroTL = gsap.timeline({
+      delay: 0.2,
+      onComplete: () => {
+        // Clear inline GSAP styles after animation — prevents ghosting on re-navigation
+        gsap.set([".hero-eyebrow", ".hero-word", ".hero-typewriter", ".hero-sub", ".hero-btn", ".hero-proof", ".scroll-indicator"], { clearProps: "all" });
+      },
+    });
     heroTL
       .from(".hero-eyebrow", { y: -30, opacity: 0, duration: 0.5, ease: "back.out(2)" })
       .from(".hero-word", {
@@ -79,19 +85,19 @@ export default function Home() {
       .from(".hero-proof", { y: 15, opacity: 0, duration: 0.4, ease: "power2.out" }, "-=0.1")
       .from(".scroll-indicator", { opacity: 0, y: -10, duration: 0.5, ease: "power2.out" }, "-=0.1");
 
-    // Scroll indicator fade on scroll
+    // ── Scroll indicator fade on scroll ──
     gsap.to(".scroll-indicator", {
       scrollTrigger: { trigger: heroRef.current, start: "top top", end: "100px top", scrub: true },
       opacity: 0, pointerEvents: "none",
     });
 
-    // Service cards
+    // ── Service cards ──
     gsap.from(".service-card", {
       scrollTrigger: { trigger: ".services-grid", start: "top 80%", toggleActions: "play none none reverse" },
       y: 100, rotationY: -25, opacity: 0, transformPerspective: 800, stagger: 0.12, duration: 0.75, ease: "power3.out",
     });
 
-    // Stats counters
+    // ── Stats counters ──
     ScrollTrigger.create({
       trigger: ".stats-section",
       start: "top 70%",
@@ -109,7 +115,7 @@ export default function Home() {
             if (progress < 1) requestAnimationFrame(update);
           }
           requestAnimationFrame(update);
-        });
+        })
       }
     });
 
@@ -118,7 +124,7 @@ export default function Home() {
       rotationX: 90, y: 40, opacity: 0, stagger: 0.15, duration: 0.6, ease: "back.out(2)", transformPerspective: 600,
     });
 
-    // Bento
+    // ── Bento ──
     gsap.from(".bento-lg", {
       scrollTrigger: { trigger: ".bento-grid", start: "top 75%" },
       x: -80, rotationY: 20, opacity: 0, transformPerspective: 1000, duration: 0.9, ease: "power3.out"
@@ -128,7 +134,7 @@ export default function Home() {
       y: 60, rotationZ: 3, opacity: 0, stagger: 0.1, transformPerspective: 800, duration: 0.7, ease: "power2.out"
     });
 
-    // SaaS Promo
+    // ── SaaS Promo ──
     gsap.from(".phone-mockup-wrapper", {
       scrollTrigger: { trigger: ".saas-promo", start: "top 70%" },
       y: 100, rotationX: -30, rotationY: 20, opacity: 0, transformPerspective: 1200, duration: 1.1, ease: "power3.out",
@@ -141,19 +147,27 @@ export default function Home() {
       x: 60, opacity: 0, rotationY: 15, transformPerspective: 800, stagger: 0.1, duration: 0.6, ease: "power2.out",
     });
 
-    // Testimonials
+    // ── Testimonials ──
     gsap.from(".testimonials-section", {
       scrollTrigger: { trigger: ".testimonials-section", start: "top 80%" },
       y: 60, opacity: 0, duration: 0.8, ease: "power3.out",
     });
 
-    // CTA
+    // ── CTA ──
     gsap.from(".cta-section", {
       scrollTrigger: { trigger: ".cta-section", start: "top 80%" },
       scale: 0.92, rotationX: 8, opacity: 0, transformPerspective: 1400, duration: 0.9, ease: "power3.out",
     });
 
-    return () => { ScrollTrigger.getAll().forEach(t => t.kill()); };
+    return () => {
+      // Kill this page's ScrollTriggers and clear any GSAP inline styles so
+      // returning to this page never shows opacity:0 frozen elements
+      heroTL.kill();
+      ScrollTrigger.getAll().forEach(t => t.kill());
+      gsap.set([".hero-eyebrow", ".hero-word", ".hero-typewriter", ".hero-sub", ".hero-btn", ".hero-proof", ".scroll-indicator",
+                 ".service-card", ".stat-number", ".bento-lg", ".bento-md", ".phone-mockup-wrapper",
+                 ".saas-promo-text .feature-item", ".testimonials-section", ".cta-section"], { clearProps: "all" });
+    };
   }, []);
 
   const handleManualNavigation = (index: number) => {

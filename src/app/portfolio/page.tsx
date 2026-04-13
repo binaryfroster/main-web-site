@@ -45,11 +45,15 @@ export default function PortfolioPage() {
   const [modal, setModal] = useState<ModalData | null>(null);
 
   useEffect(() => {
-    gsap.from(".portfolio-card", {
+    const cardsAnim = gsap.from(".portfolio-card", {
       y: 80, opacity: 0, stagger: 0.08, duration: 0.6, ease: "power3.out",
       scrollTrigger: { trigger: ".portfolio-grid", start: "top 85%" }
     });
-    return () => { ScrollTrigger.getAll().forEach(t => t.kill()); };
+    return () => {
+      cardsAnim.kill();
+      ScrollTrigger.getAll().forEach(t => t.kill());
+      gsap.set(".portfolio-card", { clearProps: "all" });
+    };
   }, []);
 
   // Lock body scroll when modal is open + Escape key

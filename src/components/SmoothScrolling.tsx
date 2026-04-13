@@ -12,7 +12,7 @@ export default function SmoothScrolling({ children }: { children: React.ReactNod
   const pathname = usePathname();
   const lenisRef = useRef<Lenis | null>(null);
 
-  // Initialize Lenis once
+  // Initialize Lenis once — wire into GSAP ticker for perfect sync
   useEffect(() => {
     const lenis = new Lenis({
       duration: 1.2,
@@ -23,49 +23,37 @@ export default function SmoothScrolling({ children }: { children: React.ReactNod
 
     lenisRef.current = lenis;
 
-    // Wire Lenis into GSAP ticker so ScrollTrigger stays in sync
-    gsap.ticker.add((time) => {
-      lenis.raf(time * 1000);
-    });
+    const ticker = (time: number) => lenis.raf(time * 1000);
+    gsap.ticker.add(ticker);
     gsap.ticker.lagSmoothing(0);
 
     return () => {
-      gsap.ticker.remove((time) => lenis.raf(time * 1000));
+      gsap.ticker.remove(ticker);
       lenis.destroy();
       lenisRef.current = null;
     };
   }, []);
 
-  // On every route change: scroll to top + refresh all observers
+  // On every route change: scroll to top + refresh layout, do NOT kill triggers
+  // (each page component is responsible for killing its own triggers in useEffect cleanup)
   useEffect(() => {
     const lenis = lenisRef.current;
 
-    // 1. Jump scroll to top immediately (no animation — page already changed)
+    // 1. Jump to top immediately
     if (lenis) {
       lenis.scrollTo(0, { immediate: true });
     } else {
       window.scrollTo(0, 0);
     }
 
-    // 2. Kill any ScrollTriggers left over from the previous page
-    ScrollTrigger.getAll().forEach((t) => t.kill());
-
-    // 3. After Next.js finishes painting the new page DOM, refresh everything
-    //    Two-pass refresh: first quick pass catches gross layout, second catches lazy images etc.
+    // 2. After Next.js paints the new page, refresh positions
+    //    Dispatch resize to re-trigger IntersectionObserver (ScrollReveal)
     const t1 = setTimeout(() => {
-      // Force IntersectionObservers (ScrollReveal) to re-evaluate by simulating a resize
       window.dispatchEvent(new Event("resize"));
-      ScrollTrigger.refresh(true);
-    }, 100);
+      ScrollTrigger.refresh();
+    }, 150);
 
-    const t2 = setTimeout(() => {
-      ScrollTrigger.refresh(true);
-    }, 400);
-
-    return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-    };
+    return () => clearTimeout(t1);
   }, [pathname]);
 
   return <>{children}</>;
