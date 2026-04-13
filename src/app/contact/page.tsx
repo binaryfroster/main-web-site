@@ -337,7 +337,7 @@ export default function ContactPage() {
                     {/* Company */}
                     <FloatInput
                       id="company" label="Company / Organisation (optional)"
-                      value={formData.company} onChange={v => updateField("company", v)}
+                      value={formData.company || ""} onChange={v => updateField("company", v)}
                     />
 
                     {/* Service */}
