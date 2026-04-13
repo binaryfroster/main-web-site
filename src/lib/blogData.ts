@@ -34,7 +34,11 @@ export const posts: BlogPost[] = [
         <li><strong class="text-[var(--text-h)]">24/7 Availability:</strong> Lead generation doesn't stop when your front office goes to sleep.</li>
       </ul>
       
-      <p>By 2027, we predict that landing pages as we know them will be completely replaced by intelligent, full-screen chat interfaces.</p>
+      <h2 class="text-2xl font-bold text-[var(--text-h)] mt-8 mb-4">Beyond the Hype: Integration is Key</h2>
+      <p>While the conversational interface is powerful, its true value lies in deep integration with existing business systems. An AI chatbot that can only regurgitate your company's "About Us" page is essentially a gimmick. The magic happens when the bot is securely hooked into your CRM, inventory management, or scheduling software.</p>
+      <p>For example, instead of simply telling a user "We offer logistics software," a deeply integrated bot can analyze their query and say, "Based on your shipping volume, our Enterprise Tier would save you £4,000 monthly. I've sent a detailed breakdown to your email, and my colleague Sarah is available at 3 PM today to discuss. Shall I book that for you?" This level of contextual awareness transforms the bot from a passive responder into a proactive sales engineer.</p>
+      
+      <p class="mt-6">By 2027, we predict that landing pages as we know them will be completely replaced by these intelligent, full-screen, system-integrated chat interfaces.</p>
     `
   },
   { 
@@ -59,8 +63,12 @@ export const posts: BlogPost[] = [
       <h2 class="text-2xl font-bold text-[var(--text-h)] mt-8 mb-4">Tackling State Complexity</h2>
       <p>One of the biggest hurdles was managing state across thousands of real-time inventory updates. We implemented a hybrid approach using Redis for ephemeral locking and Postgres with strict transaction isolation levels to prevent race conditions during high-volume production runs.</p>
       
+      <h2 class="text-2xl font-bold text-[var(--text-h)] mt-8 mb-4">Scaling Through Observability</h2>
+      <p>Building the system is only half the battle; maintaining it under the stress of 10,000 daily transactions is where the real engineering happens. We integrated comprehensive observability suites from day one. Every database query, API route, and background cron job was instrumented with OpenTelemetry.</p>
+      <p>This allowed us to identify N+1 query problems before they ever reached production. We set up alerts for when specific queue workers took longer than 500ms to process an inventory sync. By the time the ERP was rolled out to the factory floor, the tech team had a dashboard that provided a god's-eye view of the entire operation, drastically reducing the time spent debugging user-reported issues.</p>
+      
       <h2 class="text-2xl font-bold text-[var(--text-h)] mt-8 mb-4">The Result</h2>
-      <p>The custom ERP cut their processing overhead by 40%. It wasn't easy, but by keeping the architecture modular and writing relentless integration tests, we proved that custom enterprise software doesn't have to be a nightmare.</p>
+      <p>The custom ERP cut their processing overhead by 40%. It wasn't easy, but by keeping the architecture modular, embracing strict observability, and writing relentless integration tests, we proved that custom enterprise software doesn't have to be a nightmare.</p>
     `
   },
   { 
@@ -79,9 +87,13 @@ export const posts: BlogPost[] = [
       
       <p>Based on their industry CPC (Cost Per Click) averages, their lack of organic keyword presence was costing them an estimated <strong>£8,000 per month</strong> in equivalent ad spend just to maintain baseline traffic.</p>
 
+      <h2 class="text-2xl font-bold text-[var(--text-h)] mt-8 mb-4">The Trap of "Good Enough" Performance</h2>
+      <p>Before our migration, the client's marketing director believed their site was fast because it loaded quickly on his high-end Macbook connected to fiber internet. But SEO isn't determined by subjective feelings—it's measured by Google's Core Web Vitals across a vast spectrum of devices and network speeds. We discovered that on standard mobile networks, their massive unstructured DOM and bulky hero video was causing a Largest Contentful Paint (LCP) of over 6 seconds.</p>
+      
       <h2 class="text-2xl font-bold text-[var(--text-h)] mt-8 mb-4">How We Fixed It</h2>
       <p>We migrated their stack to Next.js using Server-Side Rendering (SSR) to ensure perfect indexing. We implemented automated semantic sitemap generation, structured JSON-LD data for rich snippets, and aggressively optimized their Core Web Vitals.</p>
-      <p>Within 90 days, organic traffic increased by 145%, proving that SEO isn't just "marketing fluff"—it's foundational engineering.</p>
+      <p>By heavily compressing video assets, utilizing Edge caching, and deferring non-critical JavaScript, we brought the LCP down to 1.2 seconds. Google's algorithm rewarded this almost immediately.</p>
+      <p class="mt-4">Within 90 days, organic traffic increased by 145%, proving that SEO isn't just "marketing fluff"—in the modern web era, it's foundational engineering.</p>
     `
   },
   { 
