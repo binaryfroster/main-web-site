@@ -52,6 +52,10 @@
   --success: #1D9E75;
   --warning: #EF9F27;
   --error: #E24B4A;
+
+  /* Button-specific tokens */
+  --btn-primary-text: #B8AFFA;   /* violet-300 — readable on dark bg */
+  --btn-primary-border: #7F77DD; /* violet-500 */
 }
 
 [data-theme="light"] {
@@ -74,6 +78,10 @@
   --text-h: #0D1530;
   --text-body: #3A4A7A;
   --text-muted: #6E7FBB;
+
+  /* Button-specific tokens */
+  --btn-primary-text: #3C3489;   /* violet-800 — readable on light bg */
+  --btn-primary-border: #534AB7; /* violet-600 */
 }
 
 @layer base {

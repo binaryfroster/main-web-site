@@ -58,8 +58,8 @@ export default function LiquidButton({
       ? "opacity-50 cursor-not-allowed "
       : "cursor-pointer active:scale-[0.97] ") +
     (isPrimary
-      ? "btn-primary border-violet-500 text-violet-300 hover:border-violet-400 hover:shadow-[0_0_30px_rgba(127,119,221,0.5),0_0_8px_rgba(127,119,221,0.2)]"
-      : "btn-ghost border-[var(--glass-border)] text-[var(--text-body)] hover:text-[var(--text-h)]") +
+      ? "btn-primary border-violet-500 text-[var(--btn-primary-text)] hover:border-violet-400 hover:shadow-[0_0_30px_rgba(127,119,221,0.5),0_0_8px_rgba(127,119,221,0.2)]"
+      : "btn-ghost border-[var(--glass-border)] text-[var(--text-body)] hover:text-[var(--text-h)] hover:border-[var(--glass-border-h)]") +
     " " +
     className;
 
