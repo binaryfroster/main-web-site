@@ -54,11 +54,11 @@ function FloatInput({
 
 // ── Reusable styled select ─────────────────────────────────────────────────
 function StyledSelect({
-  id, label, value, onChange, error, children,
+  id, label, value, onChange, error, required, children,
 }: {
   id: string; label: string;
   value: string; onChange: (v: string) => void;
-  error?: string; children: React.ReactNode;
+  error?: string; required?: boolean; children: React.ReactNode;
 }) {
   return (
     <div className="flex flex-col gap-1.5">
@@ -69,6 +69,7 @@ function StyledSelect({
         <select
           id={id}
           value={value}
+          required={required}
           onChange={e => onChange(e.target.value)}
           className={
             "w-full h-12 bg-[var(--glass-bg)] border rounded-xl px-4 pr-10 " +
@@ -414,7 +415,7 @@ export default function ContactPage() {
                     {/* How heard */}
                     <StyledSelect
                       id="heard" label="How did you hear about us?"
-                      value={formData.heard} onChange={v => updateField("heard", v)}
+                      value={formData.heard || ""} onChange={v => updateField("heard", v)}
                     >
                       <option value="" className="bg-[var(--bg-surface)]">Select…</option>
                       <option value="google" className="bg-[var(--bg-surface)]">Google Search</option>
