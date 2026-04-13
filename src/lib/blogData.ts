@@ -19,6 +19,7 @@ export const posts: BlogPost[] = [
     excerpt: "How GPT-powered chatbots are replacing static FAQ pages and increasing customer engagement by 300%.", 
     tags: ["AI", "Business"],
     content: `
+      <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=1200&q=80" alt="Abstract glowing AI core" class="w-full h-[400px] object-cover rounded-2xl mb-8" />
       <p>The traditional homepage is dying. For the last twenty years, businesses have relied on static websites with complex navigation menus, hoping visitors find what they're looking for. But attention spans are shrinking, and consumer expectations are at an all-time high.</p>
       
       <h2 class="text-2xl font-bold text-[var(--text-h)] mt-8 mb-4">The Shift to Conversational Interfaces</h2>
@@ -116,6 +117,7 @@ export const posts: BlogPost[] = [
     excerpt: "A technical deep-dive into performance optimization for a Stripe-powered UK marketplace.", 
     tags: ["Performance", "E-commerce"],
     content: `
+      <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80" alt="E-commerce data and analytics graphs" class="w-full h-[400px] object-cover rounded-2xl mb-8" />
       <p>In e-commerce, milliseconds equal millions. Amazon famously reported that every 100ms of latency cost them 1% in sales. Recently, a UK-based boutique marketplace came to us with a beautiful but sluggish Magento site. Average page load: 5.2 seconds.</p>
 
       <h2 class="text-2xl font-bold text-[var(--text-h)] mt-8 mb-4">The Investigation</h2>
