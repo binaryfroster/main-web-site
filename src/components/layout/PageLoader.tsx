@@ -4,16 +4,22 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 
 export default function PageLoader() {
-  const [complete, setComplete] = useState(false);
+  // Start as `null` (unknown) to avoid flash-of-loader on already-visited pages
+  const [show, setShow] = useState<boolean | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const loaderRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Check if already loaded
+    // Determine before first paint — deferred to satisfy set-state-in-effect rule
     if (sessionStorage.getItem("bf-loaded")) {
-      setTimeout(() => setComplete(true), 0);
+      setTimeout(() => setShow(false), 0);
       return;
     }
+    setTimeout(() => setShow(true), 0);
+  }, []);
+
+  useEffect(() => {
+    if (show !== true) return; // only run when we know we need to show
 
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -32,7 +38,7 @@ export default function PageLoader() {
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = "#7F77DD";
       ctx.font = "14px 'JetBrains Mono', monospace";
-      
+
       drops.forEach((y, i) => {
         const char = chars[Math.floor(Math.random() * chars.length)];
         ctx.fillText(char, i * 18, y * 18);
@@ -42,7 +48,7 @@ export default function PageLoader() {
 
     const rainInterval = setInterval(drawRain, 50);
 
-    setTimeout(() => {
+    const exitTimer = setTimeout(() => {
       clearInterval(rainInterval);
       if (loaderRef.current) {
         gsap.to(loaderRef.current, {
@@ -52,16 +58,20 @@ export default function PageLoader() {
           ease: "power2.in",
           onComplete: () => {
             sessionStorage.setItem("bf-loaded", "1");
-            setComplete(true);
+            setShow(false);
           },
         });
       }
     }, 1800);
 
-    return () => clearInterval(rainInterval);
-  }, []);
+    return () => {
+      clearInterval(rainInterval);
+      clearTimeout(exitTimer);
+    };
+  }, [show]);
 
-  if (complete) return null;
+  // Pending check — render nothing during SSR or before useEffect runs
+  if (show === null || show === false) return null;
 
   return (
     <div
@@ -70,14 +80,12 @@ export default function PageLoader() {
     >
       <canvas ref={canvasRef} className="absolute inset-0 opacity-25" />
       <div className="relative flex flex-col items-center gap-4">
-        {/* Frost Crystal SVG */}
         <img
           src="/assets/logo.png"
           alt="Binary Froster"
           className="w-16 h-16 object-contain opacity-0 scale-90"
           style={{ animation: "logo-entrance 0.8s ease-out forwards 0.2s" }}
         />
-
         <span
           className="text-h3 opacity-0 translate-y-3"
           style={{ animation: "fade-up 0.5s ease forwards 0.9s" }}

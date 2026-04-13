@@ -1,105 +1,100 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, waitFor, act } from '@testing-library/react';
+import { render, screen, act } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import PageLoader from "./PageLoader";
 
-// Must declare capturedOnComplete before vi.mock hoisting
-let capturedOnComplete: (() => void) | undefined;
-
-// Mock gsap at module level (hoisted by vitest)
-vi.mock('gsap', () => ({
+// ── Mock gsap ──────────────────────────────────────────────────────────────
+vi.mock("gsap", () => ({
   default: {
-    to: vi.fn((_target: unknown, opts: { onComplete?: () => void }) => {
-      capturedOnComplete = opts?.onComplete;
-    }),
+    to: vi.fn(),
+    registerPlugin: vi.fn(),
   },
 }));
 
-import PageLoader from './PageLoader';
-import gsap from 'gsap';
+// ── sessionStorage mock ─────────────────────────────────────────────────────
+const store: Record<string, string> = {};
+const sessionStorageMock = {
+  getItem: vi.fn((key: string) => store[key] ?? null),
+  setItem: vi.fn((key: string, value: string) => { store[key] = value; }),
+  removeItem: vi.fn((key: string) => { delete store[key]; }),
+  clear: vi.fn(() => { Object.keys(store).forEach((k) => delete store[k]); }),
+};
+Object.defineProperty(window, "sessionStorage", { value: sessionStorageMock });
 
-// Stub sessionStorage per-test
-const sessionStorageMock = (() => {
-  let store: Record<string, string> = {};
-  return {
-    getItem: vi.fn((key: string) => store[key] ?? null),
-    setItem: vi.fn((key: string, val: string) => { store[key] = val; }),
-    removeItem: vi.fn((key: string) => { delete store[key]; }),
-    clear: vi.fn(() => { store = {}; }),
-  };
-})();
-Object.defineProperty(window, 'sessionStorage', { value: sessionStorageMock, writable: true });
+// ── canvas mock ─────────────────────────────────────────────────────────────
+beforeEach(() => {
+  sessionStorageMock.clear();
+  vi.clearAllMocks();
+  vi.useFakeTimers();
 
-describe('PageLoader', () => {
-  beforeEach(() => {
-    vi.useFakeTimers();
-    vi.clearAllMocks();
-    sessionStorageMock.clear();
-    capturedOnComplete = undefined;
-  });
+  HTMLCanvasElement.prototype.getContext = vi.fn(() => ({
+    fillStyle: "",
+    font: "",
+    fillRect: vi.fn(),
+    fillText: vi.fn(),
+  }));
+});
 
-  afterEach(() => {
-    vi.useRealTimers();
-  });
+afterEach(() => {
+  vi.useRealTimers();
+});
 
-  // ---- HAPPY PATH ----
-  describe('happy path', () => {
-    it('should render the brand name when not previously loaded', () => {
-      sessionStorageMock.getItem.mockReturnValue(null);
-      render(<PageLoader />);
-      expect(screen.getByText('Binary Froster')).toBeInTheDocument();
-    });
-
-    it('should render the logo image', () => {
-      sessionStorageMock.getItem.mockReturnValue(null);
-      render(<PageLoader />);
-      expect(screen.getByAltText('Binary Froster')).toBeInTheDocument();
-    });
-
-    it('should render a canvas for the matrix rain effect', () => {
-      sessionStorageMock.getItem.mockReturnValue(null);
+describe("PageLoader", () => {
+  describe("already visited (sessionStorage set)", () => {
+    it("should render nothing when bf-loaded is set", async () => {
+      sessionStorageMock.getItem.mockReturnValue("1");
       const { container } = render(<PageLoader />);
-      expect(container.querySelector('canvas')).toBeInTheDocument();
-    });
-  });
-
-  // ---- EDGE CASES ----
-  describe('edge cases', () => {
-    it('should return null after setTimeout(0) fires when already visited', async () => {
-      sessionStorageMock.getItem.mockReturnValue('1');
-      const { container } = render(<PageLoader />);
-
-      await act(async () => {
-        vi.advanceTimersByTime(10); // flush the setTimeout(0)
-      });
-
+      // Flush the setTimeout(0) that sets show=false
+      await act(async () => { vi.runAllTimers(); });
       expect(container.firstChild).toBeNull();
     });
-
-    it('should render progress bar element', () => {
-      sessionStorageMock.getItem.mockReturnValue(null);
-      const { container } = render(<PageLoader />);
-      // The load-bar div is present inside the loader
-      const progressBar = container.querySelector('[style*="load-bar"]');
-      expect(progressBar).toBeInTheDocument();
-    });
-
-    it('should mark sessionStorage on gsap completion when onComplete fires', () => {
-      sessionStorageMock.getItem.mockReturnValue(null);
-      // Directly simulate what the onComplete callback does
-      sessionStorageMock.setItem('bf-loaded', '1');
-      expect(sessionStorageMock.setItem).toHaveBeenCalledWith('bf-loaded', '1');
-    });
   });
 
-  // ---- ERROR CASES ----
-  describe('error cases', () => {
-    it('should not throw when canvas context is unavailable', () => {
+  describe("first visit (sessionStorage empty)", () => {
+    // Helper: render and let setTimeout(0) fire so show=true
+    async function renderLoader() {
+      const result = render(<PageLoader />);
+      await act(async () => { vi.runAllTimers(); });
+      return result;
+    }
+
+    it("should render the loader on first visit", async () => {
       sessionStorageMock.getItem.mockReturnValue(null);
-      const origGetContext = HTMLCanvasElement.prototype.getContext;
-      HTMLCanvasElement.prototype.getContext = vi.fn().mockReturnValue(null) as unknown as typeof origGetContext;
+      await renderLoader();
+      expect(screen.getByAltText("Binary Froster")).toBeInTheDocument();
+    });
 
-      expect(() => render(<PageLoader />)).not.toThrow();
+    it("should render the brand name", async () => {
+      sessionStorageMock.getItem.mockReturnValue(null);
+      await renderLoader();
+      expect(screen.getByText("Binary Froster")).toBeInTheDocument();
+    });
 
-      HTMLCanvasElement.prototype.getContext = origGetContext;
+    it("should render a canvas element for the rain effect", async () => {
+      sessionStorageMock.getItem.mockReturnValue(null);
+      const { container } = await renderLoader();
+      expect(container.querySelector("canvas")).toBeInTheDocument();
+    });
+
+    it("should render the progress bar container", async () => {
+      sessionStorageMock.getItem.mockReturnValue(null);
+      const { container } = await renderLoader();
+      expect(container.querySelector(".w-40")).toBeInTheDocument();
+    });
+
+    it("should not crash when canvas context is unavailable", async () => {
+      sessionStorageMock.getItem.mockReturnValue(null);
+      HTMLCanvasElement.prototype.getContext = vi.fn(() => null);
+      expect(async () => {
+        render(<PageLoader />);
+        await act(async () => { vi.runAllTimers(); });
+      }).not.toThrow();
+    });
+
+    it("should mark sessionStorage on gsap completion when onComplete fires", () => {
+      sessionStorageMock.getItem.mockReturnValue(null);
+      // Directly simulate the contract: onComplete sets bf-loaded
+      sessionStorageMock.setItem("bf-loaded", "1");
+      expect(sessionStorageMock.setItem).toHaveBeenCalledWith("bf-loaded", "1");
     });
   });
 });

@@ -12,12 +12,8 @@ export default function SmoothScrolling({ children }: { children: React.ReactNod
   const pathname = usePathname();
   const lenisRef = useRef<Lenis | null>(null);
 
+  // Initialize Lenis once
   useEffect(() => {
-    // ScrollTrigger should refresh when window is resized
-    ScrollTrigger.addEventListener("refreshInit", () => {
-      // Any logic needed before refresh
-    });
-
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -27,39 +23,49 @@ export default function SmoothScrolling({ children }: { children: React.ReactNod
 
     lenisRef.current = lenis;
 
-    function raf(time: number) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-    requestAnimationFrame(raf);
-
-    // Give some time for layouts to settle then refresh
-    setTimeout(() => {
-      ScrollTrigger.refresh();
-    }, 500);
+    // Wire Lenis into GSAP ticker so ScrollTrigger stays in sync
+    gsap.ticker.add((time) => {
+      lenis.raf(time * 1000);
+    });
+    gsap.ticker.lagSmoothing(0);
 
     return () => {
+      gsap.ticker.remove((time) => lenis.raf(time * 1000));
       lenis.destroy();
       lenisRef.current = null;
     };
   }, []);
 
-  // Handle route change: Reset scroll and refresh ScrollTrigger
+  // On every route change: scroll to top + refresh all observers
   useEffect(() => {
-    if (lenisRef.current) {
-      // 1. Reset scroll to top immediately
-      lenisRef.current.scrollTo(0, { immediate: true });
-      
-      // 2. Clear out any existing ScrollTriggers that might be leaking (stuck)
-      // Note: Components should kill their own triggers, but we refresh globally
-      
-      // 3. Re-calculate all trigger positions after DOM update
-      const timer = setTimeout(() => {
-        ScrollTrigger.refresh(true); // pass true to force re-render
-      }, 250); // Slightly longer delay to ensure Next.js transitions are done
-      
-      return () => clearTimeout(timer);
+    const lenis = lenisRef.current;
+
+    // 1. Jump scroll to top immediately (no animation — page already changed)
+    if (lenis) {
+      lenis.scrollTo(0, { immediate: true });
+    } else {
+      window.scrollTo(0, 0);
     }
+
+    // 2. Kill any ScrollTriggers left over from the previous page
+    ScrollTrigger.getAll().forEach((t) => t.kill());
+
+    // 3. After Next.js finishes painting the new page DOM, refresh everything
+    //    Two-pass refresh: first quick pass catches gross layout, second catches lazy images etc.
+    const t1 = setTimeout(() => {
+      // Force IntersectionObservers (ScrollReveal) to re-evaluate by simulating a resize
+      window.dispatchEvent(new Event("resize"));
+      ScrollTrigger.refresh(true);
+    }, 100);
+
+    const t2 = setTimeout(() => {
+      ScrollTrigger.refresh(true);
+    }, 400);
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
   }, [pathname]);
 
   return <>{children}</>;

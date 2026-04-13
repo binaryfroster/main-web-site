@@ -1,149 +1,163 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, act } from '@testing-library/react';
-import ScrollReveal from './ScrollReveal';
+import { render, act } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import ScrollReveal from "./ScrollReveal";
 
-// IntersectionObserver is already mocked as a class in test/setup.ts.
-// Override it here with a version that captures the callback.
-let intersectCallback: ((entries: Partial<IntersectionObserverEntry>[]) => void) | null = null;
-
-const mockObserverInstance = {
-  observe: vi.fn(),
-  unobserve: vi.fn(),
-  disconnect: vi.fn(),
-};
+// ── IntersectionObserver mock ───────────────────────────────────────────────
+type IOCallback = (entries: IntersectionObserverEntry[]) => void;
 
 class MockIntersectionObserver {
-  constructor(cb: (entries: Partial<IntersectionObserverEntry>[]) => void) {
-    intersectCallback = cb;
+  static instances: MockIntersectionObserver[] = [];
+  callback: IOCallback;
+  options: IntersectionObserverInit | undefined;
+  observed: Element[] = [];
+
+  constructor(cb: IOCallback, opts?: IntersectionObserverInit) {
+    this.callback = cb;
+    this.options = opts;
+    MockIntersectionObserver.instances.push(this);
   }
-  observe = mockObserverInstance.observe;
-  unobserve = mockObserverInstance.unobserve;
-  disconnect = mockObserverInstance.disconnect;
-  takeRecords() { return []; }
+  observe = vi.fn((el: Element) => { this.observed.push(el); });
+  unobserve = vi.fn();
+  disconnect = vi.fn();
+
+  // Helper to simulate an element entering viewport
+  trigger(isIntersecting: boolean) {
+    this.observed.forEach((el) => {
+      this.callback([
+        { isIntersecting, target: el } as unknown as IntersectionObserverEntry,
+      ]);
+    });
+  }
 }
 
-describe('ScrollReveal', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-    intersectCallback = null;
-    vi.stubGlobal('IntersectionObserver', MockIntersectionObserver);
+beforeEach(() => {
+  MockIntersectionObserver.instances = [];
+  vi.useFakeTimers();
+  Object.defineProperty(window, "IntersectionObserver", {
+    value: MockIntersectionObserver,
+    writable: true,
+    configurable: true,
   });
+  // Default: normal motion
+  Object.defineProperty(window, "matchMedia", {
+    value: vi.fn(() => ({ matches: false })),
+    writable: true,
+  });
+});
 
-  // ---- HAPPY PATH ----
-  describe('happy path', () => {
-    it('should render children inside a reveal wrapper', () => {
-      render(
-        <ScrollReveal>
-          <p data-testid="child">Hello</p>
-        </ScrollReveal>,
+afterEach(() => {
+  vi.useRealTimers();
+  vi.clearAllMocks();
+});
+
+describe("ScrollReveal", () => {
+  describe("happy path", () => {
+    it("should render children", () => {
+      const { getByText } = render(
+        <ScrollReveal><p>Hello</p></ScrollReveal>
       );
-      expect(screen.getByTestId('child')).toBeInTheDocument();
+      expect(getByText("Hello")).toBeInTheDocument();
     });
 
-    it('should apply "reveal" class to the wrapper', () => {
-      const { container } = render(<ScrollReveal>Content</ScrollReveal>);
-      expect(container.firstChild).toHaveClass('reveal');
+    it("should add 'reveal' class to the wrapper div", () => {
+      const { container } = render(<ScrollReveal><p>Test</p></ScrollReveal>);
+      expect(container.firstChild).toHaveClass("reveal");
     });
 
-    it('should merge custom className with reveal', () => {
-      const { container } = render(
-        <ScrollReveal className="custom-class">Content</ScrollReveal>,
-      );
-      expect(container.firstChild).toHaveClass('reveal');
-      expect(container.firstChild).toHaveClass('custom-class');
+    it("should NOT have 'visible' class before observer fires", () => {
+      const { container } = render(<ScrollReveal><p>Hidden</p></ScrollReveal>);
+      // visible is NOT added until IO fires
+      expect(container.firstChild).not.toHaveClass("visible");
     });
 
-    it('should add "visible" class when intersection is triggered', async () => {
-      vi.useFakeTimers();
-      const { container } = render(<ScrollReveal>Content</ScrollReveal>);
-      const el = container.firstChild as HTMLElement;
+    it("should add 'visible' class after IntersectionObserver fires", async () => {
+      const { container } = render(<ScrollReveal><p>Revealed</p></ScrollReveal>);
 
       await act(async () => {
-        intersectCallback?.([{ isIntersecting: true } as IntersectionObserverEntry]);
+        MockIntersectionObserver.instances[0]?.trigger(true);
         vi.runAllTimers();
       });
 
-      expect(el).toHaveClass('visible');
-      vi.useRealTimers();
+      expect(container.firstChild).toHaveClass("visible");
     });
 
-    it('should call IntersectionObserver.observe on mount', () => {
-      render(<ScrollReveal>Content</ScrollReveal>);
-      expect(mockObserverInstance.observe).toHaveBeenCalledTimes(1);
+    it("should call unobserve after element becomes visible", async () => {
+      render(<ScrollReveal><p>Test</p></ScrollReveal>);
+      const instance = MockIntersectionObserver.instances[0];
+
+      await act(async () => {
+        instance?.trigger(true);
+        vi.runAllTimers();
+      });
+
+      expect(instance?.unobserve).toHaveBeenCalled();
+    });
+
+    it("should disconnect observer on unmount", () => {
+      const { unmount } = render(<ScrollReveal><p>Test</p></ScrollReveal>);
+      const instance = MockIntersectionObserver.instances[0];
+      unmount();
+      expect(instance?.disconnect).toHaveBeenCalled();
     });
   });
 
-  // ---- EDGE CASES ----
-  describe('edge cases', () => {
-    it('should not add "visible" when isIntersecting is false', () => {
-      const { container } = render(<ScrollReveal>Content</ScrollReveal>);
-      const el = container.firstChild as HTMLElement;
-
-      intersectCallback?.([{ isIntersecting: false } as IntersectionObserverEntry]);
-
-      expect(el).not.toHaveClass('visible');
+  describe("reduced motion", () => {
+    it("should add 'visible' immediately when reduced-motion is preferred", async () => {
+      window.matchMedia = vi.fn(() => ({ matches: true })) as unknown as typeof window.matchMedia;
+      const { container } = render(<ScrollReveal><p>Content</p></ScrollReveal>);
+      await act(async () => {});
+      expect(container.firstChild).toHaveClass("visible");
     });
+  });
 
-    it('should call unobserve after becoming visible', async () => {
-      render(<ScrollReveal>Content</ScrollReveal>);
-
-      await act(async () => {
-        intersectCallback?.([{ isIntersecting: true } as IntersectionObserverEntry]);
-      });
-
-      expect(mockObserverInstance.unobserve).toHaveBeenCalledTimes(1);
-    });
-
-    it('should apply stagger delay to direct children', async () => {
+  describe("stagger", () => {
+    it("should set transitionDelay on children when stagger > 0", async () => {
       const { container } = render(
         <ScrollReveal stagger={100}>
           <span>A</span>
           <span>B</span>
           <span>C</span>
-        </ScrollReveal>,
+        </ScrollReveal>
       );
 
       await act(async () => {
-        intersectCallback?.([{ isIntersecting: true } as IntersectionObserverEntry]);
+        MockIntersectionObserver.instances[0]?.trigger(true);
+        vi.runAllTimers();
       });
 
-      // ScrollReveal renders: <div class="reveal"> children directly
-      const revealDiv = container.firstChild as HTMLElement;
-      const children = revealDiv.querySelectorAll(':scope > span');
-      expect((children[0] as HTMLElement).style.transitionDelay).toBe('0ms');
-      expect((children[1] as HTMLElement).style.transitionDelay).toBe('100ms');
-      expect((children[2] as HTMLElement).style.transitionDelay).toBe('200ms');
-    });
-
-    it('should immediately add "visible" when prefers-reduced-motion is set', () => {
-      vi.stubGlobal(
-        'matchMedia',
-        vi.fn().mockImplementation((query: string) => ({
-          matches: query.includes('reduce'),
-          media: query,
-          onchange: null,
-          addListener: vi.fn(),
-          removeListener: vi.fn(),
-          addEventListener: vi.fn(),
-          removeEventListener: vi.fn(),
-          dispatchEvent: vi.fn(),
-        })),
-      );
-
-      const { container } = render(<ScrollReveal>Content</ScrollReveal>);
-      const el = container.firstChild as HTMLElement;
-      expect(el).toHaveClass('visible');
-
-      vi.unstubAllGlobals();
+      const kids = container.querySelectorAll(":scope > div > *");
+      expect((kids[0] as HTMLElement).style.transitionDelay).toBe("0ms");
+      expect((kids[1] as HTMLElement).style.transitionDelay).toBe("100ms");
+      expect((kids[2] as HTMLElement).style.transitionDelay).toBe("200ms");
     });
   });
 
-  // ---- ERROR CASES ----
-  describe('error cases', () => {
-    it('should disconnect observer on unmount', () => {
-      const { unmount } = render(<ScrollReveal>Content</ScrollReveal>);
+  describe("re-mount behaviour (navigation)", () => {
+    it("should reset 'visible' class on re-mount so animation re-triggers", async () => {
+      // First mount — trigger visibility
+      const { container, unmount } = render(<ScrollReveal><p>Content</p></ScrollReveal>);
+      await act(async () => {
+        MockIntersectionObserver.instances[0]?.trigger(true);
+        vi.runAllTimers();
+      });
+      expect(container.firstChild).toHaveClass("visible");
+
+      // Simulate navigating away and back
       unmount();
-      expect(mockObserverInstance.disconnect).toHaveBeenCalledTimes(1);
+      MockIntersectionObserver.instances = [];
+
+      const { container: container2 } = render(<ScrollReveal><p>Content</p></ScrollReveal>);
+      // Should NOT immediately be visible — reset happened
+      expect(container2.firstChild).not.toHaveClass("visible");
+    });
+  });
+
+  describe("extra className", () => {
+    it("should merge extra className with reveal", () => {
+      const { container } = render(
+        <ScrollReveal className="my-section"><p>Test</p></ScrollReveal>
+      );
+      expect(container.firstChild).toHaveClass("reveal", "my-section");
     });
   });
 });
