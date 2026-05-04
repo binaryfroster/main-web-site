@@ -22,8 +22,6 @@ export default function ParticleCanvas() {
     resize();
     window.addEventListener("resize", resize);
 
-    const isDark = () => document.documentElement.getAttribute("data-theme") !== "light";
-
     interface Particle {
       x: number;
       y: number;
@@ -43,9 +41,11 @@ export default function ParticleCanvas() {
 
     const draw = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const dark = isDark();
-      const nodeColor = dark ? "rgba(127,119,221,0.5)" : "rgba(83,74,183,0.2)";
-      const lineColor = dark ? "rgba(127,119,221,0.12)" : "rgba(83,74,183,0.08)";
+      
+      // Reactive theme check within loop
+      const isLight = document.documentElement.getAttribute("data-theme") === "light";
+      const nodeColor = isLight ? "rgba(83,74,183,0.2)" : "rgba(127,119,221,0.5)";
+      const lineColor = isLight ? "rgba(83,74,183,1.08)" : "rgba(127,119,221,0.12)";
 
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];

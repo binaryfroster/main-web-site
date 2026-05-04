@@ -56,32 +56,56 @@
   /* Button-specific tokens */
   --btn-primary-text: #B8AFFA;   /* violet-300 — readable on dark bg */
   --btn-primary-border: #7F77DD; /* violet-500 */
+  
+  /* Badge/category semantic tokens */
+  --badge-cat-bg: rgba(127, 119, 221, 0.12);
+  --badge-cat-text: #B8AFFA;     /* violet-300 on dark */
+  --badge-cat-border: rgba(127, 119, 221, 0.25);
 }
 
-[data-theme="light"] {
-  --bg-void: #E2E4E9;
-  --bg-base: #EBEDF2;
-  --bg-surface: #F4F5F8;
-  --bg-elevated: #E2E4E9;
-  --bg-overlay: rgba(13, 21, 48, 0.5);
+[data-theme="light"], .light-theme {
+  /* Deeper, more perceptible smooth gray base */
+  --bg-void: #D1D5DB;
+  --bg-base: #E5E7EB;
+  --bg-surface: #FFFFFF;
+  --bg-elevated: #D1D5DB;
+  --bg-overlay: rgba(13, 21, 48, 0.45);
 
-  --glass-bg: rgba(255, 255, 255, 0.55);
-  --glass-bg-hover: rgba(255, 255, 255, 0.75);
-  --glass-border: rgba(83, 74, 183, 0.14);
-  --glass-border-h: rgba(83, 74, 183, 0.30);
-  --glass-blur: blur(24px) saturate(160%);
+  /* Clean white glass with subtle violet tint */
+  --glass-bg: rgba(255, 255, 255, 0.75);
+  --glass-bg-hover: rgba(255, 255, 255, 0.95);
+  --glass-border: rgba(99, 91, 196, 0.25);
+  --glass-border-h: rgba(83, 74, 183, 0.45);
+  --glass-inner: rgba(255, 255, 255, 0.8);
+  --glass-blur: blur(24px) saturate(180%);
 
-  --violet-500: #534AB7;
-  --violet-600: #3C3489;
-  --cyan-500: #007A7A;
+  /* Deeper brand colors for light mode */
+  --violet-100: #EEEDFE;
+  --violet-300: #4B42A8;
+  --violet-500: #3C3489;
+  --violet-600: #2D2772;
+  --violet-800: #1E1B56;
+  --violet-900: #0F0D33;
 
-  --text-h: #0D1530;
-  --text-body: #3A4A7A;
-  --text-muted: #6E7FBB;
+  --cyan-200: #CCF5F5;
+  --cyan-400: #007A8C;
+  --cyan-500: #006B7A;
+  --cyan-600: #005564;
 
-  /* Button-specific tokens */
-  --btn-primary-text: #3C3489;   /* violet-800 — readable on light bg */
-  --btn-primary-border: #534AB7; /* violet-600 */
+  /* High-contrast readable text */
+  --text-h: #0A0E24;
+  --text-body: #1E2545;
+  --text-muted: #4A5380;
+  --text-hint: #8892BB;
+
+  /* Button tokens */
+  --btn-primary-text: #FFFFFF;
+  --btn-primary-border: #3C3489;
+
+  /* Badge tokens */
+  --badge-cat-bg: rgba(60, 52, 137, 0.10);
+  --badge-cat-text: #2D2772;
+  --badge-cat-border: rgba(60, 52, 137, 0.22);
 }
 
 @layer base {
@@ -124,6 +148,13 @@
       0 1px 0 rgba(255, 255, 255, 0.10) inset,
       0 -1px 0 rgba(0, 0, 0, 0.15) inset;
     position: relative;
+    /* overflow left as visible so absolutely-positioned children (badges, tooltips)
+       are not clipped. Use .glass-clip where overflow:hidden is intentional. */
+    overflow: visible;
+  }
+
+  /* Use on image cards, portfolio items, etc. where clipping is intentional */
+  .glass-clip {
     overflow: hidden;
   }
   
@@ -140,17 +171,29 @@
     transition: opacity 0.3s ease;
     opacity: 0;
     border-radius: inherit;
+    /* Keep the pseudo-element clipped to the card shape */
+    overflow: hidden;
   }
 
   .glass:hover::before {
     opacity: 1;
   }
 
-  /* Light mode glass shadows */
+  /* Light mode glass shadows — white card with strong violet depth */
   [data-theme="light"] .glass {
     box-shadow:
-      0 4px 24px rgba(83, 74, 183, 0.08),
-      0 1px 0 rgba(255, 255, 255, 0.6) inset;
+      0 4px 32px rgba(60, 52, 137, 0.15),
+      0 1px 0 rgba(255, 255, 255, 0.9) inset,
+      0 -1px 0 rgba(99, 91, 196, 0.1) inset;
+  }
+  
+  /* Make the mouse hover glow visible in light mode */
+  [data-theme="light"] .glass::before {
+    background: radial-gradient(
+      circle 200px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+      rgba(99, 91, 196, 0.15),
+      transparent 70%
+    );
   }
 
   /* Nav Glass */
@@ -161,9 +204,9 @@
   }
   
   [data-theme="light"] .glass-nav {
-    background: rgba(248, 249, 255, 0.88);
-    border-bottom: 1px solid rgba(83, 74, 183, 0.12);
-    box-shadow: 0 4px 24px rgba(83, 74, 183, 0.06);
+    background: rgba(247, 248, 252, 0.92);
+    border-bottom: 1px solid rgba(99, 91, 196, 0.14);
+    box-shadow: 0 4px 32px rgba(60, 52, 137, 0.08);
   }
 
   /* Text Styles */
@@ -210,31 +253,70 @@
     background-clip: text;
   }
 
-  [data-theme="light"] .text-gradient {
-    background: linear-gradient(90deg, var(--violet-600), var(--cyan-600));
+  .text-gradient-welcome {
+    background: linear-gradient(90deg, #7F77DD, #00BFBF);
     -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
+  [data-theme="light"] .text-gradient {
+    background: linear-gradient(90deg, var(--violet-600), var(--cyan-600));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .btn-liquid:hover > span:first-child {
+    transform: scaleY(2.2);
+    clip-path: ellipse(80% 80% at 50% 100%) !important;
+  }
+
+  /* ── Premium Eyebrow / Section Label ─────────────────────────────────── */
   .eyebrow {
-    display: inline-block;
-    font-family: var(--font-body);
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.14em;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--cyan-400);
-    margin-bottom: 12px;
-    padding: 4px 14px;
-    border: 1px solid rgba(0, 191, 191, 0.25);
-    border-radius: 9999px;
-    background: rgba(0, 191, 191, 0.07);
+    margin-bottom: 16px;
+    padding: 0 0 0 12px;
+    position: relative;
+    /* Vertical gradient accent bar on left */
+    border-left: 2px solid transparent;
+    background-image: linear-gradient(var(--bg-base), var(--bg-base)),
+      linear-gradient(180deg, var(--cyan-400), var(--violet-500));
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    /* Soft glow on the text */
+    filter: drop-shadow(0 0 8px rgba(0, 191, 191, 0.35));
+  }
+
+  /* Decorative dot before the text */
+  .eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--cyan-400), var(--violet-500));
+    flex-shrink: 0;
+    box-shadow: 0 0 6px rgba(0, 191, 191, 0.7);
   }
 
   [data-theme="light"] .eyebrow {
     color: var(--cyan-600);
-    border-color: rgba(0, 122, 122, 0.25);
-    background: rgba(0, 122, 122, 0.07);
+    filter: drop-shadow(0 0 6px rgba(0, 107, 122, 0.25));
+  }
+
+  [data-theme="light"] .eyebrow::before {
+    background: linear-gradient(135deg, var(--cyan-600), var(--violet-600));
+    box-shadow: 0 0 4px rgba(0, 107, 122, 0.4);
   }
 
   /* Scroll reveal base */
@@ -278,6 +360,70 @@
   }
   [data-theme="light"] .blog-content a:hover {
     color: var(--cyan-500);
+  }
+
+  /* Hide scrollbar while keeping scroll functionality */
+  .scrollbar-none {
+    scrollbar-width: none;        /* Firefox */
+    -ms-overflow-style: none;     /* IE/Edge */
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;                /* Chrome/Safari */
+  }
+
+  /* Required by TiltCard for proper 3D perspective */
+  .transform-style-3d {
+    transform-style: preserve-3d;
+  }
+
+  /* Ensure rounded corners visually clip content even with overflow:visible */
+  .glass {
+    /* Soft visual boundary using box-shadow instead of overflow:hidden */
+    clip-path: none;
+  }
+  /* Cards WITH images need hard clip — add glass-clip class */
+  .glass.glass-clip {
+    overflow: hidden;
+  }
+
+  /* 2-col mobile stats — prevent number overflow */
+  .stat-number {
+    display: inline-block;
+    max-width: 100%;
+  }
+
+  /* ── Hero Theme-Aware Positioning ─────────────────────────────── */
+  .hero-text-box { left: 0; }
+  .hero-img-box { left: 55%; }
+  .hero-img-dark { opacity: 1; }
+  .hero-img-light { opacity: 0; }
+
+  [data-theme="light"] .hero-text-box,
+  .light-theme .hero-text-box { left: 50%; }
+
+  [data-theme="light"] .hero-img-box,
+  .light-theme .hero-img-box { left: 0; }
+
+  [data-theme="light"] .hero-img-dark,
+  .light-theme .hero-img-dark { opacity: 0; }
+
+  [data-theme="light"] .hero-img-light,
+  .light-theme .hero-img-light { opacity: 1; }
+}
+
+@media (max-width: 1024px) {
+  .hero-text-box {
+    left: 0 !important;
+    top: 0;
+    position: relative !important;
+    width: 100% !important;
+    margin-bottom: 3rem;
+  }
+  .hero-img-box {
+    left: 0 !important;
+    top: 0;
+    position: relative !important;
+    width: 100% !important;
   }
 }
 
@@ -353,6 +499,51 @@
 @keyframes fade-in {
   from { opacity: 0; transform: scale(0.5); }
   to { opacity: 1; transform: scale(1); }
+}
+
+/* ──────────────────────────────────────────────────────────────────
+   PREMIUM UI LIBRARY ANIMATIONS (Magic UI · Aceternity · Cult)
+   ────────────────────────────────────────────────────────────────── */
+
+/* Magic UI — Marquee (horizontal) */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(calc(-100% - var(--gap))); }
+}
+
+/* Magic UI — Marquee (vertical) */
+@keyframes marquee-vertical {
+  from { transform: translateY(0); }
+  to   { transform: translateY(calc(-100% - var(--gap))); }
+}
+
+/* Magic UI — Meteors */
+@keyframes meteor {
+  0%   { transform: rotate(215deg) translateX(0); opacity: 1; }
+  70%  { opacity: 1; }
+  100% { transform: rotate(215deg) translateX(-500px); opacity: 0; }
+}
+
+/* Aceternity — Spotlight sweep */
+@keyframes spotlight {
+  0%   { opacity: 0; transform: translate(-72%, -62%) scale(0.5); }
+  100% { opacity: 1; transform: translate(-50%, -40%) scale(1); }
+}
+
+.animate-spotlight {
+  animation: spotlight 2s ease forwards;
+}
+
+.animate-marquee {
+  animation: marquee var(--duration) linear infinite;
+}
+
+.animate-marquee-vertical {
+  animation: marquee-vertical var(--duration) linear infinite;
+}
+
+.animate-meteor {
+  animation: meteor linear infinite;
 }
 
 /* Reduced motion — accessibility */

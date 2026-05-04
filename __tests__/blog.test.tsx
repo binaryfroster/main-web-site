@@ -17,7 +17,7 @@ vi.mock('gsap/ScrollTrigger', () => ({
   ScrollTrigger: { getAll: vi.fn(() => []) },
 }));
 vi.mock('next/link', () => ({
-  default: ({ children, href }: any) => <a href={href}>{children}</a>,
+  default: ({ children, href }: { children: React.ReactNode; href: string }) => <a href={href}>{children}</a>,
 }));
 
 describe('BlogPage UI', () => {
@@ -30,8 +30,9 @@ describe('BlogPage UI', () => {
       expect(screen.getByText('Insights &')).toBeInTheDocument();
       expect(screen.getByText('Tutorials')).toBeInTheDocument();
 
-      // Verify that all blog cards from the data file are rendered
-      posts.forEach(post => {
+      // Verify that first page of blog cards (10 per page) are rendered
+      const firstPagePosts = posts.slice(0, 10);
+      firstPagePosts.forEach(post => {
         expect(screen.getByText(post.title)).toBeInTheDocument();
         expect(screen.getByText(post.excerpt)).toBeInTheDocument();
       });

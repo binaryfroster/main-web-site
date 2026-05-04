@@ -26,9 +26,7 @@ export default function GlassCard({ children, className = "", ...props }: GlassC
       onMouseMove={handleMouseMove}
       {...props}
     >
-      <div className="relative z-10 w-full h-full">
-        {children}
-      </div>
+      {children}
     </div>
   );
 }

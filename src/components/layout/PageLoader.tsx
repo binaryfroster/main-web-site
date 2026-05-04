@@ -1,115 +1,102 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import Image from "next/image";
+import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 
 export default function PageLoader() {
-  // Start as `null` (unknown) to avoid flash-of-loader on already-visited pages
-  const [show, setShow] = useState<boolean | null>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const loaderRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
+  const [show, setShow] = useState(false);
+  const [assetsLoaded, setAssetsLoaded] = useState(0);
 
+  const loaderRef = useRef<HTMLDivElement>(null);
+  const welcomeRef = useRef<HTMLDivElement>(null);
+  const logoRef = useRef<HTMLDivElement>(null);
+
+  // 1. Initial mount check
   useEffect(() => {
-    // Determine before first paint — deferred to satisfy set-state-in-effect rule
-    if (sessionStorage.getItem("bf-loaded")) {
-      setTimeout(() => setShow(false), 0);
-      return;
-    }
-    setTimeout(() => setShow(true), 0);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
   }, []);
 
+  // 2. Determine if we should show the loader
   useEffect(() => {
-    if (show !== true) return; // only run when we know we need to show
+    if (mounted && !sessionStorage.getItem("bf-loaded")) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setShow(true);
+      
+      // Fallback: If image takes too long or onLoad fails, force start animation after 1 second
+      const timer = setTimeout(() => {
+        setAssetsLoaded(1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [mounted]);
 
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+  // 3. GSAP Sequence (Calibrated for ~5 seconds)
+  useGSAP(() => {
+    if (!show || assetsLoaded < 1 || !loaderRef.current) return;
 
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    const cols = Math.floor(canvas.width / 18);
-    const drops = Array(cols).fill(1);
-    const chars = "01";
-
-    const drawRain = () => {
-      ctx.fillStyle = "rgba(6,10,26,0.06)";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = "#7F77DD";
-      ctx.font = "14px 'JetBrains Mono', monospace";
-
-      drops.forEach((y, i) => {
-        const char = chars[Math.floor(Math.random() * chars.length)];
-        ctx.fillText(char, i * 18, y * 18);
-        drops[i] = y * 18 > canvas.height && Math.random() > 0.975 ? 0 : y + 1;
-      });
-    };
-
-    const rainInterval = setInterval(drawRain, 50);
-
-    const exitTimer = setTimeout(() => {
-      clearInterval(rainInterval);
-      if (loaderRef.current) {
+    const tl = gsap.timeline({
+      onComplete: () => {
+        sessionStorage.setItem("bf-loaded", "1");
         gsap.to(loaderRef.current, {
           opacity: 0,
-          filter: "blur(12px)",
           duration: 0.5,
-          ease: "power2.in",
-          onComplete: () => {
-            sessionStorage.setItem("bf-loaded", "1");
-            setShow(false);
-          },
+          pointerEvents: "none",
+          onComplete: () => setShow(false)
         });
       }
-    }, 1800);
+    });
 
-    return () => {
-      clearInterval(rainInterval);
-      clearTimeout(exitTimer);
-    };
-  }, [show]);
+    // Initial states
+    gsap.set(welcomeRef.current, { opacity: 0, y: 15 });
+    gsap.set(logoRef.current, { opacity: 0, scale: 0.8 });
 
-  // Pending check — render nothing during SSR or before useEffect runs
-  if (show === null || show === false) return null;
+    // Sequence breakdown:
+    tl.to(welcomeRef.current, { opacity: 1, y: 0, duration: 1.2, ease: "power2.out" })
+      .to(welcomeRef.current, { opacity: 0, y: -10, duration: 0.6, ease: "power2.in" }, "+=1.0")
+      .to(logoRef.current, { opacity: 1, scale: 1, duration: 1.0, ease: "back.out(1.7)" })
+      .to(logoRef.current, { opacity: 0, scale: 1.2, duration: 0.8, ease: "power2.in" }, "+=1.0");
+
+  }, { dependencies: [show, assetsLoaded], scope: loaderRef });
+
+  if (!mounted || !show) return null;
 
   return (
     <div
       ref={loaderRef}
-      className="fixed inset-0 z-[9999] bg-[#060A1A] flex flex-col items-center justify-center gap-6"
+      className="fixed inset-0 z-[9999] bg-[#000] flex items-center justify-center overflow-hidden"
     >
-      <canvas ref={canvasRef} className="absolute inset-0 opacity-25" />
-      <div className="relative flex flex-col items-center gap-4">
-        <img
-          src="/assets/logo.png"
-          alt="Binary Froster"
-          className="w-16 h-16 object-contain opacity-0 scale-90"
-          style={{ animation: "logo-entrance 0.8s ease-out forwards 0.2s" }}
-        />
-        <span
-          className="text-h3 opacity-0 translate-y-3"
-          style={{ animation: "fade-up 0.5s ease forwards 0.9s" }}
-        >
-          Binary Froster
+      {/* 1. Welcome Message */}
+      <div 
+        ref={welcomeRef}
+        className="absolute inset-0 z-30 flex flex-col items-center justify-center pointer-events-none opacity-0"
+      >
+        <span className="font-display font-bold text-5xl md:text-7xl tracking-tighter text-gradient-welcome text-center px-4">
+          BINARY FROSTER
         </span>
       </div>
-      <div className="w-40 h-0.5 bg-white/10 rounded-full overflow-hidden z-10">
-        <div
-          className="h-full w-0 rounded-full"
-          style={{
-            background: "linear-gradient(90deg, #7F77DD, #00BFBF)",
-            animation: "load-bar 1.4s cubic-bezier(0.25,0.46,0.45,0.94) forwards 0.3s",
-          }}
+
+      {/* 2. Brand Logo Centerstage */}
+      <div ref={logoRef} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-32 h-32 md:w-48 md:h-48 opacity-0 flex items-center justify-center">
+        <Image
+          src="/assets/logo.png"
+          alt="Binary Froster"
+          fill
+          priority
+          sizes="(max-width: 768px) 128px, 192px"
+          onLoad={() => setAssetsLoaded(prev => prev + 1)}
+          className="object-contain"
+          draggable={false}
         />
       </div>
-      <style dangerouslySetInnerHTML={{ __html: `
-        @keyframes logo-entrance { 
-          from { opacity: 0; transform: scale(0.85) translateY(10px); }
-          to { opacity: 1; transform: scale(1) translateY(0); }
-        }
-        @keyframes fade-up { to { opacity: 1; transform: translateY(0); } }
-        @keyframes load-bar { to { width: 100%; } }
-      `}} />
+
+
+
+      {/* Background radial glow */}
+      <div className="absolute inset-0 z-0 bg-radial-gradient from-violet-900/20 to-transparent opacity-50" />
     </div>
   );
 }

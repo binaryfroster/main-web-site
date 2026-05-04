@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import LiquidButton from "@/components/ui/LiquidButton";
@@ -9,11 +10,11 @@ import GlassCard from "@/components/ui/GlassCard";
 gsap.registerPlugin(ScrollTrigger);
 
 const features = [
-  { n: "01", title: "Hyper-Personalized Meal Plans", desc: "AI analyzes your age, weight, goals, allergies, and dietary preferences to create meal plans unique to you — not recycled templates.", icon: "🎯", align: "left" },
-  { n: "02", title: "Real-Time Macro Tracking", desc: "Log your meals with a tap. The AI monitors your calorie, protein, carb, and fat intake and adjusts future meals to keep you on track.", icon: "📊", align: "right" },
-  { n: "03", title: "Allergy & Preference Aware", desc: "Vegan, keto, halal, gluten-free, nut-free — the engine respects your restrictions and finds delicious alternatives automatically.", icon: "🛡️", align: "left" },
-  { n: "04", title: "Conversational AI Interface", desc: "Just type 'I had a huge burger for lunch' and the AI recalibrates the rest of your day. Natural language, zero friction.", icon: "💬", align: "right" },
-  { n: "05", title: "Weekly Shopping Lists", desc: "Auto-generated shopping lists based on your meal plan, optimized by local grocery availability and budget preferences.", icon: "🛒", align: "left" },
+  { n: "01", title: "Hyper-Personalized Meal Plans", desc: "AI analyzes your age, weight, goals, allergies, and dietary preferences to create meal plans unique to you — not recycled templates.", icon: "/images/icons/icon_discover.png", align: "left" },
+  { n: "02", title: "Real-Time Macro Tracking", desc: "Log your meals with a tap. The AI monitors your calorie, protein, carb, and fat intake and adjusts future meals to keep you on track.", icon: "/images/icons/icon_scalable.png", align: "right" },
+  { n: "03", title: "Allergy & Preference Aware", desc: "Vegan, keto, halal, gluten-free, nut-free — the engine respects your restrictions and finds delicious alternatives automatically.", icon: "/images/icons/icon_security.png", align: "left" },
+  { n: "04", title: "Conversational AI Interface", desc: "Just type 'I had a huge burger for lunch' and the AI recalibrates the rest of your day. Natural language, zero friction.", icon: "/images/icons/icon_communication.png", align: "right" },
+  { n: "05", title: "Weekly Shopping Lists", desc: "Auto-generated shopping lists based on your meal plan, optimized by local grocery availability and budget preferences.", icon: "/images/icons/icon_pricing.png", align: "left" },
 ];
 
 const testimonials = [
@@ -84,7 +85,7 @@ export default function DietPlannerPage() {
   };
 
   return (
-    <div className="bg-[var(--bg-void)] text-white overflow-hidden">
+    <div className="bg-[var(--bg-void)] text-[var(--text-h)] overflow-hidden">
       
       {/* ═══════ HERO ═══════ */}
       <section className="min-h-[95vh] flex items-center relative overflow-hidden">
@@ -140,14 +141,21 @@ export default function DietPlannerPage() {
                   <div className="w-2 h-2 rounded-full bg-white/10" />
                   <div className="w-12 h-2 rounded-full bg-white/10" />
                 </div>
-                <img src="/assets/diet_planner_mockup.png" alt="AI Diet Planner App" className="w-full h-full object-cover relative z-10" />
+                <div className="relative w-full h-full z-10">
+                  <Image 
+                    src="/assets/diet_planner_mockup.png" 
+                    alt="AI Diet Planner App" 
+                    fill 
+                    className="object-cover" 
+                  />
+                </div>
               </div>
-              {/* Orbiting emojis */}
-              <div className="absolute -left-12 top-[15%] text-4xl animate-[float_5s_ease-in-out_infinite]">🥑</div>
-              <div className="absolute -right-10 top-[25%] text-4xl animate-[float_6s_ease-in-out_infinite_reverse]">🥩</div>
-              <div className="absolute -left-10 bottom-[30%] text-3xl animate-[float_7s_ease-in-out_infinite]">🍎</div>
-              <div className="absolute -right-14 bottom-[20%] text-3xl animate-[float_5s_ease-in-out_infinite_reverse]">💪</div>
-              <div className="absolute left-1/2 -bottom-8 text-3xl animate-[float_8s_ease-in-out_infinite]">🔥</div>
+              {/* Orbiting icons */}
+              <div className="absolute -left-12 top-[15%] animate-[float_5s_ease-in-out_infinite]"><Image src="/images/icons/icon_test.png" alt="Icon" width={36} height={36} /></div>
+              <div className="absolute -right-10 top-[25%] animate-[float_6s_ease-in-out_infinite_reverse]"><Image src="/images/icons/icon_timer.png" alt="Icon" width={36} height={36} /></div>
+              <div className="absolute -left-10 bottom-[30%] animate-[float_7s_ease-in-out_infinite]"><Image src="/images/icons/icon_ai.png" alt="Icon" width={30} height={30} /></div>
+              <div className="absolute -right-14 bottom-[20%] animate-[float_5s_ease-in-out_infinite_reverse]"><Image src="/images/icons/icon_launch.png" alt="Icon" width={30} height={30} /></div>
+              <div className="absolute left-1/2 -bottom-8 animate-[float_8s_ease-in-out_infinite]"><Image src="/images/icons/icon_build.png" alt="Icon" width={30} height={30} /></div>
             </div>
           </div>
         </div>
@@ -161,17 +169,20 @@ export default function DietPlannerPage() {
           <p className="text-[var(--text-muted)] mt-4 max-w-xl mx-auto">Five pillars of intelligence that make our diet planner genuinely different.</p>
         </div>
 
-        <div className="flex flex-col gap-24">
+        <div className="flex flex-col gap-0 snap-y snap-mandatory overflow-y-auto h-[80vh] scrollbar-hide rounded-[40px] border border-[var(--glass-border)] bg-white/[0.02] shadow-inner">
           {features.map((feat, i) => (
-            <div key={i} className={"feature-section grid grid-cols-1 md:grid-cols-2 gap-16 items-center " + (feat.align === "right" ? "md:flex-row-reverse" : "")}>
+            <div key={i} className={"feature-section min-h-[80vh] snap-center grid grid-cols-1 md:grid-cols-2 gap-16 items-center p-12 lg:p-24 " + (feat.align === "right" ? "md:flex-row-reverse bg-gradient-to-br from-transparent to-violet-500/5" : "bg-gradient-to-bl from-transparent to-cyan-500/5")}>
               <div className={feat.align === "right" ? "md:order-2" : ""}>
                 <div className="text-cyan-400 font-mono text-sm mb-4 tracking-widest uppercase">Feature {feat.n}</div>
                 <h3 className="text-h3 mb-4">{feat.title}</h3>
                 <p className="text-[var(--text-muted)] text-lg leading-relaxed">{feat.desc}</p>
               </div>
               <div className={feat.align === "right" ? "md:order-1" : ""}>
-                <GlassCard className="p-12 flex items-center justify-center aspect-square">
-                  <span className="text-7xl">{feat.icon}</span>
+                <GlassCard className="p-12 flex items-center justify-center aspect-square shadow-2xl relative overflow-hidden group">
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="relative w-24 h-24 transition-transform duration-700 group-hover:scale-110">
+                    <Image src={feat.icon} alt={feat.title} fill className="object-contain" />
+                  </div>
                 </GlassCard>
               </div>
             </div>

@@ -73,7 +73,7 @@ export default function TiltCard({ children, className = "", glare = true }: Til
     >
       {glare && (
         <div
-          className="pointer-events-none absolute inset-0 z-10 rounded-inherit transition-opacity duration-300 pointer-events-none"
+          className="pointer-events-none absolute inset-0 z-10 rounded-inherit transition-opacity duration-300"
           style={glareStyle}
         />
       )}

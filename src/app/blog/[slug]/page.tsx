@@ -63,7 +63,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           </header>
 
           <div className="animate-[slide-up_0.6s_ease-out_0.1s_both]">
-            <GlassCard className="p-8 md:p-12 blog-content">
+            <GlassCard className="p-8 md:p-12 blog-content !backdrop-blur-md !bg-white/[0.02]">
               <div dangerouslySetInnerHTML={{ __html: post.content }} />
             </GlassCard>
           </div>

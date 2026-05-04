@@ -1,12 +1,21 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import gsap from "gsap";
 import GlassCard from "@/components/ui/GlassCard";
 import LiquidButton from "@/components/ui/LiquidButton";
 import TiltCard from "@/components/ui/TiltCard";
-
 import { validateContactForm, type ContactFormData, type FormErrors } from "@/utils/validation";
+import LiveChat from "@/components/chat/LiveChat";
+import {
+  Spotlight,
+  InView,
+  AnimatedGroup,
+  AnimatedTooltip,
+  AnimatedProgress,
+  ShimmerButton,
+  Magnetic,
+  TextEffect,
+} from "@/components/ui/premium";
 
 // ── Reusable floating-label input ──────────────────────────────────────────
 function FloatInput({
@@ -47,7 +56,7 @@ function FloatInput({
       >
         {label}
       </label>
-      {error && <p className="text-red-400 text-xs mt-1.5 ml-1">{error}</p>}
+      {error && <p className="text-red-400 text-xs mt-1.5 ml-1" role="alert" aria-live="polite">{error}</p>}
     </div>
   );
 }
@@ -89,7 +98,7 @@ function StyledSelect({
           </svg>
         </span>
       </div>
-      {error && <p className="text-red-400 text-xs mt-1 ml-1">{error}</p>}
+      {error && <p className="text-red-400 text-xs mt-1 ml-1" role="alert" aria-live="polite">{error}</p>}
     </div>
   );
 }
@@ -113,7 +122,6 @@ function InfoCard({ icon, title, children }: { icon: string; title: string; chil
 
 export default function ContactPage() {
   const [budget, setBudget] = useState(5000);
-  const [chatOpen, setChatOpen] = useState(false);
   const [bookModalOpen, setBookModalOpen] = useState(false);
   const [bookForm, setBookForm] = useState({ name: "", email: "", product: "" });
   const [submitted, setSubmitted] = useState(false);
@@ -122,10 +130,6 @@ export default function ContactPage() {
   const [formData, setFormData] = useState<ContactFormData>({
     name: "", email: "", company: "", service: "", desc: "", heard: "",
   });
-  const [chatMessages, setChatMessages] = useState([
-    { from: "bot", text: "Hi! 👋 How can we help you today?", time: "just now" }
-  ]);
-  const [chatInput, setChatInput] = useState("");
   const formRef = useRef<HTMLFormElement>(null);
 
   const budgetPct = ((budget - 500) / (50000 - 500)) * 100;
@@ -138,20 +142,15 @@ export default function ContactPage() {
     return `£${low.toLocaleString()} – £${high.toLocaleString()}`;
   };
 
+
   useEffect(() => {
-    const anim = gsap.from(".contact-elem", {
-      y: 40, opacity: 0, stagger: 0.08, duration: 0.7, ease: "power3.out", delay: 0.1,
-    });
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        setChatOpen(false);
         setBookModalOpen(false);
       }
     };
     document.addEventListener("keydown", handleEscape);
     return () => {
-      anim.kill();
-      gsap.set(".contact-elem", { clearProps: "all" });
       document.removeEventListener("keydown", handleEscape);
     };
   }, []);
@@ -180,19 +179,6 @@ export default function ContactPage() {
     setSubmitted(true);
   };
 
-  const handleChatSend = () => {
-    if (!chatInput.trim()) return;
-    setChatMessages(prev => [...prev, { from: "user", text: chatInput, time: "now" }]);
-    setChatInput("");
-    setTimeout(() => {
-      setChatMessages(prev => [...prev, {
-        from: "bot",
-        text: "Thanks for reaching out! One of our team members will get back to you shortly. In the meantime, feel free to fill out the project inquiry form for a detailed estimate.",
-        time: "just now"
-      }]);
-    }, 1500);
-  };
-
   const updateField = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     if (errors[field as keyof FormErrors]) {
@@ -210,10 +196,15 @@ export default function ContactPage() {
         <div className="absolute top-[30%] left-[60%] w-[500px] h-[500px] bg-violet-600/5 rounded-full blur-[120px]" />
       </div>
 
+      {/* ── Spotlight ─────────────────────────────────────── */}
+      <Spotlight className="-top-40 left-0 md:left-60 z-[1]" fill="cyan" />
+
       {/* ── Hero Header ──────────────────────────────────── */}
       <div className="pt-36 pb-16 text-center contact-elem">
         <span className="eyebrow">Get in Touch</span>
-        <h1 className="text-h1 mt-4 mb-4">Let&apos;s Build Something Together.</h1>
+        <h1 className="text-h1 mt-4 mb-4">
+          Let&apos;s Build Something Together.
+        </h1>
         <p className="text-[var(--text-muted)] max-w-xl mx-auto leading-relaxed">
           Tell us about your project and we&apos;ll get back to you within 24 hours.
           No commitments — just a friendly conversation.
@@ -227,7 +218,7 @@ export default function ContactPage() {
           {/* LEFT — contact info */}
           <div className="lg:col-span-2 flex flex-col gap-4 lg:sticky lg:top-28">
 
-            <div className="contact-elem flex flex-col gap-4">
+            <AnimatedGroup preset="slide" className="contact-elem flex flex-col gap-4">
               <InfoCard icon="📧" title="Email">
                 <a href="mailto:binaryfroster@gmail.com" className="text-cyan-400 hover:text-cyan-300 transition-colors text-sm break-all">
                   binaryfroster@gmail.com
@@ -239,12 +230,12 @@ export default function ContactPage() {
               </InfoCard>
 
               <InfoCard icon="🌍" title="Coverage">
-                <p className="text-[var(--text-muted)] text-sm">Serving UK &amp; US clients</p>
+                <p className="text-[var(--text-muted)] text-sm">Serving clients worldwide</p>
                 <p className="text-[var(--text-muted)] text-xs mt-1 opacity-70">
-                  UK: 9am–6pm GMT &nbsp;|&nbsp; US: 9am–5pm EST
+                  UK: 9am–6pm GMT &nbsp;|&nbsp; India: 10am–7pm IST
                 </p>
               </InfoCard>
-            </div>
+            </AnimatedGroup>
 
             {/* Book a call */}
             <div className="contact-elem">
@@ -266,26 +257,31 @@ export default function ContactPage() {
             </div>
 
             {/* Socials */}
-            <div className="contact-elem">
-              <p className="text-xs text-[var(--text-muted)] mb-3 uppercase tracking-widest font-medium">Follow Us</p>
-              <div className="flex gap-3">
-                {[
-                  { name: "LinkedIn", initial: "in", color: "hover:border-[#0A66C2]/60 hover:text-[#0A66C2]", href: "https://www.linkedin.com/in/binary-froster/" },
-                  { name: "GitHub", initial: "GH", color: "hover:border-white/40 hover:text-white", href: "#" },
-                  { name: "Twitter/X", initial: "𝕏", color: "hover:border-white/40 hover:text-white", href: "https://x.com/Binaryfroster" },
-                  { name: "Instagram", initial: "IG", color: "hover:border-[#E1306C]/60 hover:text-[#E1306C]", href: "https://www.instagram.com/binaryfroster/" },
-                ].map((s) => (
-                  <a
-                    key={s.name}
-                    href={s.href}
-                    className={`w-10 h-10 rounded-full bg-[var(--glass-bg)] border border-[var(--glass-border)] flex items-center justify-center text-[var(--text-muted)] transition-all text-xs font-semibold font-mono ${s.color}`}
-                    aria-label={s.name}
-                  >
-                    {s.initial}
-                  </a>
-                ))}
+            <InView>
+              <div className="contact-elem">
+                <p className="text-xs text-[var(--text-muted)] mb-3 uppercase tracking-widest font-medium">Follow Us</p>
+                <div className="flex gap-3">
+                  {[
+                    { name: "LinkedIn", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>, color: "hover:border-[#0A66C2]/60 hover:text-[#0A66C2]", href: "https://in.linkedin.com/in/binary-froster" },
+                    { name: "GitHub", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>, color: "hover:border-white/40 hover:text-white", href: "#" },
+                    { name: "Twitter/X", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>, color: "hover:border-white/40 hover:text-white", href: "https://x.com/Binaryfroster" },
+                    { name: "Instagram", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>, color: "hover:border-[#E1306C]/60 hover:text-[#E1306C]", href: "https://www.instagram.com/binaryfroster/" },
+                  ].map((s) => (
+                    <AnimatedTooltip key={s.name} content={s.name} side="top">
+                      <a
+                        href={s.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`w-10 h-10 rounded-full bg-[var(--glass-bg)] border border-[var(--glass-border)] flex items-center justify-center text-[var(--text-muted)] transition-all text-xs font-semibold font-mono ${s.color}`}
+                        aria-label={s.name}
+                      >
+                        {s.icon}
+                      </a>
+                    </AnimatedTooltip>
+                  ))}
+                </div>
               </div>
-            </div>
+            </InView>
           </div>
 
           {/* RIGHT — form */}
@@ -367,11 +363,12 @@ export default function ContactPage() {
                         </label>
                         <span className="text-sm text-cyan-400 font-mono font-medium">{budgetLabel()}</span>
                       </div>
-                      {/* Gradient track */}
-                      <div className="relative h-2 rounded-full bg-white/10">
-                        <div
-                          className="absolute left-0 top-0 h-full rounded-full bg-gradient-to-r from-cyan-500 to-violet-500 transition-all"
-                          style={{ width: `${budgetPct}%` }}
+                      {/* Animated Progress Track */}
+                      <div className="relative">
+                        <AnimatedProgress
+                          value={budgetPct}
+                          max={100}
+                          barClassName="bg-gradient-to-r from-cyan-500 to-violet-500"
                         />
                         <input
                           type="range" min="500" max="50000" step="500" value={budget}
@@ -409,7 +406,7 @@ export default function ContactPage() {
                       >
                         Tell us about your project…
                       </label>
-                      {errors.desc && <p className="text-red-400 text-xs mt-1.5 ml-1">{errors.desc}</p>}
+                      {errors.desc && <p className="text-red-400 text-xs mt-1.5 ml-1" role="alert" aria-live="polite">{errors.desc}</p>}
                     </div>
 
                     {/* How heard */}
@@ -426,9 +423,16 @@ export default function ContactPage() {
                       <option value="other" className="bg-[var(--bg-surface)]">Other</option>
                     </StyledSelect>
 
-                    <LiquidButton type="submit" isLoading={isSubmitting} className="w-full mt-1">
-                      Send Message →
-                    </LiquidButton>
+                    <Magnetic intensity={0.2} className="w-full">
+                      <ShimmerButton
+                        type="submit"
+                        disabled={isSubmitting}
+                        background="radial-gradient(ellipse at bottom, #1a1552 0%, #060A1A 100%)"
+                        className="w-full px-8 py-3.5 text-sm font-medium mt-1"
+                      >
+                        {isSubmitting ? "Sending…" : "Send Message →"}
+                      </ShimmerButton>
+                    </Magnetic>
 
                     <p className="text-center text-xs text-[var(--text-muted)]">
                       🔒 Your data is safe. We never share your information.
@@ -442,90 +446,7 @@ export default function ContactPage() {
       </div>
 
       {/* ── Live Chat Widget ────────────────────────────── */}
-      <div className="fixed bottom-6 right-6 z-[999] flex flex-col items-end gap-3">
-        {chatOpen && (
-          <div className="w-80 h-[420px] bg-[var(--bg-surface)]/95 backdrop-blur-xl border border-[var(--glass-border)] rounded-2xl shadow-[0_24px_80px_rgba(0,0,0,0.7)] flex flex-col overflow-hidden animate-[slide-up_0.35s_cubic-bezier(0.16,1,0.3,1)]">
-            {/* Header */}
-            <div className="p-4 border-b border-[var(--glass-border)] flex items-center gap-3 flex-shrink-0">
-              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-violet-500/40 to-cyan-500/20 border border-violet-500/30 flex items-center justify-center text-xs font-bold text-violet-200">
-                BF
-              </div>
-              <div>
-                <p className="text-sm font-medium text-[var(--text-h)]">Binary Froster Support</p>
-                <p className="text-xs text-green-400 flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-green-400 inline-block" />
-                  Online now
-                </p>
-              </div>
-              <button
-                onClick={() => setChatOpen(false)}
-                className="ml-auto w-7 h-7 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-h)] transition-colors text-sm"
-                aria-label="Close chat"
-              >
-                ✕
-              </button>
-            </div>
-            {/* Messages */}
-            <div className="flex-grow p-4 overflow-y-auto flex flex-col gap-3">
-              {chatMessages.map((msg, i) => (
-                <div key={i} className={msg.from === "bot" ? "self-start max-w-[85%]" : "self-end max-w-[85%]"}>
-                  <div className={
-                    msg.from === "bot"
-                      ? "bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-2xl rounded-bl-none px-3.5 py-2.5"
-                      : "bg-violet-500/20 border border-violet-500/30 rounded-2xl rounded-br-none px-3.5 py-2.5"
-                  }>
-                    <p className="text-sm text-[var(--text-body)] leading-relaxed">{msg.text}</p>
-                    <span className="text-[10px] text-[var(--text-muted)] mt-1 block">{msg.time}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-            {/* Input */}
-            <div className="p-3 border-t border-[var(--glass-border)] flex gap-2 flex-shrink-0">
-              <input
-                type="text"
-                placeholder="Type a message…"
-                value={chatInput}
-                onChange={e => setChatInput(e.target.value)}
-                onKeyDown={e => e.key === "Enter" && handleChatSend()}
-                className="flex-grow bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-xl px-3.5 py-2.5 text-[var(--text-h)] text-sm focus:outline-none focus:border-cyan-400 transition-colors"
-              />
-              <button
-                onClick={handleChatSend}
-                className="w-10 h-10 flex-shrink-0 bg-violet-500/20 border border-violet-500/30 rounded-xl text-violet-200 hover:bg-violet-500/30 active:scale-95 transition-all flex items-center justify-center"
-                aria-label="Send message"
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="22" y1="2" x2="11" y2="13" /><polygon points="22 2 15 22 11 13 2 9 22 2" />
-                </svg>
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Chat Toggle Button */}
-        <button
-          onClick={() => setChatOpen(!chatOpen)}
-          className="w-14 h-14 rounded-full bg-[var(--glass-bg)] backdrop-blur-md border border-[var(--glass-border)] flex items-center justify-center shadow-[0_8px_32px_rgba(0,0,0,0.5)] hover:border-cyan-400/40 hover:shadow-[0_8px_32px_rgba(0,191,191,0.15)] transition-all group relative"
-          aria-label={chatOpen ? "Close chat" : "Open chat"}
-        >
-          {chatOpen ? (
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-[var(--text-muted)]" strokeLinecap="round">
-              <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
-          ) : (
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="text-cyan-400">
-              <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" />
-            </svg>
-          )}
-          {!chatOpen && (
-            <>
-              <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-cyan-400 animate-ping" />
-              <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-cyan-400" />
-            </>
-          )}
-        </button>
-      </div>
+      <LiveChat />
 
       {/* Book a Call Modal */}
       {bookModalOpen && (
@@ -541,7 +462,7 @@ export default function ContactPage() {
                 ✕
               </button>
               <h3 className="text-xl font-display font-medium text-[var(--text-h)] mb-2">Request a Call</h3>
-              <p className="text-sm text-[var(--text-muted)] mb-6">Enter your details and we'll setup a time.</p>
+              <p className="text-sm text-[var(--text-muted)] mb-6">Enter your details and we&apos;ll setup a time.</p>
               <form onSubmit={(e) => {
                 e.preventDefault();
                 const subject = encodeURIComponent(`Call Request: ${bookForm.product}`);

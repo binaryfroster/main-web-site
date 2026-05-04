@@ -1,41 +1,51 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
 import GlassCard from "@/components/ui/GlassCard";
 import TiltCard from "@/components/ui/TiltCard";
 import LiquidButton from "@/components/ui/LiquidButton";
-
-gsap.registerPlugin(ScrollTrigger);
+import {
+  BackgroundBeams,
+  Spotlight,
+  ShimmerButton,
+  Magnetic,
+  AnimatedGroup,
+  InView,
+  TextEffect,
+  AnimatedTabs,
+  Meteors,
+} from "@/components/ui/premium";
+import { filterServices, type ServiceItem } from "@/utils/filtering";
 
 const categories = ["All", "AI & Automation", "Web Development", "E-commerce", "Management Systems", "Mobile Apps"];
 
 const services = [
-  { title: "Voice Call Automation", cat: "AI & Automation", desc: "Automate inbound and outbound calls with AI voice agents.", price: "Custom quote", icon: "📞", tags: ["AI", "Twilio"] },
-  { title: "AI Chatbot — Ask Me Anything", cat: "AI & Automation", desc: "GPT-powered chatbots trained on your own business data.", price: "From £1,500", icon: "💬", tags: ["OpenAI", "LangChain"] },
-  { title: "AI Diet Planner (SaaS)", cat: "AI & Automation", desc: "White-label nutrition engine with personalized meal plans.", price: "£7.99/mo", icon: "🥗", tags: ["AI", "SaaS"] },
-  { title: "Stock Market Analysis Tool", cat: "AI & Automation", desc: "AI-driven stock signals, pattern recognition, and portfolio tracking.", price: "Custom quote", icon: "📈", tags: ["Python", "ML"] },
-  { title: "Crypto Analysis Tool", cat: "AI & Automation", desc: "Real-time crypto analytics, sentiment scoring, and alerts.", price: "Custom quote", icon: "₿", tags: ["API", "AI"] },
-  { title: "Custom AI Integrations", cat: "AI & Automation", desc: "Bespoke AI solutions tailored to your business workflow.", price: "From £2,000", icon: "🧠", tags: ["OpenAI", "Custom"] },
-  { title: "Landing Pages", cat: "Web Development", desc: "High-converting pages for local businesses — cafes, clinics, agencies.", price: "From £500", icon: "🏠", tags: ["Next.js", "SEO"] },
-  { title: "Portfolio Websites", cat: "Web Development", desc: "Sleek personal portfolios for designers, developers, and creatives.", price: "From £600", icon: "🎨", tags: ["React", "CMS"] },
-  { title: "Custom Web Applications", cat: "Web Development", desc: "Full-stack web apps with databases, auth, dashboards, and APIs.", price: "From £3,000", icon: "💻", tags: ["TypeScript", "Supabase"] },
-  { title: "Full E-commerce Platforms", cat: "E-commerce", desc: "Stripe-powered shops with inventory, orders, analytics, and shipping.", price: "From £4,000", icon: "🛍️", tags: ["Stripe", "Next.js"] },
-  { title: "ERP System", cat: "Management Systems", desc: "Enterprise resource planning — invoicing, HR, inventory, reporting.", price: "Custom quote", icon: "⚙️", tags: ["ERP", "PostgreSQL"] },
-  { title: "Student Management System", cat: "Management Systems", desc: "Attendance, grades, timetables, and parent communication.", price: "From £5,000", icon: "🎓", tags: ["SaaS", "Dashboards"] },
-  { title: "LMS — Learning Management", cat: "Management Systems", desc: "Course creation, video hosting, quizzes, and certificates.", price: "From £6,000", icon: "📚", tags: ["LMS", "SaaS"] },
-  { title: "Hospital Management System", cat: "Management Systems", desc: "Patient records, appointments, billing, and pharmacy integration.", price: "Custom quote", icon: "🏥", tags: ["Healthcare", "HIPAA"] },
-  { title: "Real Estate Price Prediction", cat: "Management Systems", desc: "ML model trained on property data for price forecasting.", price: "Custom quote", icon: "🏢", tags: ["ML", "Python"] },
+  { title: "Voice Call Automation", cat: "AI & Automation", desc: "Automate inbound and outbound calls with AI voice agents.", price: "Custom quote", icon: "/images/icons/icon_communication.png", tags: ["AI", "Twilio"] },
+  { title: "AI Chatbot — Ask Me Anything", cat: "AI & Automation", desc: "GPT-powered chatbots trained on your own business data.", price: "From £1,500", icon: "/images/icons/icon_communication.png", tags: ["OpenAI", "LangChain"] },
+  { title: "AI Diet Planner (SaaS)", cat: "AI & Automation", desc: "White-label nutrition engine with personalized meal plans.", price: "£7.99/mo", icon: "/images/icons/icon_test.png", tags: ["AI", "SaaS"] },
+  { title: "Stock Market Analysis Tool", cat: "AI & Automation", desc: "AI-driven stock signals, pattern recognition, and portfolio tracking.", price: "Custom quote", icon: "/images/icons/icon_scalable.png", tags: ["Python", "ML"] },
+  { title: "Crypto Analysis Tool", cat: "AI & Automation", desc: "Real-time crypto analytics, sentiment scoring, and alerts.", price: "Custom quote", icon: "/images/icons/icon_pricing.png", tags: ["API", "AI"] },
+  { title: "Custom AI Integrations", cat: "AI & Automation", desc: "Bespoke AI solutions tailored to your business workflow.", price: "From £2,000", icon: "/images/icons/icon_ai.png", tags: ["OpenAI", "Custom"] },
+  { title: "Landing Pages", cat: "Web Development", desc: "High-converting pages for local businesses — cafes, clinics, agencies.", price: "From £500", icon: "/images/icons/icon_industry.png", tags: ["Next.js", "SEO"] },
+  { title: "Portfolio Websites", cat: "Web Development", desc: "Sleek personal portfolios for designers, developers, and creatives.", price: "From £600", icon: "/images/icons/icon_design.png", tags: ["React", "CMS"] },
+  { title: "Custom Web Applications", cat: "Web Development", desc: "Full-stack web apps with databases, auth, dashboards, and APIs.", price: "From £3,000", icon: "/images/icons/icon_code.png", tags: ["TypeScript", "Supabase"] },
+  { title: "Full E-commerce Platforms", cat: "E-commerce", desc: "Stripe-powered shops with inventory, orders, analytics, and shipping.", price: "From £4,000", icon: "/images/icons/icon_pricing.png", tags: ["Stripe", "Next.js"] },
+  { title: "ERP System", cat: "Management Systems", desc: "Enterprise resource planning — invoicing, HR, inventory, reporting.", price: "Custom quote", icon: "/images/icons/icon_build.png", tags: ["ERP", "PostgreSQL"] },
+  { title: "Student Management System", cat: "Management Systems", desc: "Attendance, grades, timetables, and parent communication.", price: "From £5,000", icon: "/images/icons/icon_support.png", tags: ["SaaS", "Dashboards"] },
+  { title: "LMS — Learning Management", cat: "Management Systems", desc: "Course creation, video hosting, quizzes, and certificates.", price: "From £6,000", icon: "/images/icons/icon_discover.png", tags: ["LMS", "SaaS"] },
+  { title: "Hospital Management System", cat: "Management Systems", desc: "Patient records, appointments, billing, and pharmacy integration.", price: "Custom quote", icon: "/images/icons/icon_security.png", tags: ["Healthcare", "HIPAA"] },
+  { title: "Real Estate Price Prediction", cat: "Management Systems", desc: "ML model trained on property data for price forecasting.", price: "Custom quote", icon: "/images/icons/icon_industry.png", tags: ["ML", "Python"] },
 ];
 
 const processSteps = [
-  { n: 1, name: "Discover", desc: "We learn your goals, users, and constraints.", icon: "🔍" },
-  { n: 2, name: "Design", desc: "Wireframes, mockups, and prototype.", icon: "✏️" },
-  { n: 3, name: "Build", desc: "Development in sprints with regular check-ins.", icon: "⚡" },
-  { n: 4, name: "Test", desc: "QA, performance testing, and feedback loops.", icon: "🧪" },
-  { n: 5, name: "Launch", desc: "Deployment, domain setup, and handover.", icon: "🚀" },
-  { n: 6, name: "Support", desc: "Ongoing maintenance and feature additions.", icon: "🛡️" },
+  { n: 1, name: "Discover", desc: "We learn your goals, users, and constraints.", icon: "/images/icons/icon_discover.png" },
+  { n: 2, name: "Design", desc: "Wireframes, mockups, and prototype.", icon: "/images/icons/icon_design.png" },
+  { n: 3, name: "Build", desc: "Development in sprints with regular check-ins.", icon: "/images/icons/icon_build.png" },
+  { n: 4, name: "Test", desc: "QA, performance testing, and feedback loops.", icon: "/images/icons/icon_test.png" },
+  { n: 5, name: "Launch", desc: "Deployment, domain setup, and handover.", icon: "/images/icons/icon_launch.png" },
+  { n: 6, name: "Support", desc: "Ongoing maintenance and feature additions.", icon: "/images/icons/icon_security.png" },
 ];
 
 const faq = [
@@ -75,50 +85,82 @@ const pricingTiers = [
   },
 ];
 
-import { filterServices, type ServiceItem } from "@/utils/filtering";
+// ── Category content for AnimatedTabs ──────────────────────────────────────
+function ServiceGrid({ items }: { items: typeof services }) {
+  return (
+    <AnimatedGroup
+      preset="blur-slide"
+      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+    >
+      {items.map((svc, i) => (
+        <TiltCard key={svc.title + i} className="h-full group">
+          <GlassCard className="p-7 h-full flex flex-col gap-4 hover:border-violet-500/40 hover:shadow-[0_0_25px_rgba(139,92,246,0.12)] transition-all">
+            <div className="flex justify-between items-start">
+              <div className="relative w-8 h-8 group-hover:scale-110 group-hover:rotate-[8deg] transition-transform duration-200">
+                <Image src={svc.icon} alt={svc.title} fill className="object-contain" />
+              </div>
+              <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-violet-500/15 text-violet-300 border border-violet-500/20">{svc.cat.split(" ")[0]}</span>
+            </div>
+            <h3 className="text-lg font-display font-semibold text-[var(--text-h)]">{svc.title}</h3>
+            <p className="text-[var(--text-muted)] text-sm leading-relaxed flex-grow">{svc.desc}</p>
+            <div className="flex flex-wrap gap-1.5">
+              {svc.tags.map((tag) => <span key={tag} className="px-2 py-0.5 rounded text-[10px] font-mono bg-white/5 border border-[var(--glass-border)] text-[var(--text-muted)]">{tag}</span>)}
+            </div>
+            <div className="flex justify-between items-center pt-2 border-t border-[var(--glass-border)]">
+              <span className="text-cyan-400 font-mono text-sm">{svc.price}</span>
+              <Link href="/contact" className="text-xs text-violet-300 hover:text-violet-200 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300">Get a Quote →</Link>
+            </div>
+          </GlassCard>
+        </TiltCard>
+      ))}
+    </AnimatedGroup>
+  );
+}
 
 export default function ServicesPage() {
-  const [activeCat, setActiveCat] = useState("All");
   const [search, setSearch] = useState("");
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [yearly, setYearly] = useState(false);
 
-  useEffect(() => {
-    const headerAnim = gsap.from(".service-header span, .service-header h1, .service-header p", {
-      y: 40, opacity: 0, stagger: 0.1, duration: 0.6, ease: "power3.out", delay: 0.1
-    });
+  // Build tab list: All + filtered categories
+  const tabList = categories.map((cat) => ({
+    id: cat,
+    label: cat,
+    content: (
+      <ServiceGrid
+        items={filterServices(
+          services.filter((s) => cat === "All" || s.cat === cat) as ServiceItem[],
+          "All",
+          search
+        )}
+      />
+    ),
+  }));
 
-    gsap.from(".process-step", {
-      scrollTrigger: { trigger: ".process-timeline", start: "top 75%" },
-      y: 50, opacity: 0, stagger: 0.12, duration: 0.6, ease: "power3.out",
-    });
-
-    gsap.from(".pricing-card", {
-      scrollTrigger: { trigger: ".pricing-grid", start: "top 75%" },
-      y: 60, opacity: 0, stagger: 0.12, duration: 0.7, ease: "power3.out",
-    });
-
-    return () => {
-      headerAnim.kill();
-      ScrollTrigger.getAll().forEach(t => t.kill());
-      gsap.set(".service-header span, .service-header h1, .service-header p, .process-step, .pricing-card", { clearProps: "all" });
-    };
-  }, []);
-
-  const filtered = filterServices(services as ServiceItem[], activeCat, search);
+  const filteredAll = filterServices(services as ServiceItem[], "All", search);
 
   return (
     <div className="min-h-screen pt-32 pb-24 relative overflow-hidden">
-      {/* 3D Grid Background */}
-      <div className="absolute bottom-0 left-0 right-0 h-[60vh] bg-[linear-gradient(rgba(127,119,221,0.15)_1px,transparent_1px),linear-gradient(90deg,rgba(127,119,221,0.15)_1px,transparent_1px)] bg-[size:50px_50px] [transform:rotateX(75deg)] origin-bottom z-[-1] opacity-30" aria-hidden="true" />
+
+      {/* ── Background ─────────────────────────────────────────────── */}
+      <div className="absolute inset-0 pointer-events-none z-[-1]" aria-hidden="true">
+        <BackgroundBeams className="opacity-25" />
+        <Meteors number={10} className="opacity-20" />
+        <div className="absolute bottom-0 left-0 right-0 h-[60vh] bg-[linear-gradient(rgba(127,119,221,0.15)_1px,transparent_1px),linear-gradient(90deg,rgba(127,119,221,0.15)_1px,transparent_1px)] bg-[size:50px_50px] [transform:rotateX(75deg)] origin-bottom opacity-20" />
+      </div>
+      <Spotlight className="absolute -top-20 right-0 z-[1]" fill="violet" />
 
       <div className="container mx-auto px-6 max-w-[1320px]">
 
-        {/* HERO */}
+        {/* ── Hero ─────────────────────────────────────────────────── */}
         <header className="service-header text-center mb-16 relative z-10 max-w-[800px] mx-auto">
           <span className="eyebrow">What We Offer</span>
-          <h1 className="text-h1 mt-4">End-to-End Technology Services</h1>
-          <p className="text-[var(--text-muted)] mt-4 text-lg">From AI-powered automations to complete SaaS platforms — every project is custom-built to your exact requirements.</p>
+          <h1 className="text-h1 mt-4 mb-4">
+            End-to-End Technology Services
+          </h1>
+          <p className="text-[var(--text-muted)] text-lg">
+            From AI-powered automations to complete SaaS platforms — every project is custom-built to your exact requirements.
+          </p>
           {/* Search */}
           <div className="mt-8 relative max-w-md mx-auto">
             <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
@@ -134,152 +176,159 @@ export default function ServicesPage() {
           </div>
         </header>
 
-        {/* FILTER BAR */}
-        <div className="flex justify-center gap-3 mb-12 flex-wrap relative z-10" role="tablist" aria-label="Filter services by category">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setActiveCat(cat)}
-              role="tab"
-              aria-selected={activeCat === cat}
-              className={"px-5 py-2 rounded-full border transition-all duration-300 text-sm font-medium " + (activeCat === cat ? "bg-violet-500/20 border-violet-400 text-violet-100 shadow-[0_0_15px_rgba(127,119,221,0.3)]" : "bg-[var(--glass-bg)] border-[var(--glass-border)] text-[var(--text-muted)] hover:text-[var(--text-h)] hover:border-[var(--glass-border-h)]")}
-            >
-              {cat}
-            </button>
-          ))}
-          <span className="ml-4 text-xs text-[var(--text-muted)] self-center">Showing {filtered.length} of {services.length} services</span>
+        {/* ── Animated Tabs for Category Filtering ─────────────────── */}
+        <div className="relative z-10 mb-32">
+          <AnimatedTabs
+            tabs={tabList}
+            className="w-full"
+            tabClassName="px-5 py-2 rounded-full border border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-muted)] text-sm font-medium transition-all hover:text-[var(--text-h)] hover:border-[var(--glass-border-h)]"
+            contentClassName="mt-6"
+          />
+          {/* Search result count */}
+          <p className="text-center text-xs text-[var(--text-muted)] -mt-6 mb-8">
+            Showing {filteredAll.length} of {services.length} services
+          </p>
         </div>
 
-        {/* SERVICE CARDS */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10 mb-32" role="tabpanel">
-          {filtered.map((svc, i) => (
-            <div key={svc.title} className="transition-all duration-400 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]" style={{ transitionDelay: `${i * 0.04}s` }}>
-              <TiltCard className="h-full group">
-                <GlassCard className="p-7 h-full flex flex-col gap-4">
-                  <div className="flex justify-between items-start">
-                    <span className="text-3xl group-hover:scale-115 group-hover:rotate-[8deg] transition-transform duration-200">{svc.icon}</span>
-                    <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-violet-500/15 text-violet-300 border border-violet-500/20">{svc.cat.split(" ")[0]}</span>
-                  </div>
-                  <h3 className="text-lg font-display font-semibold text-[var(--text-h)]">{svc.title}</h3>
-                  <p className="text-[var(--text-muted)] text-sm leading-relaxed flex-grow">{svc.desc}</p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {svc.tags.map((tag) => <span key={tag} className="px-2 py-0.5 rounded text-[10px] font-mono bg-white/5 border border-[var(--glass-border)] text-[var(--text-muted)]">{tag}</span>)}
-                  </div>
-                  <div className="flex justify-between items-center pt-2 border-t border-[var(--glass-border)]">
-                    <span className="text-cyan-400 font-mono text-sm">{svc.price}</span>
-                    <a href="/contact" className="text-xs text-violet-300 hover:text-violet-200 font-medium opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-2 group-hover:translate-x-0">Get a Quote →</a>
-                  </div>
-                </GlassCard>
-              </TiltCard>
+        {/* ── Process Timeline ──────────────────────────────────────── */}
+        <InView>
+          <div className="process-timeline mb-32 relative z-10">
+            <div className="text-center mb-16">
+              <span className="eyebrow">Our Process</span>
+              <TextEffect className="text-h2 mt-4" preset="slide" per="word">
+                How We Work
+              </TextEffect>
+              <p className="text-[var(--text-muted)] mt-3">A structured process that keeps your project on track, on budget, and on time.</p>
             </div>
-          ))}
-        </div>
-
-        {/* PROCESS TIMELINE */}
-        <div className="process-timeline mb-32 relative z-10">
-          <div className="text-center mb-16">
-            <span className="eyebrow">Our Process</span>
-            <h2 className="text-h2 mt-4">How We Work</h2>
-            <p className="text-[var(--text-muted)] mt-3">A structured process that keeps your project on track, on budget, and on time.</p>
+            <div className="relative">
+              <div className="hidden lg:block absolute top-8 left-[5%] right-[5%] h-[2px] bg-[var(--glass-border)]" aria-hidden="true">
+                <div className="w-full h-full bg-gradient-to-r from-violet-500/50 via-cyan-500/50 to-violet-500/50" style={{ backgroundSize: "200% 100%", animation: "shimmer 3s ease infinite" }} />
+              </div>
+              <AnimatedGroup
+                preset="slide"
+                className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 relative"
+              >
+                {processSteps.map((step) => (
+                  <div key={step.n} className="process-step text-center">
+                    <div className="w-16 h-16 mx-auto rounded-full bg-[var(--glass-bg)] border border-[var(--glass-border)] backdrop-blur-sm flex items-center justify-center text-2xl mb-4 relative z-10 hover:border-cyan-400/50 hover:shadow-[0_0_20px_rgba(0,191,191,0.15)] transition-all overflow-visible">
+                      <div className="relative w-8 h-8">
+                        <Image src={step.icon} alt={step.name} fill className="object-contain" />
+                      </div>
+                      <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-violet-500/30 border border-violet-500/50 flex items-center justify-center text-[10px] font-mono text-violet-200">{step.n}</span>
+                    </div>
+                    <h4 className="font-display font-medium text-[var(--text-h)] text-sm mb-1">{step.name}</h4>
+                    <p className="text-[var(--text-muted)] text-xs leading-relaxed">{step.desc}</p>
+                  </div>
+                ))}
+              </AnimatedGroup>
+            </div>
           </div>
-          <div className="relative">
-            {/* Connecting line */}
-            <div className="hidden lg:block absolute top-8 left-[calc(8.33%+32px)] right-[calc(8.33%+32px)] h-[2px] bg-[var(--glass-border)]" aria-hidden="true">
-              <div className="w-full h-full bg-gradient-to-r from-violet-500/50 via-cyan-500/50 to-violet-500/50" style={{ backgroundSize: '200% 100%', animation: 'shimmer 3s ease infinite' }} />
+        </InView>
+
+        {/* ── Pricing ───────────────────────────────────────────────── */}
+        <InView>
+          <div className="mb-32 relative z-10">
+            <div className="text-center mb-10">
+              <span className="eyebrow">Pricing</span>
+              <TextEffect className="text-h2 mt-4" preset="blur" per="word">
+                Transparent Pricing
+              </TextEffect>
+              <p className="text-[var(--text-muted)] mt-3">No hidden fees. Clear deliverables. Fixed or retainer — your choice.</p>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 relative">
-              {processSteps.map((step) => (
-                <div key={step.n} className="process-step text-center">
-                  <div className="w-16 h-16 mx-auto rounded-full bg-[var(--glass-bg)] border border-[var(--glass-border)] backdrop-blur-sm flex items-center justify-center text-2xl mb-4 relative z-10 hover:border-cyan-400/50 hover:shadow-[0_0_20px_rgba(0,191,191,0.15)] transition-all">
-                    {step.icon}
-                    <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-violet-500/30 border border-violet-500/50 flex items-center justify-center text-[10px] font-mono text-violet-200">{step.n}</span>
-                  </div>
-                  <h4 className="font-display font-medium text-[var(--text-h)] text-sm mb-1">{step.name}</h4>
-                  <p className="text-[var(--text-muted)] text-xs leading-relaxed">{step.desc}</p>
+            {/* Toggle */}
+            <div className="flex justify-center mb-12">
+              <div className="inline-flex items-center gap-3 bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-full p-1">
+                <button onClick={() => setYearly(false)} className={"px-5 py-2 rounded-full text-sm font-medium transition-all " + (!yearly ? "bg-violet-500/25 text-white shadow-[0_0_12px_rgba(127,119,221,0.3)]" : "text-[var(--text-muted)] hover:text-[var(--text-h)]")}>Monthly</button>
+                <button onClick={() => setYearly(true)} className={"px-5 py-2 rounded-full text-sm font-medium transition-all " + (yearly ? "bg-violet-500/25 text-white shadow-[0_0_12px_rgba(127,119,221,0.3)]" : "text-[var(--text-muted)] hover:text-[var(--text-h)]")}>Yearly — Save 20%</button>
+              </div>
+            </div>
+            <AnimatedGroup
+              preset="scale"
+              className="pricing-grid grid grid-cols-1 md:grid-cols-3 gap-8 items-start"
+            >
+              {pricingTiers.map((tier, i) => (
+                <div key={i} className={tier.featured ? "pt-5 relative" : "relative"}>
+                  <GlassCard
+                    className={
+                      "pricing-card p-8 " +
+                      (tier.featured
+                        ? "border-violet-500/50 shadow-[0_0_30px_rgba(127,119,221,0.15)] scale-[1.03] z-10"
+                        : "")
+                    }
+                  >
+                    {tier.featured && (
+                      <>
+                        <div className="absolute -inset-[1px] rounded-2xl z-[-1] overflow-hidden">
+                          <div className="absolute inset-0 bg-[conic-gradient(from_var(--border-angle),#7F77DD,#00BFBF,#7F77DD)] animate-[spin-border_3s_linear_infinite]" />
+                          <div className="absolute inset-[1px] rounded-2xl bg-[var(--bg-surface)]" />
+                        </div>
+                        <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-violet-500/30 border border-violet-500/50 text-[10px] text-violet-200 font-mono whitespace-nowrap">Most Popular</span>
+                      </>
+                    )}
+                    <p className="text-xs text-[var(--text-muted)] mb-2">Best for: {tier.best}</p>
+                    <h3 className="text-2xl font-display font-bold text-[var(--text-h)] mb-1">{tier.name}</h3>
+                    <div className="text-2xl font-display font-medium text-cyan-400 mb-6">{yearly ? tier.yearly : tier.monthly}</div>
+                    <ul className="flex flex-col gap-2.5 mb-6">
+                      {tier.features.map((f) => <li key={f} className="flex items-start gap-2 text-sm text-[var(--text-body)]"><span className="text-cyan-400 mt-0.5 flex-shrink-0">✓</span>{f}</li>)}
+                      {tier.missing.map((f) => <li key={f} className="flex items-start gap-2 text-sm text-[var(--text-muted)]"><span className="mt-0.5 flex-shrink-0 opacity-40">✗</span>{f}</li>)}
+                    </ul>
+                    <Magnetic intensity={0.15}>
+                      {tier.featured ? (
+                        <ShimmerButton
+                          background="radial-gradient(ellipse at bottom, #1a1552 0%, #060A1A 100%)"
+                          className="w-full py-3 text-sm font-medium"
+                        >
+                          <Link href="/contact" className="text-inherit no-underline">{tier.cta}</Link>
+                        </ShimmerButton>
+                      ) : (
+                        <LiquidButton href="/contact" variant="ghost" className="w-full" size="md">{tier.cta}</LiquidButton>
+                      )}
+                    </Magnetic>
+                  </GlassCard>
                 </div>
               ))}
+            </AnimatedGroup>
+          </div>
+        </InView>
+
+        {/* ── FAQ ──────────────────────────────────────────────────── */}
+        <InView>
+          <div className="relative z-10 max-w-[800px] mx-auto">
+            <div className="text-center mb-12">
+              <span className="eyebrow">FAQ</span>
+              <TextEffect className="text-h2 mt-4" preset="fade" per="word">
+                Frequently Asked Questions
+              </TextEffect>
             </div>
-          </div>
-
-        </div>
-
-        {/* PRICING */}
-        <div className="mb-32 relative z-10">
-          <div className="text-center mb-10">
-            <span className="eyebrow">Pricing</span>
-            <h2 className="text-h2 mt-4">Transparent Pricing</h2>
-            <p className="text-[var(--text-muted)] mt-3">No hidden fees. Clear deliverables. Fixed or retainer — your choice.</p>
-          </div>
-          {/* Toggle */}
-          <div className="flex justify-center mb-12">
-            <div className="inline-flex items-center gap-3 bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-full p-1">
-              <button onClick={() => setYearly(false)} className={"px-5 py-2 rounded-full text-sm font-medium transition-all " + (!yearly ? "bg-violet-500/25 text-white shadow-[0_0_12px_rgba(127,119,221,0.3)]" : "text-[var(--text-muted)] hover:text-[var(--text-h)]")}>Monthly</button>
-              <button onClick={() => setYearly(true)} className={"px-5 py-2 rounded-full text-sm font-medium transition-all " + (yearly ? "bg-violet-500/25 text-white shadow-[0_0_12px_rgba(127,119,221,0.3)]" : "text-[var(--text-muted)] hover:text-[var(--text-h)]")}>Yearly — Save 20%</button>
-            </div>
-          </div>
-          <div className="pricing-grid grid grid-cols-1 md:grid-cols-3 gap-8">
-            {pricingTiers.map((tier, i) => (
-              <GlassCard
-                key={i}
-                className={
-                  "pricing-card p-8 relative " +
-                  (tier.featured
-                    ? "border-violet-500/50 shadow-[0_0_30px_rgba(127,119,221,0.15)] scale-[1.03] z-10"
-                    : "")
-                }
-              >
-                {tier.featured && (
-                  <>
-                    <div className="absolute -inset-[1px] rounded-2xl z-[-1] overflow-hidden">
-                      <div className="absolute inset-0 bg-[conic-gradient(from_var(--border-angle),#7F77DD,#00BFBF,#7F77DD)] animate-[spin-border_3s_linear_infinite]" />
-                      <div className="absolute inset-[1px] rounded-2xl bg-[var(--bg-surface)]" />
-                    </div>
-                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-violet-500/30 border border-violet-500/50 text-[10px] text-violet-200 font-mono">Most Popular</span>
-                  </>
-                )}
-                <p className="text-xs text-[var(--text-muted)] mb-2">Best for: {tier.best}</p>
-                <h3 className="text-2xl font-display font-bold text-[var(--text-h)] mb-1">{tier.name}</h3>
-                <div className="text-2xl font-display font-medium text-cyan-400 mb-6">{yearly ? tier.yearly : tier.monthly}</div>
-                <ul className="flex flex-col gap-2.5 mb-6">
-                  {tier.features.map((f) => <li key={f} className="flex items-start gap-2 text-sm text-[var(--text-body)]"><span className="text-cyan-400 mt-0.5 flex-shrink-0">✓</span>{f}</li>)}
-                  {tier.missing.map((f) => <li key={f} className="flex items-start gap-2 text-sm text-[var(--text-muted)]"><span className="mt-0.5 flex-shrink-0 opacity-40">✗</span>{f}</li>)}
-                </ul>
-                <LiquidButton href="/contact" variant={tier.featured ? "primary" : "ghost"} className="w-full">
-                  {tier.cta}
-                </LiquidButton>
-              </GlassCard>
-            ))}
-          </div>
-        </div>
-
-        {/* FAQ */}
-        <div className="relative z-10 max-w-[800px] mx-auto">
-          <div className="text-center mb-12">
-            <span className="eyebrow">FAQ</span>
-            <h2 className="text-h2 mt-4">Frequently Asked Questions</h2>
-          </div>
-          <div className="flex flex-col gap-3" role="list">
-            {faq.map((item, i) => (
-              <GlassCard
-                key={i}
-                className={"cursor-pointer transition-all " + (openFaq === i ? "border-violet-500/30" : "")}
-                onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                role="listitem"
-              >
-                <div className="p-5 flex justify-between items-center gap-4">
-                  <h4 className="font-display font-medium text-[var(--text-h)] text-[15px]">{item.q}</h4>
-                  <span className={"text-xl text-[var(--text-muted)] transition-transform duration-300 flex-shrink-0 " + (openFaq === i ? "rotate-45" : "rotate-0")} aria-hidden="true">+</span>
-                </div>
-                <div
-                  className={"overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] " + (openFaq === i ? "max-h-[300px] opacity-100" : "max-h-0 opacity-0")}
-                  aria-hidden={openFaq !== i}
+            <div role="list">
+            <AnimatedGroup preset="slide" className="flex flex-col gap-3">
+              {faq.map((item, i) => (
+                <GlassCard
+                  key={i}
+                  className={"cursor-pointer transition-all hover:border-violet-500/30 " + (openFaq === i ? "border-violet-500/30" : "")}
+                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  onKeyDown={(e: React.KeyboardEvent) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setOpenFaq(openFaq === i ? null : i); } }}
+                  role="button"
+                  tabIndex={0}
+                  aria-expanded={openFaq === i}
                 >
-                  <p className="px-5 pb-5 text-sm text-[var(--text-muted)] leading-relaxed">{item.a}</p>
-                </div>
-              </GlassCard>
-            ))}
+                  <div className="p-5 flex justify-between items-center gap-4">
+                    <h4 className="font-display font-medium text-[var(--text-h)] text-[15px]">{item.q}</h4>
+                    <span className={"text-xl text-[var(--text-muted)] transition-transform duration-300 flex-shrink-0 " + (openFaq === i ? "rotate-45" : "rotate-0")} aria-hidden="true">+</span>
+                  </div>
+                  <div
+                    className={"overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] " + (openFaq === i ? "max-h-[300px] opacity-100" : "max-h-0 opacity-0")}
+                    aria-hidden={openFaq !== i}
+                  >
+                    <p className="px-5 pb-5 text-sm text-[var(--text-muted)] leading-relaxed">{item.a}</p>
+                  </div>
+                </GlassCard>
+              ))}
+            </AnimatedGroup>
+            </div>
           </div>
-        </div>
+        </InView>
+
       </div>
     </div>
   );

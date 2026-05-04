@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Moon, Sun } from "lucide-react";
 import LiquidButton from "@/components/ui/LiquidButton";
@@ -20,19 +21,19 @@ export default function Navbar() {
 
   useEffect(() => {
     const theme = localStorage.getItem("bf-theme");
-    if (theme === "light") {
-      setTimeout(() => {
-        setIsDark(false);
-        document.documentElement.setAttribute("data-theme", "light");
-      }, 0);
+    const systemPrefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+    
+    const initialTheme = theme || (systemPrefersLight ? "light" : "dark");
+    
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (initialTheme === "light") {
+      setIsDark(false);
+      document.documentElement.setAttribute("data-theme", "light");
+      document.body.classList.add("light-theme");
     } else {
-      // Also check system preference on first visit
-      if (!theme && window.matchMedia("(prefers-color-scheme: light)").matches) {
-        setTimeout(() => {
-          setIsDark(false);
-          document.documentElement.setAttribute("data-theme", "light");
-        }, 0);
-      }
+      setIsDark(true);
+      document.documentElement.setAttribute("data-theme", "dark");
+      document.body.classList.remove("light-theme");
     }
   }, []);
 
@@ -42,17 +43,24 @@ export default function Navbar() {
   }, [mobileOpen]);
 
   const toggleTheme = () => {
-    const newTheme = !isDark;
-    setIsDark(newTheme);
-    document.documentElement.setAttribute("data-theme", newTheme ? "dark" : "light");
-    localStorage.setItem("bf-theme", newTheme ? "dark" : "light");
+    const newIsDark = !isDark;
+    setIsDark(newIsDark);
+    const themeStr = newIsDark ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", themeStr);
+    
+    if (newIsDark) {
+      document.body.classList.remove("light-theme");
+    } else {
+      document.body.classList.add("light-theme");
+    }
+    
+    localStorage.setItem("bf-theme", themeStr);
   };
 
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "Services", path: "/services" },
     { name: "Portfolio", path: "/portfolio" },
-    { name: "Products", path: "/products/diet-planner" },
     { name: "About", path: "/about" },
     { name: "Blog", path: "/blog" },
     { name: "Contact", path: "/contact" },
@@ -67,21 +75,25 @@ export default function Navbar() {
     <>
       <nav
         className={
-          "fixed top-0 left-0 right-0 z-[1000] h-[72px] flex items-center px-6 lg:px-12 transition-all duration-350 ease-in-out " +
+          "fixed top-0 left-0 right-0 z-[1000] h-[90px] flex items-center px-6 lg:px-12 transition-all duration-350 ease-in-out " +
           (scrolled ? "glass-nav shadow-2xl" : "bg-transparent")
         }
         role="navigation"
         aria-label="Main navigation"
       >
-        <div className="w-full max-w-[1320px] mx-auto flex items-center justify-between">
+        <div className="w-full max-w-[1320px] mx-auto flex items-center justify-between gap-4">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 group" aria-label="Binary Froster Home">
-            <img
+          <Link href="/" className="flex items-center gap-2 group flex-shrink-0 min-w-0" aria-label="Binary Froster Home">
+            <Image
               src="/assets/logo.png"
               alt="Binary Froster Logo"
-              className="w-10 h-10 object-contain transition-transform duration-700 group-hover:scale-110"
+              width={48}
+              height={48}
+              priority
+              sizes="48px"
+              className="object-contain transition-transform duration-700 group-hover:scale-110 flex-shrink-0"
             />
-            <span className="font-display font-bold text-lg tracking-wide text-[var(--text-h)]">
+            <span className="font-display font-black text-xl lg:text-2xl tracking-wide text-[var(--text-h)] truncate hidden sm:block">
               Binary Froster
             </span>
           </Link>
@@ -93,7 +105,7 @@ export default function Navbar() {
                 key={link.name}
                 href={link.path}
                 className={
-                  "relative text-[14px] font-medium transition-colors py-1 group " +
+                  "relative text-base lg:text-lg font-semibold transition-colors py-1 group " +
                   (isActive(link.path)
                     ? "text-[var(--text-h)]"
                     : "text-[var(--text-muted)] hover:text-[var(--text-h)]")
@@ -112,11 +124,11 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* Actions */}
-          <div className="flex items-center gap-4">
+          {/* Actions — theme toggle is always visible, CTA hidden on mobile, burger only on mobile */}
+          <div className="flex items-center gap-2 lg:gap-4 flex-shrink-0">
             {/* Theme Toggle — Liquid Glass Switch */}
             <label
-              className="relative w-[52px] h-[28px] rounded-full bg-white/10 border border-white/20 backdrop-blur-md shadow-inner cursor-pointer transition-colors duration-400 overflow-hidden"
+              className="relative w-[52px] h-[28px] rounded-full bg-white/10 border border-white/20 backdrop-blur-md shadow-inner cursor-pointer transition-colors duration-400 overflow-hidden flex-shrink-0"
               aria-label="Toggle dark/light mode"
             >
               <input
@@ -148,14 +160,14 @@ export default function Navbar() {
               </div>
             </label>
 
-            <LiquidButton href="/contact" className="hidden lg:inline-flex">
+            <LiquidButton href="/contact" className="hidden lg:inline-flex" size="sm">
               Start a Project
             </LiquidButton>
 
             {/* Hamburger */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="lg:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5 relative z-[1100]"
+              className="lg:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5 relative z-[1100] flex-shrink-0"
               aria-label={mobileOpen ? "Close menu" : "Open menu"}
               aria-expanded={mobileOpen}
             >
@@ -179,6 +191,7 @@ export default function Navbar() {
               />
             </button>
           </div>
+
         </div>
       </nav>
 
@@ -199,23 +212,25 @@ export default function Navbar() {
             (mobileOpen ? "translate-x-0" : "translate-x-full")
           }
         >
-          {navLinks.map((link) => (
+          {navLinks.map((link, i) => (
             <Link
               key={link.name}
               href={link.path}
               onClick={() => setMobileOpen(false)}
               className={
-                "text-lg font-display font-medium transition-colors py-2 border-b border-[var(--glass-border)] " +
+                "text-lg font-display font-medium py-2 border-b border-[var(--glass-border)] transition-all duration-300 ease-out " +
                 (isActive(link.path)
                   ? "text-[var(--cyan-500)]"
-                  : "text-[var(--text-h)] hover:text-[var(--cyan-500)]")
+                  : "text-[var(--text-h)] hover:text-[var(--cyan-500)]") +
+                (mobileOpen ? " opacity-100 translate-x-0" : " opacity-0 translate-x-4")
               }
+              style={{ transitionDelay: `${mobileOpen ? 150 + i * 50 : 0}ms` }}
             >
               {link.name}
             </Link>
           ))}
           <div className="mt-auto">
-            <LiquidButton href="/contact" className="w-full">
+            <LiquidButton href="/contact" className="w-full" size="sm">
               Start a Project
             </LiquidButton>
           </div>
