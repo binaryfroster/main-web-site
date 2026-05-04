@@ -219,7 +219,7 @@ export default function Home() {
                 <div className="flex items-end justify-center gap-0.5">
                   <NumberTicker
                     value={value}
-                    className="text-4xl md:text-5xl font-display font-bold text-white tabular-nums"
+                    className="text-4xl md:text-5xl font-display font-bold text-[var(--text-h)] tabular-nums"
                   />
                   <span className="text-3xl md:text-4xl font-display font-bold text-[var(--cyan-400)]">{suffix}</span>
                 </div>
@@ -259,17 +259,17 @@ export default function Home() {
         <div className="bento-grid grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[280px] md:auto-rows-[300px]">
           {portfolioItems.map((proj, i) => (
             <TiltCard key={i} className={`${i === 0 ? "bento-lg md:col-span-2" : "bento-md"} ${proj.size === "wide" ? "md:col-span-2" : ""} h-full cursor-pointer group`}>
-              <GlassCard className="h-full p-2 relative glass-clip bg-white/5">
+              <GlassCard className="h-full p-2 relative glass-clip bg-[var(--glass-bg)]">
                 <Image src={proj.img} alt={proj.title} fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover rounded-xl transition-transform duration-700 group-hover:scale-105" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#060A1A] via-[#060A1A]/40 to-transparent opacity-80" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-base)] via-[var(--bg-base)]/40 to-transparent opacity-80" />
                 <div className="absolute bottom-6 left-6 right-6">
                   <div className="flex gap-2 mb-3">
-                    <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-violet-500/20 text-violet-300 border border-violet-500/30">{proj.cat}</span>
-                    {proj.tags.map(t => <span key={t} className="px-2 py-0.5 rounded text-[10px] font-mono bg-white/10 text-[var(--text-muted)] border border-white/10">{t}</span>)}
+                    <span className="px-2 py-0.5 rounded text-[10px] font-mono" style={{ background: 'var(--badge-cat-bg)', color: 'var(--badge-cat-text)', border: '1px solid var(--badge-cat-border)' }}>{proj.cat}</span>
+                    {proj.tags.map(t => <span key={t} className="px-2 py-0.5 rounded text-[10px] font-mono bg-[var(--glass-bg)] text-[var(--text-muted)] border border-[var(--glass-border)]">{t}</span>)}
                   </div>
-                  <h3 className="text-xl md:text-2xl font-display font-bold text-white mb-1">{proj.title}</h3>
-                  <p className="text-white/60 text-sm translate-y-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">{proj.desc}</p>
-                  <span className="inline-block mt-2 text-xs text-cyan-400 translate-y-3 opacity-0 transition-all duration-300 delay-75 group-hover:translate-y-0 group-hover:opacity-100 font-medium">View Case Study →</span>
+                  <h3 className="text-xl md:text-2xl font-display font-bold text-[var(--text-h)] mb-1">{proj.title}</h3>
+                  <p className="text-[var(--text-muted)] text-sm translate-y-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">{proj.desc}</p>
+                  <span className="inline-block mt-2 text-xs text-[var(--cyan-400)] translate-y-3 opacity-0 transition-all duration-300 delay-75 group-hover:translate-y-0 group-hover:opacity-100 font-medium">View Case Study →</span>
                 </div>
               </GlassCard>
             </TiltCard>
@@ -336,7 +336,7 @@ export default function Home() {
                       <div className="relative w-8 h-8">
                         <Image src={step.icon} alt={step.name} fill className="object-contain" />
                       </div>
-                      <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-violet-500/30 border border-violet-500/50 flex items-center justify-center text-[10px] font-mono text-violet-200">{step.n}</span>
+                      <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-[var(--badge-cat-bg)] border border-[var(--badge-cat-border)] flex items-center justify-center text-[10px] font-mono text-[var(--badge-cat-text)]">{step.n}</span>
                     </div>
                     <h4 className="font-display font-medium text-[var(--text-h)] text-sm mb-1">{step.name}</h4>
                     <p className="text-[var(--text-muted)] text-xs leading-relaxed">{step.desc}</p>

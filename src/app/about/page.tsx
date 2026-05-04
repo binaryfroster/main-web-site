@@ -73,7 +73,7 @@ export default function AboutPage() {
             {stats.map(({ value, suffix, label }) => (
               <GlassCard key={label} className="p-6 text-center">
                 <div className="flex items-end justify-center gap-0.5">
-                  <NumberTicker value={value} className="text-4xl font-display font-bold text-white tabular-nums" />
+                  <NumberTicker value={value} className="text-4xl font-display font-bold text-[var(--text-h)] tabular-nums" />
                   <span className="text-3xl font-display font-bold text-[var(--cyan-400)]">{suffix}</span>
                 </div>
                 <p className="text-[var(--text-muted)] text-sm mt-2">{label}</p>

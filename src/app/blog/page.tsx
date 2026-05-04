@@ -21,11 +21,31 @@ export default function BlogPage() {
   // Newsletter
   const [nlEmail, setNlEmail] = useState("");
   const [nlSubscribed, setNlSubscribed] = useState(false);
+  const [nlError, setNlError] = useState<string | null>(null);
+  const [nlLoading, setNlLoading] = useState(false);
 
-  // TODO: Connect to email service (Mailchimp, Resend, etc.) before production launch
-  const handleNlSubscribe = (e: React.FormEvent) => {
+  const handleNlSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (nlEmail) setNlSubscribed(true);
+    if (!nlEmail) return;
+    setNlLoading(true);
+    setNlError(null);
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: nlEmail, source: "blog" }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setNlError(data.error || "Failed to subscribe. Try again.");
+      } else {
+        setNlSubscribed(true);
+      }
+    } catch {
+      setNlError("Network error. Please try again.");
+    } finally {
+      setNlLoading(false);
+    }
   };
 
   const indexOfLastPost = currentPage * postsPerPage;
@@ -66,7 +86,7 @@ export default function BlogPage() {
           {currentPosts.map((post, i) => (
             <Link key={i} href={`/blog/${post.slug}`} className="block">
               <TiltCard className="blog-card h-full">
-                <GlassCard className="p-5 hover:border-violet-500/30 transition-colors cursor-pointer group h-full !backdrop-blur-md !bg-white/[0.02]">
+                <GlassCard className="p-5 hover:border-violet-500/30 transition-colors cursor-pointer group h-full !backdrop-blur-md">
                   <div className="flex flex-col md:flex-row md:items-stretch gap-6 h-full">
                     <div className="w-full md:w-1/3 aspect-video md:aspect-auto relative rounded-xl overflow-hidden flex-shrink-0">
                       <Image src={`/blog/${post.slug}-hero.webp`} alt={post.title} fill className="object-cover transition-transform duration-700 group-hover:scale-105" sizes="(max-width: 768px) 100vw, 33vw" />
@@ -81,7 +101,7 @@ export default function BlogPage() {
                       <h2 className="font-display font-semibold text-xl text-[var(--text-h)] mb-2 group-hover:text-[var(--cyan-500)] transition-colors">{post.title}</h2>
                       <p className="text-[var(--text-muted)] text-sm leading-relaxed">{post.excerpt}</p>
                       <div className="flex gap-2 mt-3">
-                        {post.tags.map(t => <span key={t} className="px-2 py-0.5 rounded text-[10px] font-mono bg-white/5 border border-[var(--glass-border)] text-[var(--text-muted)]">{t}</span>)}
+                        {post.tags.map(t => <span key={t} className="px-2 py-0.5 rounded text-[10px] font-mono bg-[var(--glass-bg)] border border-[var(--glass-border)] text-[var(--text-muted)]">{t}</span>)}
                       </div>
                     </div>
                     <div className="flex-shrink-0 flex items-center md:items-end justify-start md:justify-center">
@@ -119,7 +139,7 @@ export default function BlogPage() {
 
         {/* Newsletter CTA */}
         <div className="mt-16 text-center">
-          <GlassCard className="p-12 max-w-[600px] mx-auto !backdrop-blur-md !bg-white/[0.02]">
+          <GlassCard className="p-12 max-w-[600px] mx-auto !backdrop-blur-md">
             <h3 className="text-h3 mb-3">Subscribe to Our Newsletter</h3>
             <p className="text-[var(--text-muted)] text-sm mb-6">One email per week. Technical insights and project updates. No spam.</p>
             {nlSubscribed ? (
@@ -128,17 +148,25 @@ export default function BlogPage() {
                 Subscribed! We&apos;ll be in touch.
               </div>
             ) : (
-              <form onSubmit={handleNlSubscribe} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-                <input
-                  type="email"
-                  value={nlEmail}
-                  onChange={(e) => setNlEmail(e.target.value)}
-                  placeholder="your@email.com"
-                  required
-                  className="flex-grow min-w-0 bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-full px-5 py-3 text-[var(--text-h)] placeholder-[var(--text-hint)] focus:outline-none focus:border-cyan-500 text-sm"
-                />
-                <LiquidButton type="submit" className="flex-shrink-0">Subscribe</LiquidButton>
-              </form>
+              <>
+                <form onSubmit={handleNlSubscribe} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                  <input
+                    type="email"
+                    value={nlEmail}
+                    onChange={(e) => setNlEmail(e.target.value)}
+                    placeholder="your@email.com"
+                    required
+                    disabled={nlLoading}
+                    className="flex-grow min-w-0 bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-full px-5 py-3 text-[var(--text-h)] placeholder-[var(--text-hint)] focus:outline-none focus:border-cyan-500 text-sm disabled:opacity-60"
+                  />
+                  <LiquidButton type="submit" className="flex-shrink-0" disabled={nlLoading}>
+                    {nlLoading ? "Subscribing…" : "Subscribe"}
+                  </LiquidButton>
+                </form>
+                {nlError && (
+                  <p className="text-red-400 text-sm mt-3">{nlError}</p>
+                )}
+              </>
             )}
           </GlassCard>
         </div>

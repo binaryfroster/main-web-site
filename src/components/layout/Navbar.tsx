@@ -128,7 +128,7 @@ export default function Navbar() {
           <div className="flex items-center gap-2 lg:gap-4 flex-shrink-0">
             {/* Theme Toggle — Liquid Glass Switch */}
             <label
-              className="relative w-[52px] h-[28px] rounded-full bg-white/10 border border-white/20 backdrop-blur-md shadow-inner cursor-pointer transition-colors duration-400 overflow-hidden flex-shrink-0"
+              className="relative w-[52px] h-[28px] rounded-full bg-[var(--glass-bg)] border border-[var(--glass-border)] backdrop-blur-md shadow-inner cursor-pointer transition-colors duration-400 overflow-hidden flex-shrink-0"
               aria-label="Toggle dark/light mode"
             >
               <input

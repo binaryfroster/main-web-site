@@ -206,7 +206,7 @@ export function TypewriterEffect({ words, className, cursorClassName }: Typewrit
           {wordsArray.map((word, wIdx) => (
             <span key={`word-${wIdx}`} className="inline-block">
               {word.text.map((char, cIdx) => (
-                <span key={`${wIdx}-${cIdx}`} className={cn("text-white dark:text-white", word.className)}>
+                <span key={`${wIdx}-${cIdx}`} className={cn("text-[var(--text-h)]", word.className)}>
                   {char}
                 </span>
               ))}

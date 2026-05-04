@@ -104,7 +104,7 @@ function ServiceGrid({ items }: { items: typeof services }) {
             <h3 className="text-lg font-display font-semibold text-[var(--text-h)]">{svc.title}</h3>
             <p className="text-[var(--text-muted)] text-sm leading-relaxed flex-grow">{svc.desc}</p>
             <div className="flex flex-wrap gap-1.5">
-              {svc.tags.map((tag) => <span key={tag} className="px-2 py-0.5 rounded text-[10px] font-mono bg-white/5 border border-[var(--glass-border)] text-[var(--text-muted)]">{tag}</span>)}
+              {svc.tags.map((tag) => <span key={tag} className="px-2 py-0.5 rounded text-[10px] font-mono bg-[var(--glass-bg)] border border-[var(--glass-border)] text-[var(--text-muted)]">{tag}</span>)}
             </div>
             <div className="flex justify-between items-center pt-2 border-t border-[var(--glass-border)]">
               <span className="text-cyan-400 font-mono text-sm">{svc.price}</span>
@@ -238,8 +238,8 @@ export default function ServicesPage() {
             {/* Toggle */}
             <div className="flex justify-center mb-12">
               <div className="inline-flex items-center gap-3 bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-full p-1">
-                <button onClick={() => setYearly(false)} className={"px-5 py-2 rounded-full text-sm font-medium transition-all " + (!yearly ? "bg-violet-500/25 text-white shadow-[0_0_12px_rgba(127,119,221,0.3)]" : "text-[var(--text-muted)] hover:text-[var(--text-h)]")}>Monthly</button>
-                <button onClick={() => setYearly(true)} className={"px-5 py-2 rounded-full text-sm font-medium transition-all " + (yearly ? "bg-violet-500/25 text-white shadow-[0_0_12px_rgba(127,119,221,0.3)]" : "text-[var(--text-muted)] hover:text-[var(--text-h)]")}>Yearly — Save 20%</button>
+                <button onClick={() => setYearly(false)} className={"px-5 py-2 rounded-full text-sm font-medium transition-all " + (!yearly ? "bg-[var(--badge-cat-bg)] text-[var(--text-h)] shadow-[0_0_12px_rgba(127,119,221,0.3)]" : "text-[var(--text-muted)] hover:text-[var(--text-h)]")}>Monthly</button>
+                <button onClick={() => setYearly(true)} className={"px-5 py-2 rounded-full text-sm font-medium transition-all " + (yearly ? "bg-[var(--badge-cat-bg)] text-[var(--text-h)] shadow-[0_0_12px_rgba(127,119,221,0.3)]" : "text-[var(--text-muted)] hover:text-[var(--text-h)]")}>Yearly — Save 20%</button>
               </div>
             </div>
             <AnimatedGroup

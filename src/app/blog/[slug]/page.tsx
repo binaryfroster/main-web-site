@@ -55,7 +55,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             
             <div className="flex gap-2 flex-wrap">
               {post.tags.map(t => (
-                <span key={t} className="px-2.5 py-1 rounded text-[11px] font-mono bg-white/5 border border-[var(--glass-border)] text-[var(--text-muted)]">
+                <span key={t} className="px-2.5 py-1 rounded text-[11px] font-mono bg-[var(--glass-bg)] border border-[var(--glass-border)] text-[var(--text-muted)]">
                   {t}
                 </span>
               ))}
@@ -63,7 +63,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           </header>
 
           <div className="animate-[slide-up_0.6s_ease-out_0.1s_both]">
-            <GlassCard className="p-8 md:p-12 blog-content !backdrop-blur-md !bg-white/[0.02]">
+            <GlassCard className="p-8 md:p-12 blog-content !backdrop-blur-md">
               <div dangerouslySetInnerHTML={{ __html: post.content }} />
             </GlassCard>
           </div>

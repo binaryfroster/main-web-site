@@ -7,11 +7,31 @@ import Link from "next/link";
 export default function Footer() {
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
+  const [subError, setSubError] = useState<string | null>(null);
+  const [subLoading, setSubLoading] = useState(false);
 
-  // TODO: Connect to email service (Mailchimp, Resend, etc.) before production launch
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email) setSubscribed(true);
+    if (!email) return;
+    setSubLoading(true);
+    setSubError(null);
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, source: "footer" }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setSubError(data.error || "Failed to subscribe. Try again.");
+      } else {
+        setSubscribed(true);
+      }
+    } catch {
+      setSubError("Network error. Please try again.");
+    } finally {
+      setSubLoading(false);
+    }
   };
 
   return (
@@ -54,7 +74,7 @@ export default function Footer() {
                   title={s.name}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-[10px] font-mono text-text-muted hover:text-white hover:bg-white/10 hover:scale-110 hover:rotate-[8deg] transition-all duration-200"
+                  className="w-9 h-9 rounded-full bg-[var(--glass-bg)] border border-[var(--glass-border)] flex items-center justify-center text-[10px] font-mono text-[var(--text-muted)] hover:text-[var(--text-h)] hover:bg-[var(--glass-bg-hover)] hover:scale-110 hover:rotate-[8deg] transition-all duration-200"
                 >
                   {s.icon}
                 </a>
@@ -75,7 +95,7 @@ export default function Footer() {
               ))}
               <li>
                 <span className="text-sm text-[var(--text-muted)] cursor-not-allowed opacity-70 flex items-center gap-2">
-                  Client Portal <span className="text-[9px] uppercase tracking-widest bg-white/10 px-1.5 py-0.5 rounded text-white/80">Coming Soon</span>
+                  Client Portal <span className="text-[9px] uppercase tracking-widest bg-[var(--glass-bg)] px-1.5 py-0.5 rounded text-[var(--text-muted)] border border-[var(--glass-border)]">Coming Soon</span>
                 </span>
               </li>
             </ul>
@@ -119,19 +139,29 @@ export default function Footer() {
                 Subscribed!
               </div>
             ) : (
-              <form onSubmit={handleSubscribe} className="flex">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="your@email.com"
-                  className="flex-grow bg-[var(--bg-elevated)] border border-[var(--glass-border)] border-r-0 rounded-l-lg px-3 py-2 text-[var(--text-h)] text-sm focus:outline-none focus:border-[var(--cyan-500)] placeholder-[var(--text-hint)]"
-                  required
-                />
-                <button type="submit" className="px-3 py-2 bg-violet-500/20 border border-violet-500/30 rounded-r-lg text-violet-200 hover:bg-violet-500/30 transition-colors text-sm">
-                  →
-                </button>
-              </form>
+              <>
+                <form onSubmit={handleSubscribe} className="flex">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="your@email.com"
+                    className="flex-grow bg-[var(--bg-elevated)] border border-[var(--glass-border)] border-r-0 rounded-l-lg px-3 py-2 text-[var(--text-h)] text-sm focus:outline-none focus:border-[var(--cyan-500)] placeholder-[var(--text-hint)]"
+                    required
+                    disabled={subLoading}
+                  />
+                  <button
+                    type="submit"
+                    disabled={subLoading}
+                    className="px-3 py-2 bg-[var(--badge-cat-bg)] border border-[var(--badge-cat-border)] rounded-r-lg text-[var(--badge-cat-text)] hover:bg-[var(--glass-bg-hover)] transition-colors text-sm disabled:opacity-60"
+                  >
+                    {subLoading ? "…" : "→"}
+                  </button>
+                </form>
+                {subError && (
+                  <p className="text-red-400 text-[11px] mt-1">{subError}</p>
+                )}
+              </>
             )}
           </div>
         </div>
@@ -140,9 +170,9 @@ export default function Footer() {
         <div className="mt-16 pt-8 border-t border-[var(--glass-border)] flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-[var(--text-muted)] tracking-wider">
           <p>© {new Date().getFullYear()} Binary Froster. All rights reserved.</p>
           <div className="flex gap-4">
-            <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
-            <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
-            <Link href="/privacy" className="hover:text-white transition-colors">Cookie Policy</Link>
+            <Link href="/privacy" className="hover:text-[var(--text-h)] transition-colors">Privacy Policy</Link>
+            <Link href="/terms" className="hover:text-[var(--text-h)] transition-colors">Terms of Service</Link>
+            <Link href="/privacy" className="hover:text-[var(--text-h)] transition-colors">Cookie Policy</Link>
           </div>
         </div>
       </div>
