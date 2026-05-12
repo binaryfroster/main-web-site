@@ -1,0 +1,49 @@
+# Compilation Performance Issue & Solution
+
+## Reason for Slow Compilation on Pages
+The primary reason you are experiencing slow compilation times when navigating between different pages (especially the `/blog` index and individual blog posts) is due to **Next.js Local Image Optimization**.
+
+Your `public/blog` directory contains a massive amount of high-resolution `.webp` images (many of the `*-hero.webp` and `*-mid.webp` files are around 1MB in size, which is unusually large for WebP formats). 
+
+When you navigate to a page locally, Next.js's built-in `<Image>` component intercepts these files and tries to optimize them (resizing, changing formats, compressing) on-the-fly using the CPU. Because the original source images are extremely large, processing 10 of these images simultaneously (like on the blog grid page) spikes your CPU usage, blocking the Next.js server thread and causing "compilation" or page loading to take a very long time.
+
+## The Proper Solution
+
+To fix this for good, you should implement one or more of the following solutions:
+
+### Solution 1: Disable Image Optimization Locally (Quickest Fix)
+If you want the pages to compile and load instantly during development, you can disable the Next.js image optimization engine entirely.
+In your `next.config.ts`, add the `unoptimized: true` flag inside the images object:
+
+```typescript
+const nextConfig: NextConfig = {
+  images: {
+    unoptimized: true, // <-- Add this line
+    formats: ["image/avif", "image/webp"],
+    remotePatterns: [
+      { protocol: "https", hostname: "images.unsplash.com" },
+    ],
+  },
+  // ...
+};
+```
+*Note: This will also disable optimization in production, meaning the raw 1MB images will be served to end users. If bandwidth is a concern, use Solution 2.*
+
+### Solution 2: Compress the Source Images (Recommended for Production)
+The root of the issue is that the images in `public/blog` are too heavy. You should batch-compress all the WebP images down to roughly 100KB - 200KB each.
+You can use a tool like ImageMagick, Squoosh, or a cloud service to drastically reduce their file sizes. This reduces the load on Next.js's optimizer and results in much faster compilation times.
+
+### Solution 3: Use `unoptimized={true}` on Specific Heavy Images
+If you only want to disable optimization for the blog cover images, you can update the `<Image>` tags in your `src/app/blog/page.tsx` and `src/app/blog/[slug]/page.tsx` files:
+
+```tsx
+<Image 
+  src={`/blog/${post.slug}-hero.webp`} 
+  alt={post.title} 
+  fill 
+  unoptimized={true} // <-- Add this property
+  className="object-cover..." 
+/>
+```
+
+By applying these fixes, your Next.js application will stop choking on local image processing and pages will compile almost instantly again!

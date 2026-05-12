@@ -7,15 +7,11 @@ import GlassCard from "@/components/ui/GlassCard";
 import TiltCard from "@/components/ui/TiltCard";
 import LiquidButton from "@/components/ui/LiquidButton";
 import {
-  BackgroundBeams,
-  Spotlight,
-  ShimmerButton,
   Magnetic,
   AnimatedGroup,
   InView,
   TextEffect,
   AnimatedTabs,
-  Meteors,
 } from "@/components/ui/premium";
 import { filterServices, type ServiceItem } from "@/utils/filtering";
 
@@ -140,15 +136,11 @@ export default function ServicesPage() {
   const filteredAll = filterServices(services as ServiceItem[], "All", search);
 
   return (
-    <div className="min-h-screen pt-32 pb-24 relative overflow-hidden">
+    <div className="min-h-screen pt-32 pb-24 relative overflow-hidden noise-overlay">
 
       {/* ── Background ─────────────────────────────────────────────── */}
       <div className="absolute inset-0 pointer-events-none z-[-1]" aria-hidden="true">
-        <BackgroundBeams className="opacity-25" />
-        <Meteors number={10} className="opacity-20" />
-        <div className="absolute bottom-0 left-0 right-0 h-[60vh] bg-[linear-gradient(rgba(127,119,221,0.15)_1px,transparent_1px),linear-gradient(90deg,rgba(127,119,221,0.15)_1px,transparent_1px)] bg-[size:50px_50px] [transform:rotateX(75deg)] origin-bottom opacity-20" />
       </div>
-      <Spotlight className="absolute -top-20 right-0 z-[1]" fill="violet" />
 
       <div className="container mx-auto px-6 max-w-[1320px]">
 
@@ -169,7 +161,7 @@ export default function ServicesPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search services..."
-              className="w-full bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-xl pl-11 pr-4 py-3 text-[var(--text-h)] placeholder-[var(--text-hint)] focus:outline-none focus:border-[var(--cyan-500)] focus:shadow-[0_0_0_3px_rgba(0,191,191,0.15)] transition-all text-sm"
+              className="w-full bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-xl pl-11 pr-4 py-3.5 text-[var(--text-h)] placeholder-[var(--text-hint)] focus:outline-none focus:border-[var(--cyan-500)] focus:shadow-[0_0_0_3px_rgba(0,191,191,0.1)] transition-all text-sm backdrop-blur-sm"
               id="service-search"
               aria-label="Search services"
             />
@@ -189,6 +181,9 @@ export default function ServicesPage() {
             Showing {filteredAll.length} of {services.length} services
           </p>
         </div>
+
+        {/* ── Section Divider ── */}
+        <div className="section-divider" />
 
         {/* ── Process Timeline ──────────────────────────────────────── */}
         <InView>
@@ -210,11 +205,11 @@ export default function ServicesPage() {
               >
                 {processSteps.map((step) => (
                   <div key={step.n} className="process-step text-center">
-                    <div className="w-16 h-16 mx-auto rounded-full bg-[var(--glass-bg)] border border-[var(--glass-border)] backdrop-blur-sm flex items-center justify-center text-2xl mb-4 relative z-10 hover:border-cyan-400/50 hover:shadow-[0_0_20px_rgba(0,191,191,0.15)] transition-all overflow-visible">
+                    <div className="w-16 h-16 mx-auto rounded-none bg-[var(--glass-bg)] border border-[var(--glass-border)] flex items-center justify-center text-2xl mb-4 relative z-10 hover:border-[var(--glass-border-h)] transition-all overflow-visible">
                       <div className="relative w-8 h-8">
                         <Image src={step.icon} alt={step.name} fill className="object-contain" />
                       </div>
-                      <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-violet-500/30 border border-violet-500/50 flex items-center justify-center text-[10px] font-mono text-violet-200">{step.n}</span>
+                      <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-none bg-[var(--badge-cat-bg)] border border-[var(--badge-cat-border)] flex items-center justify-center text-[10px] font-mono text-[var(--text-muted)]">{step.n}</span>
                     </div>
                     <h4 className="font-display font-medium text-[var(--text-h)] text-sm mb-1">{step.name}</h4>
                     <p className="text-[var(--text-muted)] text-xs leading-relaxed">{step.desc}</p>
@@ -224,6 +219,9 @@ export default function ServicesPage() {
             </div>
           </div>
         </InView>
+
+        {/* ── Section Divider ── */}
+        <div className="section-divider" />
 
         {/* ── Pricing ───────────────────────────────────────────────── */}
         <InView>
@@ -237,9 +235,9 @@ export default function ServicesPage() {
             </div>
             {/* Toggle */}
             <div className="flex justify-center mb-12">
-              <div className="inline-flex items-center gap-3 bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-full p-1">
-                <button onClick={() => setYearly(false)} className={"px-5 py-2 rounded-full text-sm font-medium transition-all " + (!yearly ? "bg-[var(--badge-cat-bg)] text-[var(--text-h)] shadow-[0_0_12px_rgba(127,119,221,0.3)]" : "text-[var(--text-muted)] hover:text-[var(--text-h)]")}>Monthly</button>
-                <button onClick={() => setYearly(true)} className={"px-5 py-2 rounded-full text-sm font-medium transition-all " + (yearly ? "bg-[var(--badge-cat-bg)] text-[var(--text-h)] shadow-[0_0_12px_rgba(127,119,221,0.3)]" : "text-[var(--text-muted)] hover:text-[var(--text-h)]")}>Yearly — Save 20%</button>
+              <div className="inline-flex items-center gap-3 bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-none p-1">
+                <button onClick={() => setYearly(false)} className={"px-5 py-2 rounded-none text-sm font-medium transition-all " + (!yearly ? "bg-[var(--badge-cat-bg)] text-[var(--text-h)] border border-[var(--glass-border-h)]" : "text-[var(--text-muted)] hover:text-[var(--text-h)]")}>Monthly</button>
+                <button onClick={() => setYearly(true)} className={"px-5 py-2 rounded-none text-sm font-medium transition-all " + (yearly ? "bg-[var(--badge-cat-bg)] text-[var(--text-h)] border border-[var(--glass-border-h)]" : "text-[var(--text-muted)] hover:text-[var(--text-h)]")}>Yearly — Save 20%</button>
               </div>
             </div>
             <AnimatedGroup
@@ -252,17 +250,13 @@ export default function ServicesPage() {
                     className={
                       "pricing-card p-8 " +
                       (tier.featured
-                        ? "border-violet-500/50 shadow-[0_0_30px_rgba(127,119,221,0.15)] scale-[1.03] z-10"
+                        ? "border-[var(--glass-border-h)] scale-[1.03] z-10"
                         : "")
                     }
                   >
                     {tier.featured && (
                       <>
-                        <div className="absolute -inset-[1px] rounded-2xl z-[-1] overflow-hidden">
-                          <div className="absolute inset-0 bg-[conic-gradient(from_var(--border-angle),#7F77DD,#00BFBF,#7F77DD)] animate-[spin-border_3s_linear_infinite]" />
-                          <div className="absolute inset-[1px] rounded-2xl bg-[var(--bg-surface)]" />
-                        </div>
-                        <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-violet-500/30 border border-violet-500/50 text-[10px] text-violet-200 font-mono whitespace-nowrap">Most Popular</span>
+                        <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-none bg-[var(--badge-cat-bg)] border border-[var(--glass-border-h)] text-[10px] text-[var(--text-h)] font-mono whitespace-nowrap">Most Popular</span>
                       </>
                     )}
                     <p className="text-xs text-[var(--text-muted)] mb-2">Best for: {tier.best}</p>
@@ -274,12 +268,9 @@ export default function ServicesPage() {
                     </ul>
                     <Magnetic intensity={0.15}>
                       {tier.featured ? (
-                        <ShimmerButton
-                          background="radial-gradient(ellipse at bottom, #1a1552 0%, #060A1A 100%)"
-                          className="w-full py-3 text-sm font-medium"
-                        >
-                          <Link href="/contact" className="text-inherit no-underline">{tier.cta}</Link>
-                        </ShimmerButton>
+                        <Link href="/contact" className="inline-flex justify-center w-full py-3 bg-[var(--text-h)] text-[var(--bg-base)] text-sm font-semibold tracking-wide border border-[var(--text-h)] hover:bg-transparent hover:text-[var(--text-h)] transition-colors no-underline">
+                          {tier.cta}
+                        </Link>
                       ) : (
                         <LiquidButton href="/contact" variant="ghost" className="w-full" size="md">{tier.cta}</LiquidButton>
                       )}
@@ -290,6 +281,9 @@ export default function ServicesPage() {
             </AnimatedGroup>
           </div>
         </InView>
+
+        {/* ── Section Divider ── */}
+        <div className="section-divider" />
 
         {/* ── FAQ ──────────────────────────────────────────────────── */}
         <InView>

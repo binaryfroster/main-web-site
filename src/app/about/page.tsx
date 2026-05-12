@@ -4,26 +4,72 @@ import GlassCard from "@/components/ui/GlassCard";
 import TiltCard from "@/components/ui/TiltCard";
 import LiquidButton from "@/components/ui/LiquidButton";
 import {
-  BackgroundBeams,
-  Spotlight,
   AnimatedGroup,
   InView,
   TextEffect,
   NumberTicker,
-  ShimmerButton,
   Magnetic,
 } from "@/components/ui/premium";
 
 import Image from "next/image";
 import Link from "next/link";
 
+
 const team = [
-  { name: "Alex K.", role: "Founder & Lead Engineer", bio: "Full-stack developer with 7+ years of experience. Former senior engineer at a FTSE 100 company. Specializes in AI integrations and scalable architectures.", initials: "AK", color: "violet", img: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=256&h=256" },
-  { name: "Jamie D.", role: "Backend Architect", bio: "Database whisperer and API craftsman. Built systems handling 100K+ requests/day. Expert in PostgreSQL, Node.js, and distributed systems.", initials: "JD", color: "cyan", img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=256&h=256" },
-  { name: "Sophie P.", role: "UI/UX Designer", bio: "Design-obsessed creative with a knack for turning complex workflows into intuitive interfaces. Background in graphic design and human-computer interaction.", initials: "SP", color: "violet", img: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=256&h=256" },
-  { name: "Marcus R.", role: "AI/ML Engineer", bio: "Specialized in NLP, computer vision, and recommendation systems. Published researcher in applied machine learning for business automation.", initials: "MR", color: "cyan", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=256&h=256" },
-  { name: "Priya S.", role: "DevOps & Cloud", bio: "Infrastructure specialist bringing reliability and performance to every deployment. AWS certified, Kubernetes enthusiast, and automation advocate.", initials: "PS", color: "violet", img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=256&h=256" },
-  { name: "David C.", role: "Full-Stack Developer", bio: "React expert and TypeScript advocate. Passionate about clean code, component architecture, and pixel-perfect implementations.", initials: "DC", color: "cyan", img: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=256&h=256" },
+  {
+    name: "Shivam Dube",
+    role: "Founder & Backend Architect",
+    bio: "Full-stack developer and the driving force behind Binary Froster. Specializes in scalable backend architectures, API design, and AI integrations. Passionate about building production-grade systems that solve real business problems.",
+    initials: "SD",
+    color: "violet",
+    img: "/team/shivam.png",
+    linkedin: "https://www.linkedin.com/in/shivam-dube/",
+  },
+  {
+    name: "Digvijay Kadam",
+    role: "UI/UX Designer",
+    bio: "Design-obsessed creative who transforms complex workflows into intuitive, beautiful interfaces. Expert in Figma, design systems, and user research. Ensures every pixel serves a purpose.",
+    initials: "DK",
+    color: "cyan",
+    img: "/team/digvijay.png",
+    linkedin: "https://www.linkedin.com/in/kadamdigvijay/",
+  },
+  {
+    name: "Jawad Khan",
+    role: "Mobile App Developer",
+    bio: "Cross-platform mobile specialist building performant apps with React Native and Flutter. Focused on smooth animations, offline-first architectures, and seamless user experiences across iOS and Android.",
+    initials: "JK",
+    color: "violet",
+    img: "/team/jawad.png",
+    linkedin: "https://www.linkedin.com/in/jawad-khan-hakim/",
+  },
+  {
+    name: "Pruthviraj Chougale",
+    role: "AI Engineer",
+    bio: "Machine learning and AI specialist with expertise in NLP, computer vision, and LLM integrations. Builds intelligent automation pipelines that give businesses a competitive edge.",
+    initials: "PC",
+    color: "cyan",
+    img: "/team/pruthviraj.png",
+    linkedin: "https://www.linkedin.com/in/pruthviraj-chougale-3333a9240/",
+  },
+  {
+    name: "Rugved Kulkarni",
+    role: "Full-Stack Developer",
+    bio: "React and TypeScript advocate who bridges frontend elegance with backend robustness. Passionate about clean code, component architecture, and delivering pixel-perfect implementations at speed.",
+    initials: "RK",
+    color: "violet",
+    img: "/team/rugved.png",
+    linkedin: "https://www.linkedin.com/in/rugved-kulkarni-038315342/",
+  },
+  {
+    name: "Prithviraj Indulkar",
+    role: "Cloud & DevOps",
+    bio: "Infrastructure specialist bringing reliability and performance to every deployment. Expert in AWS, Docker, Kubernetes, and CI/CD pipelines. Ensures every product scales seamlessly from day one.",
+    initials: "PI",
+    color: "cyan",
+    img: "/team/prithviraj_i.png",
+    linkedin: "https://www.linkedin.com/in/prithviraj-indulkar/",
+  },
 ];
 
 const values = [
@@ -42,15 +88,11 @@ const stats = [
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen pt-32 pb-24 relative overflow-hidden">
+    <div className="min-h-screen pt-32 pb-24 relative overflow-hidden noise-overlay">
 
       {/* ── Background ─────────────────────────────────────────────── */}
       <div className="absolute inset-0 pointer-events-none z-[-1]" aria-hidden="true">
-        <BackgroundBeams className="opacity-30" />
-        <div className="absolute top-[10%] right-[10%] w-[500px] h-[500px] bg-violet-600/6 rounded-full blur-[120px] animate-[float_25s_ease-in-out_infinite]" />
-        <div className="absolute bottom-[20%] left-[15%] w-[400px] h-[400px] bg-cyan-500/5 rounded-full blur-[100px] animate-[float_20s_ease-in-out_infinite_reverse]" />
       </div>
-      <Spotlight className="absolute -top-40 left-20 z-[1]" fill="violet" />
 
       <div className="container mx-auto px-6 max-w-[1320px]">
 
@@ -82,6 +124,9 @@ export default function AboutPage() {
           </div>
         </InView>
 
+        {/* ── Section Divider ── */}
+        <div className="section-divider" />
+
         {/* ── Values ─────────────────────────────────────────────────── */}
         <section className="mb-32">
           <InView>
@@ -108,15 +153,18 @@ export default function AboutPage() {
           </AnimatedGroup>
         </section>
 
+        {/* ── Section Divider ── */}
+        <div className="section-divider" />
+
         {/* ── Team ───────────────────────────────────────────────────── */}
         <section className="mb-32">
           <InView>
             <div className="text-center mb-12">
-              <span className="eyebrow">The Team</span>
+              <span className="eyebrow">The Founders</span>
               <TextEffect className="text-h2 mt-4" preset="blur" per="word">
                 Meet the Humans Behind the Code
               </TextEffect>
-              <p className="text-[var(--text-muted)] mt-4 max-w-lg mx-auto">Every team member is a senior specialist. No junior hand-offs. No outsourcing.</p>
+              <p className="text-[var(--text-muted)] mt-4 max-w-lg mx-auto">Every team member is a specialist. No junior hand-offs. No outsourcing.</p>
             </div>
           </InView>
           <AnimatedGroup
@@ -125,10 +173,10 @@ export default function AboutPage() {
           >
             {team.map((member, i) => (
               <TiltCard key={i} className="team-card">
-                <GlassCard className="p-7 flex flex-col items-center text-center gap-4 hover:border-cyan-400/30 transition-all">
-                  <div className={`relative w-20 h-20 rounded-full border-2 overflow-hidden flex items-center justify-center text-xl font-display font-bold ${member.color === "violet" ? "bg-violet-500/20 border-violet-500/30 text-violet-300" : "bg-cyan-500/20 border-cyan-500/30 text-cyan-300"}`}>
+                <GlassCard className="p-8 flex flex-col items-center text-center gap-5 hover:border-[var(--cyan-400)]/25 hover:shadow-[0_0_40px_rgba(93,220,220,0.06)] transition-all duration-500 relative group">
+                  <div className={`relative w-24 h-24 rounded-full border-2 border-[var(--glass-border-h)] overflow-hidden flex items-center justify-center text-xl font-display font-bold bg-[var(--badge-cat-bg)] text-[var(--text-h)]`}>
                     {member.img ? (
-                      <Image src={member.img} alt={member.name} fill className="object-cover" sizes="80px" />
+                      <Image src={member.img} alt={member.name} fill className="object-cover" sizes="96px" />
                     ) : (
                       member.initials
                     )}
@@ -138,16 +186,31 @@ export default function AboutPage() {
                     <p className="text-cyan-400 text-sm font-medium mt-0.5">{member.role}</p>
                   </div>
                   <p className="text-[var(--text-muted)] text-sm leading-relaxed">{member.bio}</p>
+                  {member.linkedin && (
+                    <a
+                      href={member.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${member.name} on LinkedIn`}
+                      className="inline-flex items-center gap-1.5 text-xs font-medium text-[var(--text-muted)] hover:text-[#0A66C2] transition-colors mt-auto pt-2"
+                    >
+                      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                      <span>LinkedIn</span>
+                    </a>
+                  )}
                 </GlassCard>
               </TiltCard>
             ))}
           </AnimatedGroup>
         </section>
 
+        {/* ── Section Divider ── */}
+        <div className="section-divider" />
+
         {/* ── CTA ────────────────────────────────────────────────────── */}
         <InView>
           <section className="text-center">
-            <GlassCard className="p-16 max-w-[800px] mx-auto border-violet-500/20 hover:border-violet-500/40 transition-all">
+            <GlassCard className="p-16 max-w-[800px] mx-auto border-[var(--violet-500)]/15 hover:border-[var(--violet-500)]/30 transition-all duration-500 animate-breathe">
               <TextEffect className="text-h2 mb-4" preset="fade" per="word">
                 Want to Work With Us?
               </TextEffect>
@@ -156,12 +219,9 @@ export default function AboutPage() {
               </p>
               <div className="flex gap-4 justify-center flex-wrap">
                 <Magnetic intensity={0.3}>
-                  <ShimmerButton
-                    background="radial-gradient(ellipse at bottom, #1a1552 0%, #060A1A 100%)"
-                    className="px-8 py-3.5 text-sm font-medium"
-                  >
-                    <Link href="/contact" className="text-inherit no-underline">Start a Conversation →</Link>
-                  </ShimmerButton>
+                  <Link href="/contact" className="inline-flex justify-center px-8 py-3.5 bg-[var(--text-h)] text-[var(--bg-base)] text-sm font-semibold tracking-wide border border-[var(--text-h)] hover:bg-transparent hover:text-[var(--text-h)] transition-colors no-underline">
+                    Start a Conversation →
+                  </Link>
                 </Magnetic>
                 <LiquidButton href="/portfolio" variant="ghost" size="md">See Our Work</LiquidButton>
               </div>
@@ -173,3 +233,4 @@ export default function AboutPage() {
     </div>
   );
 }
+

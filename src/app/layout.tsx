@@ -1,13 +1,13 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
+import { Inter, Hanken_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import SmoothScrolling from "@/components/SmoothScrolling";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import PageLoader from "@/components/layout/PageLoader";
-
+import LiveChat from "@/components/chat/LiveChat";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-space" });
+const hankenGrotesk = Hanken_Grotesk({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-space" });
 const jetbrains = JetBrains_Mono({ subsets: ["latin"], weight: ["500"], variable: "--font-mono" });
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.binaryfroster.com";
@@ -99,8 +99,8 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#060A1A" },
-    { media: "(prefers-color-scheme: light)", color: "#F8F9FF" },
+    { media: "(prefers-color-scheme: dark)", color: "#131313" },
+    { media: "(prefers-color-scheme: light)", color: "#FFFFFF" },
   ],
 };
 
@@ -208,12 +208,13 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://images.unsplash.com" />
       </head>
       <body
-        className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrains.variable} antialiased min-h-screen flex flex-col`}
+        className={`${inter.variable} ${hankenGrotesk.variable} ${jetbrains.variable} antialiased min-h-screen flex flex-col`}
       >
         <SmoothScrolling>
           <PageLoader />
           <Navbar />
           <main className="flex-grow pt-24">{children}</main>
+          <LiveChat />
           <Footer />
         </SmoothScrolling>
       </body>

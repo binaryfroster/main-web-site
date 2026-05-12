@@ -61,6 +61,7 @@ export default function Navbar() {
     { name: "Home", path: "/" },
     { name: "Services", path: "/services" },
     { name: "Portfolio", path: "/portfolio" },
+    { name: "Products", path: "/products" },
     { name: "About", path: "/about" },
     { name: "Blog", path: "/blog" },
     { name: "Contact", path: "/contact" },
@@ -75,7 +76,7 @@ export default function Navbar() {
     <>
       <nav
         className={
-          "fixed top-0 left-0 right-0 z-[1000] h-[90px] flex items-center px-6 lg:px-12 transition-all duration-350 ease-in-out " +
+          "fixed top-0 left-0 right-0 z-[1000] h-[80px] flex items-center px-6 lg:px-12 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] " +
           (scrolled ? "glass-nav shadow-2xl" : "bg-transparent")
         }
         role="navigation"
@@ -93,8 +94,8 @@ export default function Navbar() {
               sizes="48px"
               className="object-contain transition-transform duration-700 group-hover:scale-110 flex-shrink-0"
             />
-            <span className="font-display font-black text-xl lg:text-2xl tracking-wide text-[var(--text-h)] truncate hidden sm:block">
-              Binary Froster
+            <span className="font-display font-bold text-lg lg:text-xl tracking-tight text-[var(--text-h)] truncate hidden sm:block">
+              Binary<span className="text-gradient">Froster</span>
             </span>
           </Link>
 
@@ -105,7 +106,7 @@ export default function Navbar() {
                 key={link.name}
                 href={link.path}
                 className={
-                  "relative text-base lg:text-lg font-semibold transition-colors py-1 group " +
+                  "relative text-[15px] font-medium transition-colors py-1 group " +
                   (isActive(link.path)
                     ? "text-[var(--text-h)]"
                     : "text-[var(--text-muted)] hover:text-[var(--text-h)]")
@@ -114,7 +115,7 @@ export default function Navbar() {
                 {link.name}
                 <span
                   className={
-                    "absolute bottom-[-2px] h-[1.5px] bg-[var(--cyan-500)] rounded-full transition-all duration-250 ease-out " +
+                    "absolute bottom-[-2px] h-[2px] bg-[var(--text-h)] rounded-none transition-all duration-300 ease-out " +
                     (isActive(link.path)
                       ? "left-0 right-0"
                       : "left-1/2 right-1/2 group-hover:left-0 group-hover:right-0")
@@ -126,9 +127,9 @@ export default function Navbar() {
 
           {/* Actions — theme toggle is always visible, CTA hidden on mobile, burger only on mobile */}
           <div className="flex items-center gap-2 lg:gap-4 flex-shrink-0">
-            {/* Theme Toggle — Liquid Glass Switch */}
+            {/* Theme Toggle — Minimal Switch */}
             <label
-              className="relative w-[52px] h-[28px] rounded-full bg-[var(--glass-bg)] border border-[var(--glass-border)] backdrop-blur-md shadow-inner cursor-pointer transition-colors duration-400 overflow-hidden flex-shrink-0"
+              className="relative w-[52px] h-[28px] rounded-none bg-[var(--glass-bg)] border border-[var(--glass-border)] backdrop-blur-md cursor-pointer transition-colors duration-400 overflow-hidden flex-shrink-0"
               aria-label="Toggle dark/light mode"
             >
               <input
@@ -137,8 +138,8 @@ export default function Navbar() {
                 checked={!isDark}
                 onChange={toggleTheme}
               />
-              <div className="absolute inset-0 bg-transparent peer-checked:bg-[rgba(83,74,183,0.18)] transition-colors duration-400" />
-              <div className="absolute top-[3px] left-[3px] w-[22px] h-[22px] rounded-full bg-white/90 backdrop-blur-sm shadow-md flex items-center justify-center transition-transform duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] peer-checked:translate-x-[24px]">
+              <div className="absolute inset-0 bg-transparent peer-checked:bg-[var(--glass-bg-hover)] transition-colors duration-400" />
+              <div className="absolute top-[3px] left-[3px] w-[22px] h-[22px] rounded-none bg-white/90 backdrop-blur-sm flex items-center justify-center transition-transform duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] peer-checked:translate-x-[24px]">
                 <Moon
                   size={12}
                   className={
@@ -208,7 +209,7 @@ export default function Navbar() {
         />
         <div
           className={
-            "absolute top-0 right-0 w-[300px] h-full bg-[var(--bg-surface)]/95 backdrop-blur-xl border-l border-[var(--glass-border)] p-8 pt-24 flex flex-col gap-6 transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] " +
+            "absolute top-0 right-0 w-[300px] h-full bg-[var(--bg-surface)]/97 backdrop-blur-2xl border-l border-[var(--glass-border)] p-8 pt-24 flex flex-col gap-5 transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] shadow-[-20px_0_60px_rgba(0,0,0,0.3)] " +
             (mobileOpen ? "translate-x-0" : "translate-x-full")
           }
         >
@@ -220,8 +221,8 @@ export default function Navbar() {
               className={
                 "text-lg font-display font-medium py-2 border-b border-[var(--glass-border)] transition-all duration-300 ease-out " +
                 (isActive(link.path)
-                  ? "text-[var(--cyan-500)]"
-                  : "text-[var(--text-h)] hover:text-[var(--cyan-500)]") +
+                  ? "text-[var(--text-h)]"
+                  : "text-[var(--text-h)] hover:text-[var(--text-muted)]") +
                 (mobileOpen ? " opacity-100 translate-x-0" : " opacity-0 translate-x-4")
               }
               style={{ transitionDelay: `${mobileOpen ? 150 + i * 50 : 0}ms` }}

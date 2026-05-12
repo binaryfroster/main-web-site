@@ -40,7 +40,7 @@ export default function LiquidButton({
     const ripple = document.createElement("span");
     const rippleSize = Math.max(rect.width, rect.height);
 
-    ripple.className = "absolute rounded-full bg-white/30 pointer-events-none z-[3]";
+    ripple.className = "absolute rounded-none bg-white/10 pointer-events-none z-[3]";
     ripple.style.width = rippleSize + "px";
     ripple.style.height = rippleSize + "px";
     ripple.style.left = (e.clientX - rect.left - rippleSize / 2) + "px";
@@ -60,33 +60,21 @@ export default function LiquidButton({
   };
 
   const baseClasses =
-    "btn-liquid relative inline-flex items-center justify-center rounded-full border-[2px] font-body font-bold tracking-[0.04em] overflow-hidden isolate transition-all duration-300 " +
+    "relative inline-flex items-center justify-center border font-body font-bold tracking-[0.04em] overflow-hidden transition-all duration-300 rounded-none " +
     sizeClasses[size] + " " +
     (disabled || isLoading
       ? "opacity-50 cursor-not-allowed "
-      : "cursor-pointer active:scale-[0.95] ") +
+      : "cursor-pointer active:scale-[0.98] ") +
     (isPrimary
-      ? "btn-primary bg-[var(--violet-600)] border-[var(--violet-400)] text-[var(--btn-primary-text)] shadow-[0_0_25px_rgba(139,92,246,0.4)] hover:border-[var(--cyan-400)] hover:bg-[var(--violet-500)] hover:shadow-[0_0_45px_rgba(34,211,238,0.6),0_0_15px_rgba(34,211,238,0.4)] hover:brightness-110 "
-      : "btn-ghost border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-h)] shadow-[0_4px_15px_rgba(0,0,0,0.1)] hover:text-[var(--cyan-500)] hover:border-[var(--cyan-500)] hover:bg-[var(--glass-bg-hover)] hover:shadow-[0_0_30px_rgba(34,211,238,0.3)] ") +
+      ? "bg-[var(--text-h)] border-[var(--text-h)] text-[var(--bg-base)] hover:bg-transparent hover:text-[var(--text-h)] "
+      : "border-[var(--glass-border)] bg-transparent text-[var(--text-h)] hover:border-[var(--glass-border-h)] hover:bg-[var(--glass-bg-hover)] ") +
     className;
-
-  const fillClasses =
-    "absolute inset-0 rounded-full origin-[50%_110%] scale-y-0 transition-transform duration-[400ms] ease-[cubic-bezier(0.25,0.46,0.45,0.94)] z-[1]";
 
   const content = (
     <>
       <span
         className={
-          isPrimary
-            ? fillClasses + " bg-gradient-to-br from-violet-500 to-violet-700"
-            : fillClasses + " bg-white/10"
-        }
-        style={{ clipPath: "ellipse(55% 60% at 50% 100%)" }}
-      />
-      <span
-        className={
-          "relative z-[2] transition-colors duration-400 delay-50 flex items-center gap-2 " +
-          (isPrimary ? "group-hover:text-white" : "")
+          "relative z-[2] transition-colors duration-300 flex items-center gap-2"
         }
       >
         {isLoading ? (

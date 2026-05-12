@@ -7,8 +7,6 @@ import TiltCard from "@/components/ui/TiltCard";
 import LiquidButton from "@/components/ui/LiquidButton";
 import useEmblaCarousel from "embla-carousel-react";
 import {
-  BackgroundBeams,
-  ShimmerButton,
   Magnetic,
   AnimatedGroup,
   InView,
@@ -83,10 +81,9 @@ export default function PortfolioPage() {
   const filtered = projects.filter((p) => activeCat === "All" || p.cat === activeCat);
 
   return (
-    <div className="min-h-screen pt-32 pb-24 relative overflow-hidden" ref={containerRef}>
+    <div className="min-h-screen pt-32 pb-24 relative overflow-hidden noise-overlay" ref={containerRef}>
       {/* ── Background ── */}
       <div className="absolute inset-0 pointer-events-none z-[-1]" aria-hidden="true">
-        <BackgroundBeams className="opacity-20" />
       </div>
       <div className="container mx-auto px-6 max-w-[1320px]">
 
@@ -108,10 +105,10 @@ export default function PortfolioPage() {
               id={`filter-${cat.replace(/[^a-z0-9]/gi, "-").toLowerCase()}`}
               onClick={() => setActiveCat(cat)}
               className={
-                "px-5 py-2.5 rounded-xl border-2 text-sm font-semibold transition-all duration-250 " +
+                "px-5 py-2.5 rounded-none border border-[var(--glass-border)] text-sm font-semibold transition-all duration-250 " +
                 (activeCat === cat
-                  ? "bg-[var(--violet-600)] border-[var(--violet-500)] text-white shadow-[0_0_20px_rgba(83,74,183,0.4)] scale-[1.04]"
-                  : "bg-[var(--glass-bg)] border-[var(--glass-border)] text-[var(--text-muted)] hover:border-[var(--violet-500)]/60 hover:text-[var(--text-h)] hover:bg-[var(--glass-bg-hover)]")
+                  ? "bg-[var(--text-h)] border-[var(--text-h)] text-[var(--bg-base)]"
+                  : "bg-[var(--glass-bg)] text-[var(--text-muted)] hover:border-[var(--glass-border-h)] hover:text-[var(--text-h)] hover:bg-[var(--glass-bg-hover)]")
               }
             >
               {cat}
@@ -140,7 +137,7 @@ export default function PortfolioPage() {
               >
                 <div
                   onClick={() => setModal(proj)}
-                  className={"relative w-full h-full rounded-2xl overflow-hidden border border-[var(--glass-border)] bg-[var(--bg-surface)] transition-all duration-300 " + ac.glow}
+                  className={"relative w-full h-full rounded-none overflow-hidden border border-[var(--glass-border)] bg-[var(--bg-surface)] transition-all duration-300 hover:border-[var(--glass-border-h)]"}
                 >
                   {/* Accent top bar */}
                   <div className={`absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r ${ac.bar} z-10`} />
@@ -169,10 +166,10 @@ export default function PortfolioPage() {
                       ))}
                     </div>
                     <h3 className="text-lg font-display font-bold text-white leading-snug">{proj.title}</h3>
-                    <p className="text-white/55 text-xs mt-1.5 translate-y-3 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 leading-relaxed">
+                    <p className="text-white/55 text-xs mt-1.5 md:translate-y-3 md:opacity-0 transition-all duration-300 md:group-hover:translate-y-0 md:group-hover:opacity-100 leading-relaxed">
                       {proj.desc}
                     </p>
-                    <span className={`inline-flex items-center gap-1.5 mt-2.5 text-xs font-semibold translate-y-3 opacity-0 transition-all duration-300 delay-75 group-hover:translate-y-0 group-hover:opacity-100 ${ac.badgeText}`}>
+                    <span className={`inline-flex items-center gap-1.5 mt-2.5 text-xs font-semibold md:translate-y-3 md:opacity-0 transition-all duration-300 delay-75 md:group-hover:translate-y-0 md:group-hover:opacity-100 ${ac.badgeText}`}>
                       View Case Study
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                     </span>
@@ -185,10 +182,8 @@ export default function PortfolioPage() {
 
         {/* ── CTA Banner ── */}
         <InView>
-          <div className="mt-20 rounded-2xl border border-[var(--glass-border)] bg-[var(--glass-bg)] backdrop-blur-xl p-10 text-center relative overflow-hidden">
+          <div className="mt-20 rounded-none border border-[var(--glass-border)] bg-[var(--glass-bg)] backdrop-blur-xl p-10 text-center relative overflow-hidden">
             <div className="absolute inset-0 pointer-events-none">
-              <div className="absolute -top-24 -left-24 w-64 h-64 bg-violet-600/10 rounded-full blur-[60px]" />
-              <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-cyan-500/10 rounded-full blur-[60px]" />
             </div>
             <span className="eyebrow relative z-10">Ready to Join This List?</span>
             <TextEffect className="text-h2 mt-4 mb-4 relative z-10" preset="fade" per="word">
@@ -199,12 +194,9 @@ export default function PortfolioPage() {
             </p>
             <div className="flex gap-4 justify-center flex-wrap relative z-10">
               <Magnetic intensity={0.3}>
-                <ShimmerButton
-                  background="radial-gradient(ellipse at bottom, #1a1552 0%, #060A1A 100%)"
-                  className="px-8 py-3.5 text-sm font-medium"
-                >
-                  <Link href="/contact" className="text-inherit no-underline">Start a Project →</Link>
-                </ShimmerButton>
+                <Link href="/contact" className="inline-flex justify-center px-8 py-3.5 bg-[var(--text-h)] text-[var(--bg-base)] text-sm font-semibold tracking-wide border border-[var(--text-h)] hover:bg-transparent hover:text-[var(--text-h)] transition-colors no-underline">
+                  Start a Project →
+                </Link>
               </Magnetic>
               <LiquidButton href="/services" variant="ghost">Explore Services</LiquidButton>
             </div>
@@ -223,13 +215,13 @@ export default function PortfolioPage() {
         >
           <div className="absolute inset-0 bg-black/75 backdrop-blur-sm" />
           <div
-            className="relative w-full max-w-[820px] max-h-[92vh] bg-[var(--bg-surface)] rounded-t-3xl md:rounded-3xl border border-[var(--glass-border)] overflow-y-auto animate-[modal-up_0.35s_cubic-bezier(0.16,1,0.3,1)]"
+            className="relative w-full max-w-[820px] max-h-[92vh] bg-[var(--bg-surface)] rounded-none border border-[var(--glass-border)] overflow-y-auto animate-[modal-up_0.35s_cubic-bezier(0.16,1,0.3,1)]"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close */}
             <button
               onClick={() => setModal(null)}
-              className="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/50 backdrop-blur-md border border-white/20 flex items-center justify-center text-white z-[3000] hover:bg-black/70 transition-colors text-lg font-light"
+              className="absolute top-4 right-4 w-10 h-10 rounded-none bg-black/50 backdrop-blur-md border border-white/20 flex items-center justify-center text-white z-[3000] hover:bg-black/70 transition-colors text-lg font-light"
               aria-label="Close modal"
             >✕</button>
 
