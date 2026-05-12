@@ -1,9 +1,17 @@
-import { Resend } from "resend";
 import { NextResponse } from "next/server";
+import nodemailer from "nodemailer";
 
-export const runtime = "edge";
+// Use Node.js runtime (not edge) for nodemailer compatibility
+export const runtime = "nodejs";
 
-const resend = new Resend(process.env.RESEND_API_KEY || "re_dummy_key_for_build");
+// Gmail SMTP transporter
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.GMAIL_USER || "binaryfroster@gmail.com",
+    pass: process.env.GMAIL_APP_PASSWORD || "",
+  },
+});
 
 // Rate limiting — simple in-memory store (resets on cold start)
 const ipRequests = new Map<string, { count: number; resetAt: number }>();
@@ -20,6 +28,15 @@ function isRateLimited(ip: string): boolean {
   if (entry.count >= RATE_LIMIT) return true;
   entry.count++;
   return false;
+}
+
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
 
 export async function POST(req: Request) {
@@ -51,9 +68,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Message is too long." }, { status: 400 });
     }
 
-    // ── Check API key ─────────────────────────────────────────────────
-    if (!process.env.RESEND_API_KEY || process.env.RESEND_API_KEY.startsWith("re_REPLACE")) {
-      // Dev fallback — log to console when no key is configured
+    // ── Check if Gmail App Password is configured ─────────────────────
+    if (!process.env.GMAIL_APP_PASSWORD) {
+      // Dev fallback — log to console when no password is configured
       console.log("\n📬 [Contact Form — Dev Mode]");
       console.log(`From: ${name} <${email}>`);
       if (company) console.log(`Company: ${company}`);
@@ -63,9 +80,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: true, dev: true });
     }
 
-    // ── Send notification to Binary Froster ───────────────────────────
-    await resend.emails.send({
-      from: "Binary Froster Contact <contact@binaryfroster.com>",
+    // ── Send notification email to Binary Froster ─────────────────────
+    await transporter.sendMail({
+      from: `"Binary Froster Contact" <${process.env.GMAIL_USER || "binaryfroster@gmail.com"}>`,
       to: "binaryfroster@gmail.com",
       replyTo: email,
       subject: `New Inquiry${company ? ` from ${company}` : ""} — ${service || "General"}`,
@@ -95,15 +112,15 @@ export async function POST(req: Request) {
           </div>
 
           <p style="margin:20px 0 0;font-size:12px;color:#6B7280;text-align:center">
-            Sent via Binary Froster contact form · Reply directly to this email to respond to ${escapeHtml(name)}
+            Sent via Binary Froster contact form · Reply directly to respond to ${escapeHtml(name)}
           </p>
         </div>
       `,
     });
 
     // ── Auto-reply to the sender ──────────────────────────────────────
-    await resend.emails.send({
-      from: "Binary Froster <contact@binaryfroster.com>",
+    await transporter.sendMail({
+      from: `"Binary Froster" <${process.env.GMAIL_USER || "binaryfroster@gmail.com"}>`,
       to: email,
       subject: "We received your message — Binary Froster",
       html: `
@@ -126,13 +143,4 @@ export async function POST(req: Request) {
       { status: 500 }
     );
   }
-}
-
-function escapeHtml(str: string): string {
-  return str
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
 }

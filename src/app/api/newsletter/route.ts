@@ -1,19 +1,33 @@
-import { Resend } from "resend";
 import { NextResponse } from "next/server";
+import nodemailer from "nodemailer";
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 
-const resend = new Resend(process.env.RESEND_API_KEY || "re_dummy_key_for_build");
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.GMAIL_USER || "binaryfroster@gmail.com",
+    pass: process.env.GMAIL_APP_PASSWORD || "",
+  },
+});
 
-// In-memory dedupe cache (resets on cold start; good enough for low traffic)
+// In-memory dedupe cache (resets on cold start)
 const recentEmails = new Set<string>();
+
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
     const { email, source = "footer" } = body;
 
-    // ── Validate ──────────────────────────────────────────────────────
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return NextResponse.json({ error: "Please enter a valid email address." }, { status: 400 });
     }
@@ -21,22 +35,21 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Email address is too long." }, { status: 400 });
     }
 
-    // ── Dedupe (per process lifetime) ─────────────────────────────────
     const key = email.toLowerCase().trim();
     if (recentEmails.has(key)) {
       return NextResponse.json({ ok: true, alreadySubscribed: true });
     }
     recentEmails.add(key);
 
-    // ── Dev fallback ──────────────────────────────────────────────────
-    if (!process.env.RESEND_API_KEY || process.env.RESEND_API_KEY.startsWith("re_REPLACE")) {
+    // Dev fallback
+    if (!process.env.GMAIL_APP_PASSWORD) {
       console.log(`\n📧 [Newsletter — Dev Mode] New subscriber: ${email} (source: ${source})\n`);
       return NextResponse.json({ ok: true, dev: true });
     }
 
-    // ── Notify Binary Froster of new subscriber ────────────────────────
-    await resend.emails.send({
-      from: "Binary Froster <contact@binaryfroster.com>",
+    // Notify you of new subscriber
+    await transporter.sendMail({
+      from: `"Binary Froster" <${process.env.GMAIL_USER || "binaryfroster@gmail.com"}>`,
       to: "binaryfroster@gmail.com",
       subject: `📧 New Newsletter Subscriber — ${email}`,
       html: `
@@ -48,14 +61,13 @@ export async function POST(req: Request) {
             <tr><td style="color:#9CA3AF;padding:6px 0">Source</td>
                 <td style="color:#F9FAFB">${escapeHtml(source)}</td></tr>
           </table>
-          <p style="font-size:12px;color:#6B7280;margin-top:16px">Add this address to your mailing list to keep them in the loop.</p>
         </div>
       `,
     });
 
-    // ── Welcome email to subscriber ───────────────────────────────────
-    await resend.emails.send({
-      from: "Binary Froster <contact@binaryfroster.com>",
+    // Welcome email to subscriber
+    await transporter.sendMail({
+      from: `"Binary Froster" <${process.env.GMAIL_USER || "binaryfroster@gmail.com"}>`,
       to: email,
       subject: "You're on the list 🎉 — Binary Froster Tech Tips",
       html: `
@@ -63,8 +75,8 @@ export async function POST(req: Request) {
           <div style="margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid #1F2937">
             <span style="font-size:18px;font-weight:700;color:#F9FAFB">Welcome to the Binary Froster Newsletter 🚀</span>
           </div>
-          <p style="color:#D1D5DB;line-height:1.6">You're now subscribed to our weekly tech insights — AI, web development, automation, and everything we learn building products for growing businesses.</p>
-          <p style="color:#D1D5DB;line-height:1.6">Expect <strong style="color:#22D3EE">one email per week</strong>. No spam, ever. You can unsubscribe anytime.</p>
+          <p style="color:#D1D5DB;line-height:1.6">You're now subscribed to our weekly tech insights — AI, web development, automation, and everything we learn building products.</p>
+          <p style="color:#D1D5DB;line-height:1.6">Expect <strong style="color:#22D3EE">one email per week</strong>. No spam, ever.</p>
           <p style="color:#9CA3AF;font-size:13px;margin-top:24px">— The Binary Froster Team<br>
             <a href="https://www.binaryfroster.com" style="color:#22D3EE">binaryfroster.com</a>
           </p>
@@ -80,13 +92,4 @@ export async function POST(req: Request) {
       { status: 500 }
     );
   }
-}
-
-function escapeHtml(str: string): string {
-  return str
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
 }
