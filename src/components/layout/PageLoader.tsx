@@ -34,7 +34,7 @@ export default function PageLoader() {
     }
   }, [mounted]);
 
-  // 3. GSAP Sequence (Calibrated for ~5 seconds)
+  // 3. GSAP Sequence (Calibrated for ~2 seconds — fast and snappy)
   useGSAP(() => {
     if (!show || assetsLoaded < 1 || !loaderRef.current) return;
 
@@ -43,7 +43,7 @@ export default function PageLoader() {
         sessionStorage.setItem("bf-loaded", "1");
         gsap.to(loaderRef.current, {
           opacity: 0,
-          duration: 0.5,
+          duration: 0.3,
           pointerEvents: "none",
           onComplete: () => setShow(false)
         });
@@ -54,11 +54,11 @@ export default function PageLoader() {
     gsap.set(welcomeRef.current, { opacity: 0, y: 15 });
     gsap.set(logoRef.current, { opacity: 0, scale: 0.8 });
 
-    // Sequence breakdown:
-    tl.to(welcomeRef.current, { opacity: 1, y: 0, duration: 1.2, ease: "power2.out" })
-      .to(welcomeRef.current, { opacity: 0, y: -10, duration: 0.6, ease: "power2.in" }, "+=1.0")
-      .to(logoRef.current, { opacity: 1, scale: 1, duration: 1.0, ease: "back.out(1.7)" })
-      .to(logoRef.current, { opacity: 0, scale: 1.2, duration: 0.8, ease: "power2.in" }, "+=1.0");
+    // Sequence breakdown — fast but elegant:
+    tl.to(welcomeRef.current, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" })
+      .to(welcomeRef.current, { opacity: 0, y: -10, duration: 0.3, ease: "power2.in" }, "+=0.3")
+      .to(logoRef.current, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.7)" })
+      .to(logoRef.current, { opacity: 0, scale: 1.2, duration: 0.3, ease: "power2.in" }, "+=0.2");
 
   }, { dependencies: [show, assetsLoaded], scope: loaderRef });
 
@@ -82,7 +82,7 @@ export default function PageLoader() {
       {/* 2. Brand Logo Centerstage */}
       <div ref={logoRef} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-32 h-32 md:w-48 md:h-48 opacity-0 flex items-center justify-center">
         <Image
-          src="/assets/logo.png"
+          src="/assets/logo.webp"
           alt="Binary Froster"
           fill
           priority

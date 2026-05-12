@@ -5,10 +5,10 @@ import SmoothScrolling from "@/components/SmoothScrolling";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import PageLoader from "@/components/layout/PageLoader";
-import LiveChat from "@/components/chat/LiveChat";
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const hankenGrotesk = Hanken_Grotesk({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-space" });
-const jetbrains = JetBrains_Mono({ subsets: ["latin"], weight: ["500"], variable: "--font-mono" });
+import LiveChatWrapper from "@/components/chat/LiveChatWrapper";
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
+const hankenGrotesk = Hanken_Grotesk({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-space", display: "swap" });
+const jetbrains = JetBrains_Mono({ subsets: ["latin"], weight: ["500"], variable: "--font-mono", display: "swap" });
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.binaryfroster.com";
 
@@ -73,7 +73,7 @@ export const metadata: Metadata = {
       "Precision-built AI integrations, web apps, e-commerce, ERP, and SaaS solutions for growing businesses worldwide.",
     images: [
       {
-        url: "/assets/logo.png",
+        url: "/assets/logo.webp",
         width: 1024,
         height: 1024,
         alt: "Binary Froster — AI & Custom Software Development Agency",
@@ -87,7 +87,7 @@ export const metadata: Metadata = {
     title: "Binary Froster — AI & Custom Software Development",
     description:
       "Precision-built technology solutions for growing businesses worldwide. AI, web apps, SaaS, e-commerce & ERP.",
-    images: ["/assets/logo.png"],
+    images: ["/assets/logo.webp"],
   },
   verification: {
     // Add your Google Search Console / Bing verification tokens here
@@ -110,7 +110,7 @@ const organizationSchema = {
   "@type": "Organization",
   name: "Binary Froster",
   url: SITE_URL,
-  logo: `${SITE_URL}/assets/logo.png`,
+  logo: `${SITE_URL}/assets/logo.webp`,
   description:
     "Binary Froster is an AI & custom software development agency building web apps, SaaS platforms, e-commerce stores, ERP systems, and AI integrations for SMEs worldwide.",
   foundingDate: "2023",
@@ -160,8 +160,8 @@ const professionalServiceSchema = {
   "@type": "ProfessionalService",
   name: "Binary Froster",
   url: SITE_URL,
-  logo: `${SITE_URL}/assets/logo.png`,
-  image: `${SITE_URL}/assets/logo.png`,
+  logo: `${SITE_URL}/assets/logo.webp`,
+  image: `${SITE_URL}/assets/logo.webp`,
   description:
     "AI & custom software development agency for SMEs worldwide. We build web apps, SaaS, e-commerce, and ERP systems.",
   email: "binaryfroster@gmail.com",
@@ -214,7 +214,7 @@ export default function RootLayout({
           <PageLoader />
           <Navbar />
           <main className="flex-grow pt-24">{children}</main>
-          <LiveChat />
+          <LiveChatWrapper />
           <Footer />
         </SmoothScrolling>
       </body>

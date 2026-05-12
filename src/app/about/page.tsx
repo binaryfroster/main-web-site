@@ -22,7 +22,7 @@ const team = [
     bio: "Full-stack developer and the driving force behind Binary Froster. Specializes in scalable backend architectures, API design, and AI integrations. Passionate about building production-grade systems that solve real business problems.",
     initials: "SD",
     color: "violet",
-    img: "/team/shivam.png",
+    img: "/team/shivam.webp",
     linkedin: "https://www.linkedin.com/in/shivam-dube/",
   },
   {
@@ -31,7 +31,7 @@ const team = [
     bio: "Design-obsessed creative who transforms complex workflows into intuitive, beautiful interfaces. Expert in Figma, design systems, and user research. Ensures every pixel serves a purpose.",
     initials: "DK",
     color: "cyan",
-    img: "/team/digvijay.png",
+    img: "/team/digvijay.webp",
     linkedin: "https://www.linkedin.com/in/kadamdigvijay/",
   },
   {
@@ -40,7 +40,7 @@ const team = [
     bio: "Cross-platform mobile specialist building performant apps with React Native and Flutter. Focused on smooth animations, offline-first architectures, and seamless user experiences across iOS and Android.",
     initials: "JK",
     color: "violet",
-    img: "/team/jawad.png",
+    img: "/team/jawad.webp",
     linkedin: "https://www.linkedin.com/in/jawad-khan-hakim/",
   },
   {
@@ -49,7 +49,7 @@ const team = [
     bio: "Machine learning and AI specialist with expertise in NLP, computer vision, and LLM integrations. Builds intelligent automation pipelines that give businesses a competitive edge.",
     initials: "PC",
     color: "cyan",
-    img: "/team/pruthviraj.png",
+    img: "/team/pruthviraj.webp",
     linkedin: "https://www.linkedin.com/in/pruthviraj-chougale-3333a9240/",
   },
   {
@@ -58,7 +58,7 @@ const team = [
     bio: "React and TypeScript advocate who bridges frontend elegance with backend robustness. Passionate about clean code, component architecture, and delivering pixel-perfect implementations at speed.",
     initials: "RK",
     color: "violet",
-    img: "/team/rugved.png",
+    img: "/team/rugved.webp",
     linkedin: "https://www.linkedin.com/in/rugved-kulkarni-038315342/",
   },
   {
@@ -67,7 +67,7 @@ const team = [
     bio: "Infrastructure specialist bringing reliability and performance to every deployment. Expert in AWS, Docker, Kubernetes, and CI/CD pipelines. Ensures every product scales seamlessly from day one.",
     initials: "PI",
     color: "cyan",
-    img: "/team/prithviraj_i.png",
+    img: "/team/prithviraj_i.webp",
     linkedin: "https://www.linkedin.com/in/prithviraj-indulkar/",
   },
 ];

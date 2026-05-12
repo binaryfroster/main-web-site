@@ -45,7 +45,7 @@ export default function Footer() {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <Image
-                src="/assets/logo.png"
+                src="/assets/logo.webp"
                 alt="Binary Froster Logo"
                 width={40}
                 height={40}

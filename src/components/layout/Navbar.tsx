@@ -86,7 +86,7 @@ export default function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group flex-shrink-0 min-w-0" aria-label="Binary Froster Home">
             <Image
-              src="/assets/logo.png"
+              src="/assets/logo.webp"
               alt="Binary Froster Logo"
               width={48}
               height={48}

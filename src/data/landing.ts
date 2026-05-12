@@ -51,9 +51,9 @@ export const differentiators = [
 ];
 
 export const portfolioItems = [
-  { title: "FlowOps ERP", cat: "ERP", tags: ["React", "PostgreSQL"], img: "/assets/portfolio_chatbot.png", desc: "Enterprise resource planning built for how you actually work.", size: "lg" },
-  { title: "AI Diet Planner", cat: "SaaS", tags: ["OpenAI", "Next.js"], img: "/assets/diet_planner_mockup.png", desc: "Personalized nutrition plans powered by cutting-edge AI.", size: "md" },
-  { title: "Voice Call Automation", cat: "AI", tags: ["Twilio", "Python"], img: "/assets/portfolio_automation.png", desc: "AI-powered inbound/outbound call handling at scale.", size: "md" },
-  { title: "MediCare Hub", cat: "Management", tags: ["React", "HIPAA"], img: "/assets/portfolio_chatbot.png", desc: "Patient records, appointments, and telemetry integration.", size: "wide" },
-  { title: "ShopLocal UK", cat: "E-commerce", tags: ["Stripe", "Next.js"], img: "/assets/portfolio_automation.png", desc: "Full e-commerce platform with inventory and shipping.", size: "md" },
+  { title: "FlowOps ERP", cat: "ERP", tags: ["React", "PostgreSQL"], img: "/assets/portfolio_chatbot.webp", desc: "Enterprise resource planning built for how you actually work.", size: "lg" },
+  { title: "AI Diet Planner", cat: "SaaS", tags: ["OpenAI", "Next.js"], img: "/assets/diet_planner_mockup.webp", desc: "Personalized nutrition plans powered by cutting-edge AI.", size: "md" },
+  { title: "Voice Call Automation", cat: "AI", tags: ["Twilio", "Python"], img: "/assets/portfolio_automation.webp", desc: "AI-powered inbound/outbound call handling at scale.", size: "md" },
+  { title: "MediCare Hub", cat: "Management", tags: ["React", "HIPAA"], img: "/assets/portfolio_chatbot.webp", desc: "Patient records, appointments, and telemetry integration.", size: "wide" },
+  { title: "ShopLocal UK", cat: "E-commerce", tags: ["Stripe", "Next.js"], img: "/assets/portfolio_automation.webp", desc: "Full e-commerce platform with inventory and shipping.", size: "md" },
 ];

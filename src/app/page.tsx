@@ -159,6 +159,7 @@ export default function Home() {
                   src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1200"
                   alt="Business System Dark"
                   fill
+                  priority
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   className="hero-img-dark object-cover transition-opacity duration-[1200ms] group-hover:scale-105"
                 />
