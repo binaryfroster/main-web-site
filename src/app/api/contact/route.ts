@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 export const runtime = "edge";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY || "re_dummy_key_for_build");
 
 // Rate limiting — simple in-memory store (resets on cold start)
 const ipRequests = new Map<string, { count: number; resetAt: number }>();

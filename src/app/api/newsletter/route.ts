@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 export const runtime = "edge";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY || "re_dummy_key_for_build");
 
 // In-memory dedupe cache (resets on cold start; good enough for low traffic)
 const recentEmails = new Set<string>();
