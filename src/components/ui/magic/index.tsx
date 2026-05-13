@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, useMotionValue, useTransform, animate } from "framer-motion";
-import { useEffect, useRef, useId, useMemo, ReactNode } from "react";
+import { motion, useMotionValue, useTransform, animate, useInView } from "framer-motion";
+import { useEffect, useRef, useState, useId, useMemo, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 // ─── Animated Beam ───────────────────────────────────────────────────────────
@@ -119,7 +119,7 @@ interface NumberTickerProps {
 
 export function NumberTicker({
   value,
-  startValue = 0,
+  startValue = 1,
   direction = "up",
   delay = 0,
   decimalPlaces = 0,
@@ -127,30 +127,63 @@ export function NumberTicker({
 }: NumberTickerProps) {
   const ref = useRef<HTMLSpanElement>(null);
   const motionVal = useMotionValue(direction === "down" ? value : startValue);
-  const transformed = useTransform(motionVal, (latest) =>
-    Intl.NumberFormat("en-US", { minimumFractionDigits: decimalPlaces, maximumFractionDigits: decimalPlaces }).format(
-      Number(latest.toFixed(decimalPlaces))
-    )
-  );
+  const [isInView, setIsInView] = useState(false);
 
+  // Audit the IntersectionObserver binding — fix root margin and threshold (use threshold: 0.1, rootMargin: "0px 0px -50px 0px")
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+          observer.disconnect();
+        }
+      },
+      {
+        threshold: 0.1,
+        rootMargin: "0px 0px -50px 0px",
+      }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // Add a useEffect fallback trigger with 300ms delay that fires on mount independent of scroll position
   useEffect(() => {
     const timer = setTimeout(() => {
-      const target = direction === "down" ? startValue : value;
-      animate(motionVal, target, { duration: 2, ease: "easeOut" });
-    }, delay * 1000);
+      setIsInView(true);
+    }, 300);
     return () => clearTimeout(timer);
-  }, [motionVal, value, startValue, direction, delay]);
+  }, []);
+
+  const transformed = useTransform(motionVal, (latest) => {
+    const val = Math.max(1, Number(latest.toFixed(decimalPlaces)));
+    return Intl.NumberFormat("en-US", { minimumFractionDigits: decimalPlaces, maximumFractionDigits: decimalPlaces }).format(val);
+  });
+
+  useEffect(() => {
+    if (isInView) {
+      const timer = setTimeout(() => {
+        const target = direction === "down" ? startValue : value;
+        animate(motionVal, target, { duration: 2, ease: "easeOut" });
+      }, delay * 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [motionVal, value, startValue, direction, delay, isInView]);
 
   useEffect(() => {
     return transformed.on("change", (val) => {
-      if (ref.current) ref.current.textContent = val;
+      if (ref.current && val !== "0") {
+        ref.current.textContent = val;
+      }
     });
   }, [transformed]);
 
   return (
     <span className={cn("inline-block tabular-nums tracking-wider", className)} ref={ref}>
       {Intl.NumberFormat("en-US", { minimumFractionDigits: decimalPlaces, maximumFractionDigits: decimalPlaces }).format(
-        Number((direction === "down" ? value : startValue).toFixed(decimalPlaces))
+        Math.max(1, value)
       )}
     </span>
   );

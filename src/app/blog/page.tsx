@@ -88,12 +88,12 @@ export default function BlogPage() {
               <TiltCard className="blog-card h-full">
                 <GlassCard className="p-5 hover:border-violet-500/30 transition-colors cursor-pointer group h-full !backdrop-blur-md">
                   <div className="flex flex-col md:flex-row md:items-stretch gap-6 h-full">
-                    <div className="w-full md:w-1/3 aspect-video md:aspect-auto relative rounded-xl overflow-hidden flex-shrink-0">
-                      <Image src={`/blog/${post.slug}-hero.webp`} alt={post.title} fill className="object-cover transition-transform duration-700 group-hover:scale-105" sizes="(max-width: 768px) 100vw, 33vw" />
+                    <div className="w-full md:w-1/3 aspect-video md:aspect-auto relative rounded-none overflow-hidden flex-shrink-0">
+                      <Image src={`/blog/${post.slug}-hero.webp`} alt={post.title} fill className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105" sizes="(max-width: 768px) 100vw, 33vw" />
                     </div>
                     <div className="flex-grow flex flex-col justify-center">
                       <div className="flex items-center gap-3 mb-2">
-                        <span className="px-2 py-0.5 rounded text-[10px] font-mono" style={{background: 'var(--badge-cat-bg)', color: 'var(--badge-cat-text)', border: '1px solid var(--badge-cat-border)'}}>{post.cat}</span>
+                        <span className="px-2 py-0.5 rounded-none text-[10px] font-mono" style={{background: 'var(--badge-cat-bg)', color: 'var(--badge-cat-text)', border: '1px solid var(--badge-cat-border)'}}>{post.cat}</span>
                         <span className="text-[11px] text-[var(--text-hint)]">{post.date}</span>
                         <span className="text-[11px] text-[var(--text-hint)]">·</span>
                         <span className="text-[11px] text-[var(--text-hint)]">{post.read}</span>
@@ -101,7 +101,7 @@ export default function BlogPage() {
                       <h2 className="font-display font-semibold text-xl text-[var(--text-h)] mb-2 group-hover:text-[var(--cyan-500)] transition-colors">{post.title}</h2>
                       <p className="text-[var(--text-muted)] text-sm leading-relaxed">{post.excerpt}</p>
                       <div className="flex gap-2 mt-3">
-                        {post.tags.map(t => <span key={t} className="px-2 py-0.5 rounded text-[10px] font-mono bg-[var(--glass-bg)] border border-[var(--glass-border)] text-[var(--text-muted)]">{t}</span>)}
+                        {post.tags.map(t => <span key={t} className="px-2 py-0.5 rounded-none text-[10px] font-mono bg-[var(--glass-bg)] border border-[var(--glass-border)] text-[var(--text-muted)]">{t}</span>)}
                       </div>
                     </div>
                     <div className="flex-shrink-0 flex items-center md:items-end justify-start md:justify-center">
@@ -120,7 +120,7 @@ export default function BlogPage() {
             <button 
               onClick={() => handlePageChange(currentPage - 1)} 
               disabled={currentPage === 1}
-              className="px-4 py-2 rounded-full border border-[var(--glass-border)] text-[var(--text-muted)] disabled:opacity-50 hover:bg-[var(--glass-bg)] transition-colors"
+              className="px-4 py-2 rounded-none border border-[var(--glass-border)] text-[var(--text-muted)] disabled:opacity-50 hover:bg-[var(--glass-bg)] transition-colors"
             >
               Previous
             </button>
@@ -130,7 +130,7 @@ export default function BlogPage() {
             <button 
               onClick={() => handlePageChange(currentPage + 1)} 
               disabled={currentPage === totalPages}
-              className="px-4 py-2 rounded-full border border-[var(--glass-border)] text-[var(--text-muted)] disabled:opacity-50 hover:bg-[var(--glass-bg)] transition-colors"
+              className="px-4 py-2 rounded-none border border-[var(--glass-border)] text-[var(--text-muted)] disabled:opacity-50 hover:bg-[var(--glass-bg)] transition-colors"
             >
               Next
             </button>
@@ -157,7 +157,7 @@ export default function BlogPage() {
                     placeholder="your@email.com"
                     required
                     disabled={nlLoading}
-                    className="flex-grow min-w-0 bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-full px-5 py-3 text-[var(--text-h)] placeholder-[var(--text-hint)] focus:outline-none focus:border-cyan-500 text-sm disabled:opacity-60"
+                    className="flex-grow min-w-0 bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-none px-5 py-3 text-[var(--text-h)] placeholder-[var(--text-hint)] focus:outline-none focus:border-cyan-500 text-sm disabled:opacity-60"
                   />
                   <LiquidButton type="submit" className="flex-shrink-0" disabled={nlLoading}>
                     {nlLoading ? "Subscribing…" : "Subscribe"}

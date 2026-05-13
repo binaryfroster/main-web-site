@@ -8,7 +8,7 @@ export const runtime = "nodejs";
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: process.env.GMAIL_USER || "binaryfroster@gmail.com",
+    user: process.env.GMAIL_USER || "hello@binaryfroster.com",
     pass: process.env.GMAIL_APP_PASSWORD || "",
   },
 });
@@ -82,8 +82,8 @@ export async function POST(req: Request) {
 
     // ── Send notification email to Binary Froster ─────────────────────
     await transporter.sendMail({
-      from: `"Binary Froster Contact" <${process.env.GMAIL_USER || "binaryfroster@gmail.com"}>`,
-      to: "binaryfroster@gmail.com",
+      from: `"Binary Froster Contact" <${process.env.GMAIL_USER || "hello@binaryfroster.com"}>`,
+      to: "hello@binaryfroster.com",
       replyTo: email,
       subject: `New Inquiry${company ? ` from ${company}` : ""} — ${service || "General"}`,
       html: `
@@ -120,7 +120,7 @@ export async function POST(req: Request) {
 
     // ── Auto-reply to the sender ──────────────────────────────────────
     await transporter.sendMail({
-      from: `"Binary Froster" <${process.env.GMAIL_USER || "binaryfroster@gmail.com"}>`,
+      from: `"Binary Froster" <${process.env.GMAIL_USER || "hello@binaryfroster.com"}>`,
       to: email,
       subject: "We received your message — Binary Froster",
       html: `
@@ -139,7 +139,7 @@ export async function POST(req: Request) {
   } catch (err) {
     console.error("[API /contact] Error:", err);
     return NextResponse.json(
-      { error: "Failed to send message. Please email us directly at binaryfroster@gmail.com" },
+      { error: "Failed to send message. Please email us directly at hello@binaryfroster.com" },
       { status: 500 }
     );
   }

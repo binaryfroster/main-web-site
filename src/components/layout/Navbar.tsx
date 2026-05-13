@@ -165,10 +165,10 @@ export default function Navbar() {
               Start a Project
             </LiquidButton>
 
-            {/* Hamburger */}
+      {/* Hamburger — z-index increased to stay above overlay */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="lg:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5 relative z-[1100] flex-shrink-0"
+              className="lg:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5 relative z-[3000] flex-shrink-0"
               aria-label={mobileOpen ? "Close menu" : "Open menu"}
               aria-expanded={mobileOpen}
             >
@@ -196,44 +196,53 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Menu Overlay */}
       <div
-        className={
-          "fixed inset-0 z-[999] lg:hidden transition-opacity duration-300 " +
-          (mobileOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none")
-        }
+        className={`fixed inset-0 z-[2000] bg-[#0d0d0d]/95 backdrop-blur-[16px] flex flex-col items-center justify-center p-8 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] lg:hidden ${
+          mobileOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        }`}
+        aria-hidden={!mobileOpen}
       >
-        <div
-          className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-          onClick={() => setMobileOpen(false)}
-        />
-        <div
-          className={
-            "absolute top-0 right-0 w-[300px] h-full bg-[var(--bg-surface)]/97 backdrop-blur-2xl border-l border-[var(--glass-border)] p-8 pt-24 flex flex-col gap-5 transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] shadow-[-20px_0_60px_rgba(0,0,0,0.3)] " +
-            (mobileOpen ? "translate-x-0" : "translate-x-full")
-          }
-        >
+        {/* Watermark Logo */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.03] overflow-hidden" aria-hidden="true">
+          <span className="text-[30vw] font-display font-bold whitespace-nowrap rotate-[-15deg]">
+            BINARY FROSTER
+          </span>
+        </div>
+
+        {/* Navigation Links */}
+        <div className="flex flex-col items-center gap-6 mb-12 relative z-10">
           {navLinks.map((link, i) => (
             <Link
               key={link.name}
               href={link.path}
               onClick={() => setMobileOpen(false)}
-              className={
-                "text-lg font-display font-medium py-2 border-b border-[var(--glass-border)] transition-all duration-300 ease-out " +
-                (isActive(link.path)
-                  ? "text-[var(--text-h)]"
-                  : "text-[var(--text-h)] hover:text-[var(--text-muted)]") +
-                (mobileOpen ? " opacity-100 translate-x-0" : " opacity-0 translate-x-4")
-              }
-              style={{ transitionDelay: `${mobileOpen ? 150 + i * 50 : 0}ms` }}
+              className={`text-5xl font-display font-extrabold tracking-tighter transition-all duration-500 ${
+                isActive(link.path) ? "text-[#B8F564]" : "text-[var(--text-h)] hover:text-[#B8F564]"
+              } ${mobileOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
+              style={{ transitionDelay: `${mobileOpen ? 100 + i * 40 : 0}ms` }}
             >
               {link.name}
             </Link>
           ))}
-          <div className="mt-auto">
-            <LiquidButton href="/contact" className="w-full" size="sm">
-              Start a Project
-            </LiquidButton>
+        </div>
+
+        {/* Action & Socials */}
+        <div className={`flex flex-col items-center gap-10 relative z-10 transition-all duration-500 delay-[400ms] ${mobileOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
+          <LiquidButton href="/contact" size="lg" onClick={() => setMobileOpen(false)}>
+            Start a Project
+          </LiquidButton>
+
+          <div className="flex gap-6">
+            {[
+              { name: "LinkedIn", href: "https://in.linkedin.com/in/binary-froster", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg> },
+              { name: "Twitter", href: "https://x.com/Binaryfroster", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg> },
+              { name: "GitHub", href: "https://github.com/binaryfroster", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg> },
+            ].map((s) => (
+              <a key={s.name} href={s.href} target="_blank" rel="noopener noreferrer" className="text-[var(--text-muted)] hover:text-[#B8F564] transition-colors" aria-label={s.name}>
+                {s.icon}
+              </a>
+            ))}
           </div>
         </div>
       </div>

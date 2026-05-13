@@ -33,12 +33,12 @@ function FloatInput({
         placeholder=" "
         required={required}
         className={
-          "peer w-full h-14 bg-[var(--bg-surface)] border rounded-xl px-4 pt-5 pb-1 " +
+          "peer w-full h-14 bg-[var(--bg-surface)] border rounded-none px-4 pt-5 pb-1 " +
           "text-[var(--text-h)] text-sm focus:outline-none transition-all " +
-          "focus:shadow-[0_0_0_3px_rgba(0,191,191,0.12)] " +
+          "focus:ring-2 focus:ring-[var(--text-h)] focus:border-[var(--text-h)] " +
           (error
             ? "border-red-500 focus:border-red-400"
-            : "border-[var(--glass-border)] focus:border-cyan-400")
+            : "border-white/20 focus:border-[var(--text-h)]")
         }
       />
       <label
@@ -78,12 +78,12 @@ function StyledSelect({
           required={required}
           onChange={e => onChange(e.target.value)}
           className={
-            "w-full h-12 bg-[var(--bg-surface)] border rounded-xl px-4 pr-10 " +
+            "w-full h-12 bg-[var(--bg-surface)] border rounded-none px-4 pr-10 " +
             "text-[var(--text-h)] text-sm focus:outline-none transition-all appearance-none cursor-pointer " +
-            "focus:shadow-[0_0_0_3px_rgba(0,191,191,0.12)] " +
+            "focus:ring-2 focus:ring-[var(--text-h)] focus:border-[var(--text-h)] " +
             (error
               ? "border-red-500 focus:border-red-400"
-              : "border-[var(--glass-border)] focus:border-cyan-400")
+              : "border-white/20 focus:border-[var(--text-h)]")
           }
         >
           {children}
@@ -235,8 +235,8 @@ export default function ContactPage() {
 
             <AnimatedGroup preset="slide" className="contact-elem flex flex-col gap-4">
               <InfoCard icon="📧" title="Email">
-                <a href="mailto:binaryfroster@gmail.com" className="text-cyan-400 hover:text-cyan-300 transition-colors text-sm break-all">
-                  binaryfroster@gmail.com
+                <a href="mailto:hello@binaryfroster.com" className="text-cyan-400 hover:text-cyan-300 transition-colors text-sm break-all">
+                  hello@binaryfroster.com
                 </a>
               </InfoCard>
 
@@ -409,10 +409,10 @@ export default function ContactPage() {
                         onChange={e => updateField("desc", e.target.value)}
                         placeholder=" "
                         className={
-                          "peer w-full bg-[var(--bg-surface)] border rounded-xl px-4 pt-7 pb-3 " +
+                          "peer w-full bg-[var(--bg-surface)] border rounded-none px-4 pt-7 pb-3 " +
                           "text-[var(--text-h)] text-sm focus:outline-none transition-all resize-none " +
-                          "focus:shadow-[0_0_0_3px_rgba(0,191,191,0.12)] " +
-                          (errors.desc ? "border-red-500" : "border-[var(--glass-border)] focus:border-cyan-400")
+                          "focus:ring-2 focus:ring-[var(--text-h)] focus:border-[var(--text-h)] " +
+                          (errors.desc ? "border-red-500" : "border-white/20 focus:border-[var(--text-h)]")
                         }
                       />
                       <label
@@ -453,7 +453,7 @@ export default function ContactPage() {
                     </p>
 
                     {submitError && (
-                      <div role="alert" className="flex items-start gap-2 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
+                      <div role="alert" className="flex items-start gap-2 p-3 rounded-none bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
                         <svg className="flex-shrink-0 mt-0.5" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                         {submitError}
                       </div>

@@ -95,12 +95,17 @@ function ServiceGrid({ items }: { items: typeof services }) {
               <div className="relative w-8 h-8 group-hover:scale-110 group-hover:rotate-[8deg] transition-transform duration-200">
                 <Image src={svc.icon} alt={svc.title} fill className="object-contain" />
               </div>
-              <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-violet-500/15 text-violet-300 border border-violet-500/20">{svc.cat.split(" ")[0]}</span>
+              <div className="flex flex-col items-end gap-2">
+                <span className="text-[10px] font-mono text-white/30 group-hover:text-[#B8F564] transition-colors">
+                  {(i + 1).toString().padStart(2, '0')}
+                </span>
+                <span className="px-2 py-0.5 rounded-none text-[10px] font-mono bg-violet-500/15 text-violet-300 border border-violet-500/20">{svc.cat.split(" ")[0]}</span>
+              </div>
             </div>
             <h3 className="text-lg font-display font-semibold text-[var(--text-h)]">{svc.title}</h3>
             <p className="text-[var(--text-muted)] text-sm leading-relaxed flex-grow">{svc.desc}</p>
             <div className="flex flex-wrap gap-1.5">
-              {svc.tags.map((tag) => <span key={tag} className="px-2 py-0.5 rounded text-[10px] font-mono bg-[var(--glass-bg)] border border-[var(--glass-border)] text-[var(--text-muted)]">{tag}</span>)}
+              {svc.tags.map((tag) => <span key={tag} className="px-2 py-0.5 rounded-none text-[10px] font-mono bg-[var(--glass-bg)] border border-[var(--glass-border)] text-[var(--text-muted)]">{tag}</span>)}
             </div>
             <div className="flex justify-between items-center pt-2 border-t border-[var(--glass-border)]">
               <span className="text-cyan-400 font-mono text-sm">{svc.price}</span>
@@ -142,7 +147,7 @@ export default function ServicesPage() {
       <div className="absolute inset-0 pointer-events-none z-[-1]" aria-hidden="true">
       </div>
 
-      <div className="container mx-auto px-6 max-w-[1320px]">
+      <div className="container mx-auto px-6 lg:px-12 max-w-[1320px]">
 
         {/* ── Hero ─────────────────────────────────────────────────── */}
         <header className="service-header text-center mb-16 relative z-10 max-w-[800px] mx-auto">
@@ -161,7 +166,7 @@ export default function ServicesPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search services..."
-              className="w-full bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-xl pl-11 pr-4 py-3.5 text-[var(--text-h)] placeholder-[var(--text-hint)] focus:outline-none focus:border-[var(--cyan-500)] focus:shadow-[0_0_0_3px_rgba(0,191,191,0.1)] transition-all text-sm backdrop-blur-sm"
+              className="w-full bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-none pl-11 pr-4 py-3.5 text-[var(--text-h)] placeholder-[var(--text-hint)] focus:outline-none focus:border-[var(--cyan-500)] focus:shadow-[0_0_0_3px_rgba(0,191,191,0.1)] transition-all text-sm backdrop-blur-sm"
               id="service-search"
               aria-label="Search services"
             />
@@ -173,7 +178,7 @@ export default function ServicesPage() {
           <AnimatedTabs
             tabs={tabList}
             className="w-full"
-            tabClassName="px-5 py-2 rounded-full border border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-muted)] text-sm font-medium transition-all hover:text-[var(--text-h)] hover:border-[var(--glass-border-h)]"
+            tabClassName="px-5 py-2 rounded-none border border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text-muted)] text-sm font-medium transition-all hover:text-[var(--text-h)] hover:border-[var(--glass-border-h)]"
             contentClassName="mt-6"
           />
           {/* Search result count */}

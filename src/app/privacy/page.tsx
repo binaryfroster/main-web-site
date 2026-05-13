@@ -61,7 +61,7 @@ export default function PrivacyPolicyPage() {
 
             <section>
               <h3 className="text-xl font-semibold text-[var(--text-h)] mb-4">4. Your Rights</h3>
-              <p>Depending on your location, you may have certain rights regarding your personal information, such as the right to access, correct, or delete your data. To exercise these rights, please contact us at <a href="mailto:binaryfroster@gmail.com" className="text-[var(--cyan-500)] hover:text-[var(--cyan-400)] underline underline-offset-4 decoration-[var(--cyan-500)/30]">binaryfroster@gmail.com</a>.</p>
+              <p>Depending on your location, you may have certain rights regarding your personal information, such as the right to access, correct, or delete your data. To exercise these rights, please contact us at <a href="mailto:hello@binaryfroster.com" className="text-[var(--cyan-500)] hover:text-[var(--cyan-400)] underline underline-offset-4 decoration-[var(--cyan-500)/30]">hello@binaryfroster.com</a>.</p>
             </section>
 
             <section>
@@ -72,7 +72,7 @@ export default function PrivacyPolicyPage() {
             <section>
               <h3 className="text-xl font-semibold text-[var(--text-h)] mb-4">6. Contact Us</h3>
               <p className="mb-2">If you have any questions about this Privacy Policy, please contact us at:</p>
-              <p><strong className="text-[var(--text-h)]">Email:</strong> <a href="mailto:binaryfroster@gmail.com" className="text-[var(--cyan-500)] hover:text-[var(--cyan-400)] underline underline-offset-4 decoration-[var(--cyan-500)/30]">binaryfroster@gmail.com</a></p>
+              <p><strong className="text-[var(--text-h)]">Email:</strong> <a href="mailto:hello@binaryfroster.com" className="text-[var(--cyan-500)] hover:text-[var(--cyan-400)] underline underline-offset-4 decoration-[var(--cyan-500)/30]">hello@binaryfroster.com</a></p>
             </section>
           </div>
         </GlassCard>

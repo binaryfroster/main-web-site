@@ -105,7 +105,7 @@ export default function LiveChat() {
     <div className="fixed bottom-5 right-5 z-[999] flex flex-col items-end gap-3">
       {/* ── Chat Window ─────────────────────────────────────── */}
       {open && (
-        <div className="w-[min(380px,calc(100vw-2.5rem))] h-[min(560px,calc(100vh-120px))] flex flex-col overflow-hidden rounded-2xl border border-[var(--glass-border)] bg-[var(--bg-surface)]/97 backdrop-blur-2xl shadow-[0_20px_60px_rgba(0,0,0,0.5),0_0_0_1px_rgba(255,255,255,0.05)] animate-[slide-up_0.3s_cubic-bezier(0.16,1,0.3,1)]">
+        <div className="w-[min(380px,calc(100vw-2.5rem))] h-[min(560px,calc(100vh-120px))] flex flex-col overflow-hidden rounded-none border border-[var(--glass-border)] bg-[var(--bg-surface)]/97 backdrop-blur-2xl shadow-[0_20px_60px_rgba(0,0,0,0.5),0_0_0_1px_rgba(255,255,255,0.05)] animate-[slide-up_0.3s_cubic-bezier(0.16,1,0.3,1)]">
 
           {/* Header */}
           <div className="flex items-center gap-3 px-5 py-4 border-b border-[var(--glass-border)] bg-gradient-to-r from-violet-600/10 to-cyan-600/5 flex-shrink-0">
@@ -177,7 +177,7 @@ export default function LiveChat() {
                 key={chip.value}
                 onClick={() => sendMessage(chip.value)}
                 disabled={typing}
-                className="px-2.5 py-1 text-[10px] font-medium rounded-full border border-violet-500/30 bg-violet-500/8 text-violet-300 hover:bg-violet-500/20 hover:border-violet-500/50 transition-all flex-shrink-0 disabled:opacity-40 whitespace-nowrap"
+                className="px-2.5 py-1 text-[10px] font-medium rounded-none border border-violet-500/30 bg-violet-500/8 text-violet-300 hover:bg-violet-500/20 hover:border-violet-500/50 transition-all flex-shrink-0 disabled:opacity-40 whitespace-nowrap"
               >
                 {chip.label}
               </button>
@@ -193,12 +193,12 @@ export default function LiveChat() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               disabled={typing}
-              className="flex-grow bg-[var(--glass-bg)] border border-[var(--glass-border)] focus:border-violet-500 rounded-xl px-4 py-2.5 text-[var(--text-h)] text-sm focus:outline-none transition-all disabled:opacity-50 placeholder:text-[var(--text-muted)]"
+              className="flex-grow bg-[var(--glass-bg)] border border-white/20 focus:ring-2 focus:ring-[var(--text-h)] focus:border-[var(--text-h)] rounded-none px-4 py-2.5 text-[var(--text-h)] text-sm focus:outline-none transition-all disabled:opacity-50 placeholder:text-[var(--text-muted)]"
             />
             <button
               type="submit"
               disabled={typing || !input.trim()}
-              className="w-10 h-10 flex-shrink-0 bg-gradient-to-br from-violet-600 to-violet-700 border border-violet-500/40 rounded-xl text-white hover:from-violet-500 hover:to-violet-600 active:scale-95 transition-all flex items-center justify-center shadow-[0_2px_16px_rgba(139,92,246,0.3)] disabled:opacity-40"
+              className="w-10 h-10 flex-shrink-0 bg-gradient-to-br from-violet-600 to-violet-700 border border-violet-500/40 rounded-none text-white hover:from-violet-500 hover:to-violet-600 active:scale-95 transition-all flex items-center justify-center shadow-[0_2px_16px_rgba(139,92,246,0.3)] disabled:opacity-40"
               aria-label="Send"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">

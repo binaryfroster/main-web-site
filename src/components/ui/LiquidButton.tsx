@@ -54,9 +54,9 @@ export default function LiquidButton({
   const isPrimary = variant === "primary";
 
   const sizeClasses = {
-    sm: "px-6 py-2.5 text-[14px]",
-    md: "px-8 py-3.5 text-[16px]",
-    lg: "px-10 py-[18px] text-[17px]",
+    sm: "px-6 py-2.5 text-[13px]",
+    md: "px-8 py-3.5 text-sm",
+    lg: "px-10 py-4 text-sm",
   };
 
   const baseClasses =

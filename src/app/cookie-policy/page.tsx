@@ -52,7 +52,7 @@ export default function CookiePolicyPage() {
             <section>
               <h3 className="text-xl font-semibold text-[var(--text-h)] mb-4">5. Contact Us</h3>
               <p className="mb-2">If you have any questions about our use of cookies or other technologies, please email us at:</p>
-              <p><strong className="text-[var(--text-h)]">Email:</strong> <a href="mailto:binaryfroster@gmail.com" className="text-[var(--cyan-500)] hover:text-[var(--cyan-400)] underline underline-offset-4 decoration-[var(--cyan-500)/30]">binaryfroster@gmail.com</a></p>
+              <p><strong className="text-[var(--text-h)]">Email:</strong> <a href="mailto:hello@binaryfroster.com" className="text-[var(--cyan-500)] hover:text-[var(--cyan-400)] underline underline-offset-4 decoration-[var(--cyan-500)/30]">hello@binaryfroster.com</a></p>
             </section>
           </div>
         </GlassCard>

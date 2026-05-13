@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.binaryfroster.com";
+
 export const metadata: Metadata = {
   title: "About Us — Meet the Binary Froster Team",
   description:
@@ -14,19 +16,25 @@ export const metadata: Metadata = {
     "dedicated software engineers",
     "offshore development team",
   ],
-  alternates: { canonical: "/about" },
+  alternates: { canonical: `${SITE_URL}/about` },
   openGraph: {
     title: "About Us — Binary Froster | Our Team & Mission",
     description:
       "Meet the team of senior engineers, designers, and strategists building precision software for global businesses.",
-    url: "/about",
+    url: `${SITE_URL}/about`,
     type: "website",
+    siteName: "Binary Froster",
+    locale: "en_GB",
+    images: [{ url: `${SITE_URL}/assets/logo.webp`, width: 1024, height: 1024, alt: "Binary Froster Team" }],
   },
   twitter: {
     card: "summary_large_image",
+    site: "@Binaryfroster",
+    creator: "@Binaryfroster",
     title: "About Binary Froster — Our Team & Mission",
     description:
       "A UK & India-based team of 6–10 senior engineers building world-class software for businesses worldwide.",
+    images: [`${SITE_URL}/assets/logo.webp`],
   },
 };
 

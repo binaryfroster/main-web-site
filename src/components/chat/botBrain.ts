@@ -17,7 +17,7 @@ const rules: Rule[] = [
   // PRICING
   {
     patterns: [/pric|cost|how much|rate|budget|package|quot|fee|cheap|afford|invest|money|pay/i],
-    reply: "Here's our pricing guide:\n\n💡 **Starter** — £800–2K\nLanding pages, simple websites, small integrations\n\n🚀 **Growth** — £2K–8K\nFull business sites, e-commerce, management tools\n\n🏢 **Enterprise** — £8K–25K+\nERP systems, SaaS products, complex AI solutions\n\n📦 **Retainers** from £500/month for ongoing support\n\nAll quotes are bespoke — use our contact form for a free estimate!",
+    reply: "Here's our pricing guide:\n\n💡 **Starter** — £800–2K\nLanding pages, simple websites, small integrations\n\n🚀 **Growth** — £2K–8K\nFull business sites, e-commerce, management tools\n\n🏢 **Enterprise** — £8K–25K+\nERP systems, SaaS products, complex AI solutions\n\n📦 **Retainers** from £500/month for ongoing support\n\nAll quotes are bespoke — **[Request a tailored quote here](/contact)** to get an accurate estimate within 24 hours.",
   },
   // PORTFOLIO
   {
@@ -27,12 +27,12 @@ const rules: Rule[] = [
   // ABOUT
   {
     patterns: [/about|who are you|company|team|founded|binary frost|tell me about|background|member/i],
-    reply: "**Binary Froster** is a premium software agency serving businesses worldwide.\n\n👥 **6-person expert team** — Backend, Frontend, AI, Mobile, DevOps & UI/UX\n📍 Operating since 2023\n🌍 Clients in UK, US, India & worldwide\n✅ You own the code, data & IP — no lock-in\n📧 binaryfroster@gmail.com\n\nVisit our **About** page to meet the full team!",
+    reply: "**Binary Froster** is a premium software agency serving businesses worldwide.\n\n👥 **6-person expert team** — Backend, Frontend, AI, Mobile, DevOps & UI/UX\n📍 Operating since 2023\n🌍 Clients in UK, US, India & worldwide\n✅ You own the code, data & IP — no lock-in\n📧 hello@binaryfroster.com\n\nVisit our **About** page to meet the full team!",
   },
   // CONTACT
   {
     patterns: [/contact|reach|email|phone|call|speak|talk to|get in touch|meet|book|schedule/i],
-    reply: "Ways to reach us:\n\n📧 **Email:** binaryfroster@gmail.com\n⏱ **Response:** Within 24 hours (Mon–Fri)\n🕒 **Hours:** 9am–6pm GMT / 10am–7pm IST\n\nYou can also:\n→ Fill out our **contact form** for a detailed estimate\n→ Book a free **30-min discovery call**\n→ Connect on **LinkedIn**: linkedin.com/in/binary-froster\n\nWe look forward to hearing from you!",
+    reply: "Ways to reach us:\n\n📧 **Email:** hello@binaryfroster.com\n⏱ **Response:** Within 24 hours (Mon–Fri)\n🕒 **Hours:** 9am–6pm GMT / 10am–7pm IST\n\nYou can also:\n→ Fill out our **contact form** for a detailed estimate\n→ Book a free **30-min discovery call**\n→ Connect on **LinkedIn**: linkedin.com/in/binary-froster\n\nWe look forward to hearing from you!",
   },
   // TIMELINE
   {
@@ -102,7 +102,7 @@ const rules: Rule[] = [
   // HIRING / CAREERS / JOIN
   {
     patterns: [/hire|career|job|join|work with you|position|opening|recruit/i],
-    reply: "Interested in joining Binary Froster? 🎉\n\nWe're always looking for talented developers, designers, and AI engineers.\n\n📧 Send your resume to: **binaryfroster@gmail.com**\n💼 Subject line: \"Career Inquiry — [Your Role]\"\n\nWe value passion, clean code, and continuous learning!",
+    reply: "Interested in joining Binary Froster? 🎉\n\nWe're always looking for talented developers, designers, and AI engineers.\n\n📧 Send your resume to: **hello@binaryfroster.com**\n💼 Subject line: \"Career Inquiry — [Your Role]\"\n\nWe value passion, clean code, and continuous learning!",
   },
   // PAYMENT
   {
@@ -112,17 +112,17 @@ const rules: Rule[] = [
   // THANKS
   {
     patterns: [/thank|thanks|cheers|appreciate|helpful|great|awesome|perfect/i],
-    reply: "You're welcome! 😊 Glad I could help.\n\nReady to take the next step?\n→ Fill out our **contact form** for a free estimate\n→ Email us at **binaryfroster@gmail.com**\n\nWe'd love to work with you!",
+    reply: "You're welcome! 😊 Glad I could help.\n\nReady to take the next step?\n→ Fill out our **contact form** for a free estimate\n→ Email us at **hello@binaryfroster.com**\n\nWe'd love to work with you!",
   },
   // BYE
   {
     patterns: [/bye|goodbye|see you|later|take care|cya/i],
-    reply: "Goodbye! 👋 Thanks for visiting Binary Froster.\n\nWhenever you're ready to start your project, we're just one message away.\n\n📧 binaryfroster@gmail.com\n🌐 binaryfroster.com/contact",
+    reply: "Goodbye! 👋 Thanks for visiting Binary Froster.\n\nWhenever you're ready to start your project, we're just one message away.\n\n📧 hello@binaryfroster.com\n🌐 binaryfroster.com/contact",
   },
   // YES / INTERESTED
   {
     patterns: [/^(yes|yeah|yep|sure|ok|okay|interested|tell me more|go ahead|definitely)/i],
-    reply: "Great! 🎉 To get you the most accurate information, could you tell me:\n\n1. What type of project are you looking for? (website, app, AI, etc.)\n2. Do you have a rough budget in mind?\n3. What's your ideal timeline?\n\nOr simply visit our **contact page** to submit your project details!",
+    reply: "Great! 🎉 To get you the most accurate information, could you tell me:\n\n1. What type of project are you looking for? (website, app, AI, etc.)\n2. Do you have a rough budget in mind?\n3. What's your ideal timeline?\n\nOr simply **[submit your project details here](/contact)** for a tailored assessment!",
   },
   // NO / NOT SURE
   {
@@ -157,5 +157,5 @@ export function getBotReply(input: string): string {
   }
 
   // DEFAULT FALLBACK
-  return "That's a great question! 🤔 I might not have the specific answer, but here's how to get help:\n\n📧 **Email:** binaryfroster@gmail.com\n📋 **Contact form:** binaryfroster.com/contact\n\nOr try asking about our **services**, **pricing**, **portfolio**, **AI**, **tech stack**, or **process** — I know all about those!";
+  return "That's a great question! 🤔 I might not have the specific answer, but here's how to get help:\n\n📧 **Email:** hello@binaryfroster.com\n📋 **Contact form:** binaryfroster.com/contact\n\nOr try asking about our **services**, **pricing**, **portfolio**, **AI**, **tech stack**, or **process** — I know all about those!";
 }

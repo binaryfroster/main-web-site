@@ -1,13 +1,13 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Hanken_Grotesk, JetBrains_Mono } from "next/font/google";
+import { DM_Sans, Syne, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import SmoothScrolling from "@/components/SmoothScrolling";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import PageLoader from "@/components/layout/PageLoader";
 import LiveChatWrapper from "@/components/chat/LiveChatWrapper";
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
-const hankenGrotesk = Hanken_Grotesk({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-space", display: "swap" });
+const dmSans = DM_Sans({ subsets: ["latin"], weight: ["400", "500", "700"], variable: "--font-dm-sans", display: "swap" });
+const syne = Syne({ subsets: ["latin"], weight: ["700", "800"], variable: "--font-syne", display: "swap" });
 const jetbrains = JetBrains_Mono({ subsets: ["latin"], weight: ["500"], variable: "--font-mono", display: "swap" });
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.binaryfroster.com";
@@ -114,7 +114,7 @@ const organizationSchema = {
   description:
     "Binary Froster is an AI & custom software development agency building web apps, SaaS platforms, e-commerce stores, ERP systems, and AI integrations for SMEs worldwide.",
   foundingDate: "2023",
-  email: "binaryfroster@gmail.com",
+  email: "hello@binaryfroster.com",
   sameAs: [
     "https://in.linkedin.com/in/binary-froster",
     "https://x.com/Binaryfroster",
@@ -164,7 +164,7 @@ const professionalServiceSchema = {
   image: `${SITE_URL}/assets/logo.webp`,
   description:
     "AI & custom software development agency for SMEs worldwide. We build web apps, SaaS, e-commerce, and ERP systems.",
-  email: "binaryfroster@gmail.com",
+  email: "hello@binaryfroster.com",
   priceRange: "$$",
   currenciesAccepted: "GBP, USD, INR",
   paymentAccepted: "Bank Transfer, Stripe",
@@ -208,7 +208,7 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://images.unsplash.com" />
       </head>
       <body
-        className={`${inter.variable} ${hankenGrotesk.variable} ${jetbrains.variable} antialiased min-h-screen flex flex-col`}
+        className={`${dmSans.variable} ${syne.variable} ${jetbrains.variable} antialiased min-h-screen flex flex-col`}
       >
         <SmoothScrolling>
           <PageLoader />

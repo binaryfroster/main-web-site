@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.binaryfroster.com";
+
 export const metadata: Metadata = {
-  title: "Contact Us — Start Your Software Project Today",
+  title: "Contact Us — Start Your Software Project | Binary Froster",
   description:
     "Ready to build? Contact Binary Froster for a free consultation. We respond within 24 hours. Serving startups and SMEs in the UK, US, India, and worldwide.",
   keywords: [
@@ -15,19 +17,25 @@ export const metadata: Metadata = {
     "custom web development inquiry",
     "AI development quote",
   ],
-  alternates: { canonical: "/contact" },
+  alternates: { canonical: `${SITE_URL}/contact` },
   openGraph: {
     title: "Contact Binary Froster — Free Project Consultation",
     description:
       "Start a conversation. Tell us about your project and get a free, no-obligation quote within 24 hours.",
-    url: "/contact",
+    url: `${SITE_URL}/contact`,
     type: "website",
+    siteName: "Binary Froster",
+    locale: "en_GB",
+    images: [{ url: `${SITE_URL}/assets/logo.webp`, width: 1024, height: 1024, alt: "Contact Binary Froster" }],
   },
   twitter: {
     card: "summary_large_image",
+    site: "@Binaryfroster",
+    creator: "@Binaryfroster",
     title: "Contact Binary Froster — Start Your Project",
     description:
       "Free 24-hour consultation for your software, AI, or web development project.",
+    images: [`${SITE_URL}/assets/logo.webp`],
   },
 };
 

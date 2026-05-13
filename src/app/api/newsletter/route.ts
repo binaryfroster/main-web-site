@@ -6,7 +6,7 @@ export const runtime = "nodejs";
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: process.env.GMAIL_USER || "binaryfroster@gmail.com",
+    user: process.env.GMAIL_USER || "hello@binaryfroster.com",
     pass: process.env.GMAIL_APP_PASSWORD || "",
   },
 });
@@ -49,8 +49,8 @@ export async function POST(req: Request) {
 
     // Notify you of new subscriber
     await transporter.sendMail({
-      from: `"Binary Froster" <${process.env.GMAIL_USER || "binaryfroster@gmail.com"}>`,
-      to: "binaryfroster@gmail.com",
+      from: `"Binary Froster" <${process.env.GMAIL_USER || "hello@binaryfroster.com"}>`,
+      to: "hello@binaryfroster.com",
       subject: `📧 New Newsletter Subscriber — ${email}`,
       html: `
         <div style="font-family:sans-serif;max-width:500px;margin:0 auto;padding:24px;background:#0D1117;color:#E5E7EB;border-radius:12px;border:1px solid #1F2937">
@@ -67,7 +67,7 @@ export async function POST(req: Request) {
 
     // Welcome email to subscriber
     await transporter.sendMail({
-      from: `"Binary Froster" <${process.env.GMAIL_USER || "binaryfroster@gmail.com"}>`,
+      from: `"Binary Froster" <${process.env.GMAIL_USER || "hello@binaryfroster.com"}>`,
       to: email,
       subject: "You're on the list 🎉 — Binary Froster Tech Tips",
       html: `
@@ -75,8 +75,8 @@ export async function POST(req: Request) {
           <div style="margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid #1F2937">
             <span style="font-size:18px;font-weight:700;color:#F9FAFB">Welcome to the Binary Froster Newsletter 🚀</span>
           </div>
-          <p style="color:#D1D5DB;line-height:1.6">You're now subscribed to our weekly tech insights — AI, web development, automation, and everything we learn building products.</p>
-          <p style="color:#D1D5DB;line-height:1.6">Expect <strong style="color:#22D3EE">one email per week</strong>. No spam, ever.</p>
+          <p style="color:#D1D5DB;line-height:1.6">You're now subscribed to our bi-weekly practical AI & automation tips, plus everything we learn building high-performance custom software.</p>
+          <p style="color:#D1D5DB;line-height:1.6">Expect <strong style="color:#22D3EE">one email every two weeks</strong>. No spam, unsubscribe anytime.</p>
           <p style="color:#9CA3AF;font-size:13px;margin-top:24px">— The Binary Froster Team<br>
             <a href="https://www.binaryfroster.com" style="color:#22D3EE">binaryfroster.com</a>
           </p>

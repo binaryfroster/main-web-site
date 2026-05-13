@@ -9,51 +9,51 @@ export const processSteps = [
 
 export const differentiators = [
   {
-    title: "100% Code Ownership",
-    desc: "We build it, you own it. No vendor lock-in, no hidden proprietary engines, complete intellectual property transfer on day one.",
+    title: "Absolute IP Transfer",
+    desc: "100% unencumbered code ownership and IP handover on day one. Zero recurring vendor licensing, no black-box dependencies.",
     icon: "/images/icons/icon_code.png"
   },
   {
-    title: "Transparent Fixed Pricing",
-    desc: "No surprise bills or scope creep. We provide clear, milestone-based pricing so you know exactly what you will pay before we write a single line of code.",
-    icon: "/images/icons/icon_pricing.png"
+    title: "Deterministic Architecture",
+    desc: "Engineered for uncompromising resilience. We design systems utilizing TypeScript, high-performance APIs, and PostgreSQL to ensure deterministic scale.",
+    icon: "/images/icons/icon_scalable.png"
   },
   {
-    title: "AI-First Engineering",
-    desc: "Integrating state-of-the-art LLMs, predictive models, and automations natively into your systems to give you a genuine technological advantage.",
+    title: "Custom AI Integrations",
+    desc: "Beyond generic wrappers. We fine-tune tailored models and embed low-latency inference directly into your mission-critical workflows.",
     icon: "/images/icons/icon_ai.png"
   },
   {
-    title: "End-to-End Delivery",
-    desc: "From initial architecture and UI/UX design to secure deployment and server management. We handle the entire engineering lifecycle in-house.",
-    icon: "/images/icons/icon_build.png"
+    title: "Milestone-Driven Execution",
+    desc: "Fixed-fee predictability aligned with tangible delivery sprints. Transparent schedules eliminate agency scope creep entirely.",
+    icon: "/images/icons/icon_pricing.png"
   },
   {
-    title: "Rigorous Security Standards",
-    desc: "We implement enterprise-grade security protocols, including HIPAA compliance frameworks, end-to-end encryption, and regular vulnerability audits.",
+    title: "Strict Code Compliance",
+    desc: "Peerless software standards. Every module adheres to enterprise security frameworks, end-to-end encryption, and rigorous test coverage.",
     icon: "/images/icons/icon_security.png"
   },
   {
-    title: "Dedicated Support",
-    desc: "Our relationship does not end at deployment. We provide guaranteed post-launch support and regular maintenance options to keep your platform flawless.",
-    icon: "/images/icons/icon_support.png"
-  },
-  {
-    title: "Direct Communication",
-    desc: "Skip the middleman. You communicate directly with the software engineers building your product, ensuring nothing gets lost in translation.",
+    title: "Direct Engineer Synergy",
+    desc: "Uncompromised clarity. Direct communication pathways with elite software engineers, bypassing traditional account management friction.",
     icon: "/images/icons/icon_communication.png"
   },
   {
-    title: "Scalable Architecture",
-    desc: "We design systems built to grow. Using cutting-edge cloud infrastructure, your platform can handle 10 users or 10 million users without rewriting the core.",
-    icon: "/images/icons/icon_scalable.png"
+    title: "Production-Ready Foundations",
+    desc: "Cloud-native structures built on cutting-edge edge runtimes, architected to scale effortlessly from Day 1 launches to enterprise loads.",
+    icon: "/images/icons/icon_build.png"
+  },
+  {
+    title: "Guaranteed Continuity",
+    desc: "Our stewardship extends beyond launch day. High-availability SLA backing ensures absolute platform uptime and continuous progressive optimization.",
+    icon: "/images/icons/icon_support.png"
   }
 ];
 
 export const portfolioItems = [
-  { title: "FlowOps ERP", cat: "ERP", tags: ["React", "PostgreSQL"], img: "/assets/portfolio_chatbot.webp", desc: "Enterprise resource planning built for how you actually work.", size: "lg" },
+  { title: "FlowOps ERP", cat: "ERP", tags: ["React", "Node.js", "PostgreSQL"], img: "/assets/portfolio_chatbot.webp", desc: "Custom unified ERP replacing legacy tools. Automated workflows to reduce manual entry by 40%.", size: "lg" },
   { title: "AI Diet Planner", cat: "SaaS", tags: ["OpenAI", "Next.js"], img: "/assets/diet_planner_mockup.webp", desc: "Personalized nutrition plans powered by cutting-edge AI.", size: "md" },
   { title: "Voice Call Automation", cat: "AI", tags: ["Twilio", "Python"], img: "/assets/portfolio_automation.webp", desc: "AI-powered inbound/outbound call handling at scale.", size: "md" },
   { title: "MediCare Hub", cat: "Management", tags: ["React", "HIPAA"], img: "/assets/portfolio_chatbot.webp", desc: "Patient records, appointments, and telemetry integration.", size: "wide" },
-  { title: "ShopLocal UK", cat: "E-commerce", tags: ["Stripe", "Next.js"], img: "/assets/portfolio_automation.webp", desc: "Full e-commerce platform with inventory and shipping.", size: "md" },
+  { title: "ShopLocal UK", cat: "E-commerce", tags: ["Stripe", "Next.js"], img: "/assets/portfolio_automation.webp", desc: "Multi-vendor marketplace scaled to 10k daily sessions with live inventory sync.", size: "md" },
 ];
